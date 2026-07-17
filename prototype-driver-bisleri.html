@@ -1,0 +1,28 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Bisleri Driver App — Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="prototype/bisleri-driver.css" />
+</head>
+<body>
+<div class="stage">
+  <div class="device-wrap"><div class="device"><div id="app"></div></div></div>
+  <div class="caption">
+    <span class="caption__hint">Demo login <b>MUM-0482</b> / <b>bisleri</b></span>
+    <div class="netsim" id="netsim">
+      <span class="netsim__lbl">Network</span>
+      <button type="button" data-net="online" class="is-on">Online</button>
+      <button type="button" data-net="offline">Offline</button>
+    </div>
+    <button id="resetBtn" type="button">Reset</button>
+  </div>
+</div>
+<script src="prototype/bisleri-driver.js"></script>
+</body>
+</html>
