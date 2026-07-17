@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en" data-pt-no-enter>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Gourav Sharma — Product & UI/UX Designer</title>
+<meta name="description" content="Gourav Sharma — Product &amp; UI/UX Designer with 3.5+ years designing SaaS, mobile and web products." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<script src="net-quality.js"></script>
+<script src="sound-manager.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@300;400;500;600&display=swap" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+/* ---------- Boot overlay ---------- */
+.boot { position: fixed; inset: 0; z-index: 2000; background: var(--bg); display: flex; align-items: center; justify-content: center; transition: opacity 0.6s var(--ease); }
+.boot.done { opacity: 0; pointer-events: none; }
+.boot__panel { font-family: var(--font-mono); font-size: 13px; line-height: 2.1; color: var(--text-dim); width: min(440px, 82vw); }
+.boot__line { opacity: 0; transform: translateX(-6px); transition: 0.3s var(--ease); white-space: nowrap; overflow: hidden; }
+.boot__line.show { opacity: 1; transform: none; }
+.boot__line .ok { color: var(--accent); }
+.boot__bar { height: 2px; background: var(--bg-3); margin-top: 16px; overflow: hidden; }
+.boot__bar i { display: block; height: 100%; width: 0; background: var(--accent); box-shadow: 0 0 12px var(--accent-glow); animation: bootfill 1.9s var(--ease) forwards; }
+@keyframes bootfill { to { width: 100%; } }
+
+/* ---------- Hero text ---------- */
+.hero__readout { display: flex; gap: 18px; flex-wrap: wrap; align-items: center; font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.14em; color: var(--text-faint); text-transform: uppercase; margin-bottom: var(--sp-6); }
+.hero__name { font-size: clamp(54px, 13.5vw, 188px); font-weight: 500; line-height: 0.86; letter-spacing: -0.04em; }
+.hero__name .ln { display: block; overflow: hidden; }
+.hero__name .ln > span { display: block; }
+/* Hero name: masked line-rise on first reveal (fires when html.booted is set,
+   i.e. the moment the hero is revealed). Lines start below their clip mask and
+   slide up swiftly, staggered. Inner span carries the .glitch/chrome em along,
+   so the RGB-split and hover audio are untouched. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero__name .ln > span {
+    transform: translateY(118%);
+    transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+  }
+  .hero__name.is-hero-rise .ln:nth-child(1) > span { transition-delay: 0.12s; }
+  .hero__name.is-hero-rise .ln:nth-child(2) > span { transition-delay: 0.36s; }
+  .hero__name.is-hero-rise .ln > span { transform: translateY(0); }
+}
+.hero__name em {
+  font-style: normal;
+  background: var(--chrome); background-size: 100% 200%; background-position: 0 0;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(0,0,0,0.4));
+}
+.hero__intro { font-size: clamp(17px, 1.7vw, 21px); line-height: 1.6; max-width: 56ch; color: var(--text); }
+.hero__intro b { color: var(--accent); font-weight: 500; }
+
+/* ---------- C64 3D zoom stage ---------- */
+.zoomstage { position: fixed; inset: 0; z-index: 5; pointer-events: none; background: var(--bg); opacity: var(--c64-fade, 1); transition: opacity 0.18s linear; }
+html.c64-booted .zoomstage { visibility: hidden; }
+#c64Canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.c64-scanlines { position: absolute; inset: 0; pointer-events: none; opacity: 0.30; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.25) 0 1px, transparent 1px 3px); mix-blend-mode: multiply; }
+.hero__scrim { position: absolute; inset: 0; pointer-events: none; opacity: calc(1 - var(--c64-p, 0) * 2.4); background: linear-gradient(95deg, var(--bg) 4%, color-mix(in srgb, var(--bg) 72%, transparent) 30%, transparent 52%); }
+.introstage { height: 150vh; }
+.zoomstage .hero { position: absolute; inset: var(--nav-h) 0 0 0; display: flex; align-items: center; padding: 0; overflow: visible; pointer-events: none; }
+.zoomstage .hero .wrap { width: 100%; }
+.hero__text { max-width: min(54%, 640px); transform: translateY(calc(var(--c64-p, 0) * -48px)); opacity: calc(1 - var(--c64-p, 0) * 2.6); transition: opacity 0.1s linear; will-change: transform, opacity; pointer-events: auto; }
+.zoomstage .hero__name { font-size: clamp(46px, 7.6vw, 116px); margin-top: var(--sp-6); }
+.zoomstage .hero__intro { font-size: clamp(15px, 1.5vw, 19px); max-width: 46ch; margin-top: var(--sp-6); }
+.hero__cue { position: absolute; left: var(--gutter); bottom: clamp(20px, 5vh, 48px); display: flex; flex-direction: column; gap: 10px; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.18em; color: var(--text-faint); text-transform: uppercase; opacity: calc(1 - var(--c64-p, 0) * 3); pointer-events: none; }
+.hero__cue-load { width: 180px; height: 2px; background: var(--bg-3); overflow: hidden; }
+.hero__cue-load i { display: block; height: 100%; width: 0; background: var(--accent); box-shadow: 0 0 10px var(--accent-glow); transition: width 0.25s var(--ease); }
+.hero__cue-arr { color: var(--accent); display: inline-block; animation: c64bob 1.4s var(--ease) infinite; }
+@keyframes c64bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+
+html.c64-failed .zoomstage { position: relative; z-index: 2; height: auto; min-height: 86vh; opacity: 1 !important; visibility: visible; }
+html.c64-failed #c64Canvas, html.c64-failed .c64-scanlines, html.c64-failed .hero__scrim, html.c64-failed .hero__cue { display: none; }
+html.c64-failed .hero__text { opacity: 1 !important; transform: none !important; max-width: 760px; }
+html.c64-failed .introstage { display: none; }
+
+/* ---------- Stats screen (zoom landing — mirrors the CRT) ---------- */
+.screenstats { position: relative; overflow: hidden; }
+.screenstats__scan { position: absolute; inset: 0; pointer-events: none; opacity: 0.4; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.22) 0 1px, transparent 1px 3px); }
+.screenstats .wrap { width: 100%; }
+.screenstats__head { font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.2em; color: var(--accent); text-transform: uppercase; margin-bottom: clamp(28px, 4vw, 48px); }
+.screenstats__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.sstat { background: var(--bg-1); padding: clamp(22px, 3vw, 44px) clamp(16px, 1.8vw, 30px); display: block; text-decoration: none; color: inherit; }
+.sstat__n { font-size: clamp(34px, 4.6vw, 76px); font-weight: 600; letter-spacing: -0.03em; line-height: 0.92; color: #f5f7fa; white-space: nowrap; }
+.sstat__n .accent { color: var(--accent); }
+.sstat__n .chrome { background: var(--chrome); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; }
+.sstat__l { font-family: var(--font-mono); font-size: clamp(10px, 0.85vw, 13px); letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint); margin-top: 14px; }
+.sstat--link { position: relative; transition: background 0.3s var(--ease); }
+.sstat--link::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--accent); transform: scaleY(0); transform-origin: top; transition: transform 0.35s var(--ease); }
+.sstat--link:hover { background: linear-gradient(180deg, var(--accent-soft), transparent 80%); }
+.sstat--link:hover::before { transform: scaleY(1); }
+.hero__stat-go { color: var(--accent); margin-left: 4px; display: inline-block; }
+
+/* ---------- Capabilities ---------- */
+.cap { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.cap__col { background: var(--bg); padding: clamp(28px, 4vw, 46px); }
+.cap__col h3 { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 26px; display: flex; align-items: center; gap: 10px; }
+.cap__col h3 .num { color: var(--text-faint); }
+.cap__list { display: flex; flex-wrap: wrap; gap: 10px; }
+.cap__list span,
+.cap__list a { font-size: 15px; color: var(--text); border: 1px solid var(--line); padding: 9px 14px; transition: 0.25s var(--ease); display: inline-flex; align-items: center; gap: 8px; }
+.cap__list span:hover,
+.cap__list a:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.cap__list a .arr { font-family: var(--font-mono); color: var(--text-faint); transition: color 0.25s var(--ease), transform 0.25s var(--ease); }
+.cap__list a:hover .arr { color: var(--accent); transform: translateX(2px); }
+.cap-h-spaced { margin-top: 34px; }
+.tools__list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.tools__list div { background: var(--bg); padding: 16px 18px; font-family: var(--font-mono); font-size: 14px; color: var(--text-dim); display: flex; align-items: center; gap: 12px; transition: 0.25s var(--ease); }
+.tools__list div:hover { color: var(--text); }
+.tools__list div::before { content: "▸"; color: var(--accent); font-size: 11px; }
+
+/* ---------- Contact CTA ---------- */
+.cta-band { border: 1px solid var(--line-2); padding: clamp(40px, 7vw, 88px) var(--gutter); text-align: center; position: relative; overflow: hidden; }
+.cta-band .cta-band__grid { position: absolute; inset: 0; background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 40px 40px; opacity: 0.4; -webkit-mask-image: radial-gradient(circle at 50% 50%, #000, transparent 75%); mask-image: radial-gradient(circle at 50% 50%, #000, transparent 75%); }
+.cta-band > * { position: relative; z-index: 1; }
+.cta-band h2 { font-size: clamp(32px, 6vw, 72px); font-weight: 500; letter-spacing: -0.03em; line-height: 1; margin: 18px 0 14px; }
+.cta-band h2 a, .cta-band h2 .cta-accent { color: var(--accent); text-decoration: none; position: relative; }
+.cta-band h2 a:hover { text-shadow: 0 0 28px var(--accent-glow); }
+.cta-band p { color: var(--text-dim); max-width: 48ch; margin: 0 auto 30px; }
+.cta-band__row { display: inline-flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+
+@media (max-width: 980px) {
+  .hero__text { max-width: 80%; }
+  .hero__cue { display: none; }
+  .cap { grid-template-columns: 1fr; }
+}
+@media (max-width: 720px) {
+  .hero__text { max-width: 100%; background: linear-gradient(180deg, rgba(7,8,11,0.6), transparent); }
+  .zoomstage .hero__name { font-size: clamp(52px, 15vw, 96px) !important; }
+}
+
+/* ===== View-all CTA ===== */
+.workmore { margin-top: clamp(28px, 4vw, 44px); display: flex; justify-content: center; }
+.workmore__cta { display: inline-flex; align-items: center; gap: 14px;
+  font-family: var(--font-mono); text-transform: uppercase; }
+.workmore__cta:hover { transform: translateY(-2px); }
+.workmore__txt { font-weight: 500; }
+.workmore__n { display: inline-grid; place-items: center; min-width: 24px; height: 24px; padding: 0 6px; border-radius: 999px;
+  background: var(--accent); color: #fff; font-size: 11px; font-weight: 700; }
+.workmore__cta svg { color: var(--accent); transition: transform .18s ease, color .18s ease; }
+.workmore__cta:hover svg { transform: translate(2px, -2px); color: #0a0c11; }
+.workmore__cta:hover .workmore__n { background: #0a0c11; color: var(--accent); }
+
+/* ===== All-projects index overlay ===== */
+.allwork { position: fixed; inset: 0; z-index: 1200; }
+.allwork[hidden] { display: none; }
+.allwork__scrim { position: absolute; inset: 0; background: rgba(5,6,9,0.72); backdrop-filter: blur(3px);
+  animation: awFade .25s ease; }
+@keyframes awFade { from { opacity: 0; } }
+.allwork__panel { position: absolute; top: 0; right: 0; bottom: 0; width: min(560px, 92vw);
+  background: var(--bg); border-left: 1px solid var(--line); overflow-y: auto; padding: clamp(26px,4vw,42px);
+  animation: awSlide .42s cubic-bezier(.22,1,.36,1); }
+@keyframes awSlide { from { transform: translateX(40px); opacity: 0; } }
+.allwork__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+  padding-bottom: 22px; margin-bottom: 8px; border-bottom: 1px solid var(--line); }
+.allwork__title { font-size: clamp(24px,3vw,32px); font-weight: 500; letter-spacing: -0.02em; margin: 14px 0 0; color: var(--text); }
+.allwork__x { flex: 0 0 auto; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 4px;
+  background: var(--bg-1); border: 1px solid var(--line); color: var(--text-dim); cursor: pointer; transition: border-color .16s ease, color .16s ease; }
+.allwork__x:hover { border-color: var(--accent); color: var(--text); }
+.allwork__group { margin-top: 26px; }
+.allwork__glabel { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--accent); display: block; margin-bottom: 6px; }
+.awrow { display: grid; grid-template-columns: 26px 46px 1fr auto auto; align-items: center; gap: 13px;
+  padding: 14px 4px; border-bottom: 1px solid var(--line); text-decoration: none; color: var(--text); transition: padding .16s ease; }
+.awrow:hover { padding-left: 12px; }
+.awrow__thumb { width: 46px; height: 46px; border-radius: 11px; display: grid; place-items: center;
+  font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: 0.04em; color: #fff;
+  background: linear-gradient(150deg, var(--accent), color-mix(in srgb, var(--accent) 62%, #0a0c11));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 2px 6px rgba(10,12,17,0.28); flex: 0 0 auto; overflow: hidden; }
+.awrow__thumb img { width: 100%; height: 100%; object-fit: cover; object-position: left top; display: block; }
+.awrow__thumb--img { background: #0e1117; }
+.awrow--soon .awrow__thumb { filter: saturate(0.5) brightness(0.82); opacity: 0.7; }
+.awrow__no { font-family: var(--font-mono); font-size: 12px; color: var(--text-faint); }
+.awrow__main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.awrow__main b { font-weight: 500; font-size: 15.5px; letter-spacing: -0.01em; }
+.awrow__main i { font-style: normal; font-size: 12px; color: var(--text-dim); }
+.awrow__tags { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-faint); white-space: nowrap; }
+.awrow__go { color: var(--accent); font-size: 15px; opacity: 0; transition: opacity .16s ease; }
+.awrow:hover .awrow__go { opacity: 1; }
+.awrow--soon { cursor: default; }
+.awrow--soon .awrow__main b { color: var(--text-dim); }
+.awrow--soon:hover { padding-left: 4px; }
+.awrow__soon { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-faint); border: 1px solid var(--line); border-radius: 999px; padding: 3px 9px; }
+</style>
+<script src="theme-toggle.js"></script>
+<script src="page-transition.js"></script>
+<script src="gold-cursor.js"></script>
+<script type="importmap">
+{ "imports": {
+  "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+}}
+</script>
+</head>
+<body>
+<script src="loader.js"></script>
+
+<!-- ===== Nav ===== -->
+<nav class="nav">
+  <div class="nav__inner">
+    <a class="brand" href="index.html"><span class="brand__mark" aria-hidden="true"><svg class="brand__logo" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect x="0.5" y="0.5" width="31" height="31" rx="6" fill="#0a0c11" stroke="#ff5b2e" stroke-width="1"/><line x1="7" y1="25" x2="25" y2="7" stroke="#ff5b2e" stroke-width="1" stroke-opacity="0.55"/><text x="6" y="13" font-family="Space Grotesk, system-ui, sans-serif" font-size="10" font-weight="600" fill="#ffffff">G</text><text x="20" y="27" font-family="Space Grotesk, system-ui, sans-serif" font-size="10" font-weight="600" fill="#ffffff">S</text></svg><img class="brand__face" src="assets/portrait.png" alt="" /></span><b>GOURAV</b><span>/SHARMA</span></a>
+    <div class="nav__links">
+      <a href="index.html" class="active"><span class="idx">01</span>Index</a>
+      <a href="index.html#work"><span class="idx">02</span>Work</a>
+      <a href="about.html"><span class="idx">03</span>About</a>
+      <a href="blog.html"><span class="idx">04</span>Blogs</a>
+    </div>
+    <a class="btn btn--ghost nav__cta" href="uploads/cv.pdf" download>Resume ↓</a>
+    <button class="nav__burger" aria-label="Menu"><span></span></button>
+  </div>
+</nav>
+<div class="drawer">
+  <a href="index.html" class="active"><span class="idx">01</span>Index</a>
+  <a href="index.html#work"><span class="idx">02</span>Work</a>
+  <a href="about.html"><span class="idx">03</span>About</a>
+  <a href="blog.html"><span class="idx">04</span>Blogs</a>
+  <a href="uploads/cv.pdf" download><span class="idx">→</span>Download Resume</a>
+</div>
+
+<!-- ===== C64 fixed zoom stage: live 3D canvas + hero text ===== -->
+<div class="zoomstage" id="zoomStage">
+  <canvas id="c64Canvas"></canvas>
+  <div class="c64-scanlines"></div>
+  <div class="hero__scrim" aria-hidden="true"></div>
+<header class="hero" data-screen-label="Home / Hero">
+  <div class="wrap">
+    <div class="hero__text">
+      <div class="hero__readout reveal in">
+        <span>// PRODUCT &amp; UI/UX DESIGNER</span>
+      </div>
+      <h1 class="hero__name">
+        <span class="ln"><span class="glitch" data-text="GOURAV">GOURAV</span></span>
+        <span class="ln"><span class="glitch" data-text="SHARMA"><em>SHAR</em>MA</span></span>
+      </h1>
+      <p class="hero__intro reveal in" data-delay="1">
+        Product designer with <b>3.5+ years</b> designing SaaS platforms, mobile apps
+        and the web — from <b>user research</b> to <b>design systems</b>. Most of it in
+        logistics, where the users are drivers, pickers and ops teams.
+      </p>
+    </div>
+  </div>
+</header>
+</div>
+
+<main>
+<div class="introstage" id="introStage" aria-hidden="true"></div>
+
+<!-- ===== Stats — the zoom lands here, continuing straight from the CRT screen ===== -->
+<section class="section screenstats" id="screenstats" data-screen-label="Home / Stats">
+  <div class="screenstats__scan" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="screenstats__head reveal">// SYSTEM STATS</div>
+    <div class="screenstats__grid reveal">
+      <div class="sstat"><div class="sstat__n"><span data-count="3.5" data-dec="1">3.5</span><span class="accent">+</span></div><div class="sstat__l">Years Designing</div></div>
+      <div class="sstat"><div class="sstat__n"><span data-count="8">8</span></div><div class="sstat__l">Featured Cases</div></div>
+      <div class="sstat"><div class="sstat__n"><span data-count="2">2</span></div><div class="sstat__l">Design Systems Built</div></div>
+      <a class="sstat sstat--link" href="nift.html"><div class="sstat__n"><span class="chrome">NIFT</span><span class="accent">·</span>22</div><div class="sstat__l">B.Des · Kolkata <span class="hero__stat-go">↗</span></div></a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Work ===== -->
+<section class="worksec" id="work" data-screen-label="Home / Work">
+  <div class="wrap worksec__head">
+    <div class="head-row reveal">
+      <div>
+        <div class="eyebrow">Selected Work</div>
+        <h2 class="section-title">Work that<br />shipped.</h2>
+      </div>
+      <div class="head-row__count">[ 13 PROJECTS // 2022 — 2026 ]</div>
+    </div>
+  </div>
+  <div class="worksec__rail" data-rail>
+    <div class="worksec__stage" data-stage>
+
+      <div class="casescroll casestack" id="caseScroll">
+        <div class="casescroll__track" data-track>
+        <a class="casecard" data-frame="matte" href="project-demand-forecasting.html">
+          <div class="casecard__media">
+            <div class="casecard__mock"><figure class="mbook mbook--card"><div class="mbook__lid"><div class="mbook__bezel"><span class="mbook__notch"></span><div class="mbook__screen"><div style="position:relative;overflow:hidden;background:#f7f7f7;aspect-ratio:1512/920;"><iframe loading="lazy" scrolling="no" tabindex="-1" title="Demand Forecasting dashboard" src="demand-live/10-forecasts.html" style="position:absolute;top:0;left:0;width:1512px;height:920px;border:0;transform-origin:0 0;pointer-events:none;background:#f7f7f7;" onload="var v=this.parentElement;var f=this;function fit(){if(v.clientWidth)f.style.transform='scale('+(v.clientWidth/1512)+')';}fit();window.addEventListener('resize',fit);"></iframe></div></div></div></div><div class="mbook__base"><span class="mbook__dip"></span></div></figure></div>
+            <style>
+            .mbook--card{position:relative;z-index:4;width:100%;max-width:none;margin:0 auto;filter:drop-shadow(0 30px 40px rgba(0,0,0,.4));}
+            .casecard[href="project-demand-forecasting.html"] .casecard__mock{display:flex;align-items:center;justify-content:center;width:100%;height:100%;padding:10px;box-sizing:border-box;z-index:4;}
+            .casecard[href="project-demand-forecasting.html"] .casecard__media{background:#0f1015;}
+            .casecard[href="project-demand-forecasting.html"] .casecard__media::before,.casecard[href="project-demand-forecasting.html"] .casecard__media::after{display:none;}
+            .mbook--card .mbook__lid{position:relative;z-index:2;background:linear-gradient(155deg,#d9dbe0 0%,#b9bcc4 48%,#a6a9b2 100%);border-radius:14px;padding:4px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.45),inset 0 -2px 4px rgba(0,0,0,.2);}
+            .mbook--card .mbook__bezel{position:relative;background:#0a0b0d;border-radius:11px;padding:14px 11px 11px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.05);}
+            .mbook--card .mbook__notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:110px;height:10px;background:#0a0b0d;border-radius:0 0 8px 8px;z-index:3;}
+            .mbook--card .mbook__screen{position:relative;border-radius:3px;overflow:hidden;background:#000;box-shadow:0 0 0 1px rgba(0,0,0,.5);}
+            .mbook--card .mbook__base{position:relative;z-index:3;width:116%;height:14px;margin:-3px auto 0;left:50%;transform:translateX(-50%);background:linear-gradient(#d7d9e0,#b0b3bc);border-radius:0 0 12px 12px;box-shadow:inset 0 2px 2px rgba(255,255,255,.6),0 3px 4px rgba(0,0,0,.3);}
+            .mbook--card .mbook__dip{position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:7px;background:linear-gradient(#a6a9b2,#c3c6cd);border-radius:0 0 7px 7px;}
+            </style>
+            <span class="casecard__scan" aria-hidden="true"></span>
+            <span class="casecard__no">001</span>
+            <span class="casecard__tags"><i>Data</i><i>Web</i></span>
+          </div>
+          <div class="casecard__cap">
+            <span class="casecard__title">Demand forecasting</span>
+            <span class="casecard__desc">From a demand chart the planner can trust to a purchase order, in one confident step.</span>
+            <span class="casecard__meta"><span>Omniful · WMS / OMS</span><span class="casecard__go"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H5M12 4V11" stroke="currentColor" stroke-width="1.6"/></svg></span></span>
+          </div>
+        </a>
+
+        <a class="casecard" href="project-dual-payment.html">
+          <div class="casecard__media casecard__media--device">
+            <div class="casecard__device">
+              <div class="ccphone"><span class="ccphone__island"></span><div class="ccphone__screen">
+                <iframe loading="lazy" scrolling="no" tabindex="-1" title="Collect Payment — live screen" src="prototype-collect-payment.html?seed=filled&static=1&bare=1"></iframe>
+              </div></div>
+            </div>
+            <span class="casecard__scan" aria-hidden="true"></span>
+            <span class="casecard__no">002</span>
+            <span class="casecard__tags"><i>Mobile</i><i>Payments</i></span>
+          </div>
+          <div class="casecard__cap">
+            <span class="casecard__title">Dual payment collection</span>
+            <span class="casecard__desc">Settle one order across two methods, with the balance auto-calculated as the partner types.</span>
+            <span class="casecard__meta"><span>Omniful · Delivery Partner App</span><span class="casecard__go"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H5M12 4V11" stroke="currentColor" stroke-width="1.6"/></svg></span></span>
+          </div>
+        </a>
+
+        <a class="casecard" href="project-bulk-otp.html">
+          <div class="casecard__media casecard__media--device">
+            <div class="casecard__device">
+              <div class="ccphone ccphone--otp"><span class="ccphone__island"></span><div class="ccphone__screen">
+                <iframe loading="lazy" scrolling="no" tabindex="-1" title="Bulk OTP verification" src="prototype-bulk-otp.html?seed=select&static=1&bare=1"></iframe>
+              </div></div>
+            </div>
+            <span class="casecard__scan" aria-hidden="true"></span>
+            <span class="casecard__no">003</span>
+            <span class="casecard__tags"><i>Mobile</i><i>Verification</i></span>
+          </div>
+          <div class="casecard__cap">
+            <span class="casecard__title">Bulk OTP verification</span>
+            <span class="casecard__desc">One code verifies a customer's whole set of packages, the partner still choosing what is handed over.</span>
+            <span class="casecard__meta"><span>Omniful · Delivery Partner App</span><span class="casecard__go"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H5M12 4V11" stroke="currentColor" stroke-width="1.6"/></svg></span></span>
+          </div>
+        </a>
+
+        <a class="casecard" href="project-route-optimization-bisleri.html">
+          <div class="casecard__media casecard__media--device">
+            <div class="casecard__device">
+              <div class="ccphone"><span class="ccphone__island"></span><div class="ccphone__screen">
+                <iframe loading="lazy" scrolling="no" tabindex="-1" title="Bisleri driver app — live screen" src="prototype-driver-bisleri.html?seed=start&static=1&bare=1"></iframe>
+              </div></div>
+            </div>
+            <span class="casecard__scan" aria-hidden="true"></span>
+            <span class="casecard__no">004</span>
+            <span class="casecard__tags"><i>Web</i><i>Mobile</i></span>
+          </div>
+          <div class="casecard__cap">
+            <span class="casecard__title">Route optimization</span>
+            <span class="casecard__desc">Validate the daily sheet on upload, then plan a vehicle-aware route past Maps’ ten-stop ceiling.</span>
+            <span class="casecard__meta"><span>Edgistify × Bisleri · Web + Mobile</span><span class="casecard__go"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H5M12 4V11" stroke="currentColor" stroke-width="1.6"/></svg></span></span>
+          </div>
+        </a>
+
+        <a class="casecard" data-frame="matte" href="project-design-system-omniful.html">
+          <div class="casecard__media">
+            <div class="casecard__mock"><figure class="mbook mbook--card"><div class="mbook__lid"><div class="mbook__bezel"><span class="mbook__notch"></span><div class="mbook__screen"><div style="position:relative;overflow:hidden;background:#F4F5F7;aspect-ratio:1512/920;"><iframe loading="lazy" scrolling="no" tabindex="-1" title="Omniful Design System library" src="omniful-ds/library.html" style="position:absolute;top:0;left:0;width:1512px;height:920px;border:0;transform-origin:0 0;pointer-events:none;background:#F4F5F7;" onload="var v=this.parentElement;var f=this;function fit(){if(v.clientWidth)f.style.transform='scale('+(v.clientWidth/1512)+')';}fit();window.addEventListener('resize',fit);"></iframe></div></div></div></div><div class="mbook__base"><span class="mbook__dip"></span></div></figure></div>
+            <style>
+            .casecard[href="project-design-system-omniful.html"] .casecard__mock{display:flex;align-items:center;justify-content:center;width:100%;height:100%;padding:10px;box-sizing:border-box;z-index:4;}
+            .casecard[href="project-design-system-omniful.html"] .casecard__media{background:#0f1015;}
+            .casecard[href="project-design-system-omniful.html"] .casecard__media::before,.casecard[href="project-design-system-omniful.html"] .casecard__media::after{display:none;}
+            </style>
+            <span class="casecard__scan" aria-hidden="true"></span>
+            <span class="casecard__no">005</span>
+            <span class="casecard__tags"><i>Design System</i><i>Web</i></span>
+          </div>
+          <div class="casecard__cap">
+            <span class="casecard__title">Omniful design system</span>
+            <span class="casecard__desc">55 tokens, 230 domain icons and 25+ components — one language for three products.</span>
+            <span class="casecard__meta"><span>Omniful · WMS / OMS / TMS</span><span class="casecard__go"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H5M12 4V11" stroke="currentColor" stroke-width="1.6"/></svg></span></span>
+          </div>
+        </a>
+
+        <div class="casecard casecard--soon" data-frame="bleed" aria-disabled="true" role="listitem">
+          <div class="casecard__media">
+            <div class="casecard__mock"><div class="ccwin"><div class="ccwin__bar"><i></i><i></i><i></i></div><div class="ccwin__view" data-mock="stock-on-wheel"></div></div></div>
+            <span class="casecard__soon"><i>Coming<br>soon</i><b>In progress</b></span>
+            <span class="casecard__scan" aria-hidden="true"></span>
+            <span class="casecard__no">006</span>
+            <span class="casecard__tags"><i>Mobile</i><i>Web</i></span>
+          </div>
+          <div class="casecard__cap">
+            <span class="casecard__title">Real-time mobile inventory</span>
+            <span class="casecard__desc">An admin web for ops and a driver app for the road, with one-tap confirms that survive dead zones.</span>
+            <span class="casecard__meta"><span>Omniful · Admin + Driver</span><span class="casecard__go"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H5M12 4V11" stroke="currentColor" stroke-width="1.6"/></svg></span></span>
+          </div>
+        </div>
+
+        <div class="casecard casecard--soon" data-frame="tilt" aria-disabled="true" role="listitem">
+          <div class="casecard__media">
+            <div class="casecard__mock"><div class="ccwin"><div class="ccwin__bar"><i></i><i></i><i></i></div><div class="ccwin__view" data-mock="tms-delivery-app"></div></div></div>
+            <span class="casecard__soon"><i>Coming<br>soon</i><b>In progress</b></span>
+            <span class="casecard__scan" aria-hidden="true"></span>
+            <span class="casecard__no">007</span>
+            <span class="casecard__tags"><i>Web</i><i>Mobile</i></span>
+          </div>
+          <div class="casecard__cap">
+            <span class="casecard__title">Unified delivery flow</span>
+            <span class="casecard__desc">Vehicles, trips, proof-of-delivery and payments, unified across dispatcher and driver in one flow.</span>
+            <span class="casecard__meta"><span>Omniful · TMS + Last-mile</span><span class="casecard__go"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H5M12 4V11" stroke="currentColor" stroke-width="1.6"/></svg></span></span>
+          </div>
+        </div>
+
+        
+
+        <div class="casecard casecard--soon" data-frame="stack" aria-disabled="true" role="listitem">
+          <div class="casecard__media">
+            <div class="casecard__mock"><div class="ccwin"><div class="ccwin__bar"><i></i><i></i><i></i></div><div class="ccwin__view" data-mock="picker-app"></div></div></div>
+            <span class="casecard__soon"><i>Coming<br>soon</i><b>In progress</b></span>
+            <span class="casecard__scan" aria-hidden="true"></span>
+            <span class="casecard__no">008</span>
+            <span class="casecard__tags"><i>Web</i><i>Warehouse</i></span>
+          </div>
+          <div class="casecard__cap">
+            <span class="casecard__title">Warehouse picker</span>
+            <span class="casecard__desc">Path-order routing with inline validation, and never more than two things on the screen at once.</span>
+            <span class="casecard__meta"><span>Edgistify · Web</span><span class="casecard__go"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H5M12 4V11" stroke="currentColor" stroke-width="1.6"/></svg></span></span>
+          </div>
+        </div>
+
+        <div class="casecard casecard--soon" data-frame="browser" aria-disabled="true" role="listitem">
+          <div class="casecard__media">
+            <div class="casecard__mock"><div class="ccwin"><div class="ccwin__bar"><i></i><i></i><i></i></div><div class="ccwin__view" data-mock="edgeos"></div></div></div>
+            <span class="casecard__soon"><i>Coming<br>soon</i><b>In progress</b></span>
+            <span class="casecard__scan" aria-hidden="true"></span>
+            <span class="casecard__no">009</span>
+            <span class="casecard__tags"><i>SaaS</i><i>Web</i></span>
+          </div>
+          <div class="casecard__cap">
+            <span class="casecard__title">EdgeOS platform</span>
+            <span class="casecard__desc">One logistics platform across B2B and B2C, built on a single shared pattern-library backbone.</span>
+            <span class="casecard__meta"><span>Edgistify · SaaS Platform</span><span class="casecard__go"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H5M12 4V11" stroke="currentColor" stroke-width="1.6"/></svg></span></span>
+          </div>
+        </div>
+
+        <span class="casescroll__end" aria-hidden="true"></span>
+        </div>
+        <div class="casescroll__foot">
+          <span class="casescroll__prog"><i data-prog></i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap workmore">
+    <button class="casecard__cta btn btn--ghost workmore__cta" data-allwork-open type="button">
+      <span class="workmore__txt">View all projects</span>
+      <span class="workmore__n">14</span>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H5M12 4V11" stroke="currentColor" stroke-width="1.6"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- ===== All projects (full index) ===== -->
+<div class="allwork" id="allwork" data-allwork hidden>
+  <div class="allwork__scrim" data-allwork-close></div>
+  <aside class="allwork__panel" role="dialog" aria-modal="true" aria-label="All projects">
+    <div class="allwork__head">
+      <div>
+        <div class="eyebrow">Full Index</div>
+        <h3 class="allwork__title">All projects</h3>
+      </div>
+      <button class="allwork__x" data-allwork-close type="button" aria-label="Close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="allwork__group">
+      <a class="awrow" href="project-bulk-otp.html"><span class="awrow__no">01</span><span class="awrow__thumb"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></span><span class="awrow__main"><b>Bulk OTP verification</b><i>Omniful · Delivery Partner App</i></span><span class="awrow__tags">Mobile</span><span class="awrow__go">↗</span></a>
+      <a class="awrow" href="project-dual-payment.html"><span class="awrow__no">02</span><span class="awrow__thumb"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/><path d="M7 15h4"/></svg></span><span class="awrow__main"><b>Dual payment collection</b><i>Omniful · Delivery Partner App</i></span><span class="awrow__tags">Payments</span><span class="awrow__go">↗</span></a>
+      <a class="awrow" href="project-demand-forecasting.html"><span class="awrow__no">04</span><span class="awrow__thumb"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 7-7"/><path d="M17 8h4v4"/></svg></span><span class="awrow__main"><b>Demand forecasting</b><i>Omniful · WMS / OMS</i></span><span class="awrow__tags">Data</span><span class="awrow__go">↗</span></a>
+      <a class="awrow" href="project-route-optimization-bisleri.html"><span class="awrow__no">05</span><span class="awrow__thumb"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg></span><span class="awrow__main"><b>Route optimization</b><i>Edgistify × Bisleri · Web + Mobile</i></span><span class="awrow__tags">Web · Mobile</span><span class="awrow__go">↗</span></a>
+      <span class="awrow awrow--soon" data-href="project-stock-on-wheel.html"><span class="awrow__no">06</span><span class="awrow__thumb"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l9-4 9 4-9 4-9-4z"/><path d="M3 8v8l9 4 9-4V8"/><path d="M12 12v8"/></svg></span><span class="awrow__main"><b>Real-time mobile inventory</b><i>Omniful · Admin + Driver</i></span><span class="awrow__tags">Mobile · Web</span><span class="awrow__soon">Soon</span></span>
+      <span class="awrow awrow--soon" data-href="project-edgeos.html"><span class="awrow__no">07</span><span class="awrow__thumb"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg></span><span class="awrow__main"><b>EdgeOS platform</b><i>Edgistify · SaaS Platform</i></span><span class="awrow__tags">SaaS</span><span class="awrow__soon">Soon</span></span>
+      <span class="awrow awrow--soon" data-href="project-picker-app.html"><span class="awrow__no">08</span><span class="awrow__thumb"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9z"/><path d="M9 13l2 2 4-4"/></svg></span><span class="awrow__main"><b>Warehouse picker</b><i>Edgistify · Web</i></span><span class="awrow__tags">Web</span><span class="awrow__soon">Soon</span></span>
+      <a class="awrow" href="project-design-system-omniful.html"><span class="awrow__no">09</span><span class="awrow__thumb"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3.5"/><rect x="13.5" y="4.5" width="7" height="7" rx="1.5"/><rect x="4.5" y="13.5" width="7" height="7" rx="1.5"/><path d="M17 13.5v7M13.5 17h7"/></svg></span><span class="awrow__main"><b>Omniful design system</b><i>Omniful · WMS / OMS / TMS</i></span><span class="awrow__tags">Design System</span><span class="awrow__go">↗</span></a>
+      <span class="awrow awrow--soon"><span class="awrow__no">10</span><span class="awrow__thumb"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.6 2.7 2.6 15.3 0 18M12 3c-2.6 2.7-2.6 15.3 0 18"/></svg></span><span class="awrow__main"><b>Omniful website redesign</b><i>Omniful · Marketing Site</i></span><span class="awrow__tags">Web</span><span class="awrow__soon">Soon</span></span>
+      <a class="awrow" href="project-app-builder-shopify.html"><span class="awrow__no">11</span><span class="awrow__thumb"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><path d="M16.5 13.5v6M13.5 16.5h6"/></svg></span><span class="awrow__main"><b>App builder redesign</b><i>Omniful · Shopify App Store</i></span><span class="awrow__tags">Web · Polaris</span><span class="awrow__go">↗</span></a>
+      <a class="awrow" href="project-vehicle-maintenance.html"><span class="awrow__no">12</span><span class="awrow__thumb"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a3.5 3.5 0 0 0-4.6 4.2l-5.4 5.4a1.6 1.6 0 0 0 2.3 2.3l5.4-5.4a3.5 3.5 0 0 0 4.2-4.6l-2 2-1.8-.4-.4-1.8 2.3-1.9z"/></svg></span><span class="awrow__main"><b>Vehicle maintenance</b><i>Omniful · TMS</i></span><span class="awrow__tags">Web · Mobile</span><span class="awrow__go">↗</span></a>
+      <a class="awrow" href="project-edgistify-website.html"><span class="awrow__no">13</span><span class="awrow__thumb"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M7 6.5h.01M10 6.5h.01"/></svg></span><span class="awrow__main"><b>Edgistify website redesign</b><i>Edgistify · Marketing Site</i></span><span class="awrow__tags">Web</span><span class="awrow__go">↗</span></a>
+      <span class="awrow awrow--soon"><span class="awrow__no">14</span><span class="awrow__thumb"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><path d="M9 10l2 2 4-4"/></svg></span><span class="awrow__main"><b>Confirm delivery address</b><i>Omniful · TMS</i></span><span class="awrow__tags">Mobile</span><span class="awrow__soon">Soon</span></span>
+    </div>
+  </aside>
+</div>
+
+<!-- ===== Testimonials ===== -->
+<section class="section tag-pin" id="words" data-screen-label="Home / Testimonials" data-tagpin>
+  <div class="wrap tag-pin__head">
+    <div class="head-row reveal">
+      <div>
+        <div class="eyebrow">// References</div>
+        <h2 class="section-title">What the people<br />I worked with say.</h2>
+      </div>
+      <div class="head-row__count">[ 04 RECOMMENDATIONS // 2024 ]</div>
+    </div>
+  </div>
+
+  <div class="tag-pin__sticky">
+    <div class="tag-rail" data-tagrail>
+      <div class="tag-rail__track" data-tagtrack>
+        <div class="tag-cable" aria-hidden="true"></div>
+
+        <article class="ltag reveal" data-delay="1">
+          <span class="ltag__bar" aria-hidden="true"></span>
+          <div class="ltag__eyelet" aria-hidden="true"><span class="ltag__glow"></span><span class="ltag__hole"></span><span class="ltag__clasp"></span></div>
+          <div class="ltag__top"><span class="ltag__no">REC // 001</span><span class="ltag__init">KK</span><span class="ltag__rel"><i class="pip"></i>MANAGED DIRECTLY</span></div>
+          <div class="ltag__panel">
+            <span class="ltag__svc">Recommendation</span>
+            <h3 class="ltag__name">Kamal Kishore<br />Kumawat</h3>
+            <div class="ltag__meta">Co-Founder, Edgistify · EE @ IIT Bombay</div>
+            <div class="ltag__tear"></div>
+            <p class="ltag__quote"><span class="q">&ldquo;</span>Gourav's impact has been <b>profound</b> — a dynamic blend of talent across product design, UI/UX innovation and product management. He consistently surpasses expectations, crafting intuitive interfaces that <b>deeply resonate with our users</b>.</p>
+          </div>
+        </article>
+
+        <article class="ltag reveal" data-delay="1">
+          <span class="ltag__bar" aria-hidden="true"></span>
+          <div class="ltag__eyelet" aria-hidden="true"><span class="ltag__glow"></span><span class="ltag__hole"></span><span class="ltag__clasp"></span></div>
+          <div class="ltag__top"><span class="ltag__no">REC // 002</span><span class="ltag__init">NS</span><span class="ltag__rel"><i class="pip"></i>CROSS-TEAM</span></div>
+          <div class="ltag__panel">
+            <span class="ltag__svc">Recommendation</span>
+            <h3 class="ltag__name">Nikhil<br />Shrikhande</h3>
+            <div class="ltag__meta">Head — Brand Partnerships · Mancunianz</div>
+            <div class="ltag__tear"></div>
+            <p class="ltag__quote"><span class="q">&ldquo;</span>Gourav was my main point of contact in design and tech. He has an exceptional ability to <b>grasp intricate concepts and translate them into visually compelling materials</b> — his pitch decks conveyed our message with meticulous attention to detail.</p>
+          </div>
+        </article>
+
+        <article class="ltag reveal" data-delay="1">
+          <span class="ltag__bar" aria-hidden="true"></span>
+          <div class="ltag__eyelet" aria-hidden="true"><span class="ltag__glow"></span><span class="ltag__hole"></span><span class="ltag__clasp"></span></div>
+          <div class="ltag__top"><span class="ltag__no">REC // 003</span><span class="ltag__init">RP</span><span class="ltag__rel"><i class="pip"></i>SENIOR</span></div>
+          <div class="ltag__panel">
+            <span class="ltag__svc">Recommendation</span>
+            <h3 class="ltag__name">Rohit<br />Patil</h3>
+            <div class="ltag__meta">Supply Chain Entrepreneur · 12y D2C Fulfillment</div>
+            <div class="ltag__tear"></div>
+            <p class="ltag__quote"><span class="q">&ldquo;</span>I've worked with Gourav for <b>over 2 years</b>. His holistic approach and sense of design is noteworthy. A good team player — always open to suggestions and <b>ready to help</b>.</p>
+          </div>
+        </article>
+
+        <article class="ltag reveal" data-delay="1">
+          <span class="ltag__bar" aria-hidden="true"></span>
+          <div class="ltag__eyelet" aria-hidden="true"><span class="ltag__glow"></span><span class="ltag__hole"></span><span class="ltag__clasp"></span></div>
+          <div class="ltag__top"><span class="ltag__no">REC // 004</span><span class="ltag__init">PM</span><span class="ltag__rel"><i class="pip"></i>SAME TEAM</span></div>
+          <div class="ltag__panel">
+            <span class="ltag__svc">Recommendation</span>
+            <h3 class="ltag__name">Pankaj<br />Malviya</h3>
+            <div class="ltag__meta">Edgistify · Ex-TCS · NIT Rourkela</div>
+            <div class="ltag__tear"></div>
+            <p class="ltag__quote"><span class="q">&ldquo;</span><b>An exceptional UI/UX designer</b> whose creativity elevated our projects. Gourav combines aesthetic appeal with seamless user experience — designs that are visually pleasing and genuinely <b>enhance usability</b>.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Capabilities ===== -->
+<section class="section" id="capabilities" data-screen-label="Home / Capabilities">
+  <div class="wrap">
+    <div class="head-row reveal">
+      <div>
+        <div class="eyebrow">Capabilities</div>
+        <h2 class="section-title">The toolkit.</h2>
+      </div>
+      <div class="head-row__count">[ SKILLS // STACK ]</div>
+    </div>
+    <div class="console reveal" id="capConsole">
+      <div class="console__bar">
+        <span class="console__stat"><i></i> ONLINE</span>
+        <span class="console__bardots" aria-hidden="true"><b></b><b></b><b></b></span>
+        <span class="console__meta">12 DISCIPLINES</span>
+      </div>
+
+      <div class="disc" data-spotlight>
+        <span class="disc__label"><span class="num">01 /</span> Disciplines</span>
+        <div class="disc__grid">
+          <a class="disc__cell"><span class="disc__i">01</span><span class="disc__t">User Research</span></a>
+          <a class="disc__cell"><span class="disc__i">02</span><span class="disc__t">Prototyping</span></a>
+          <a class="disc__cell"><span class="disc__i">03</span><span class="disc__t">Wireframing</span></a>
+          <a class="disc__cell"><span class="disc__i">04</span><span class="disc__t">Usability Testing</span></a>
+          <a class="disc__cell"><span class="disc__i">05</span><span class="disc__t">Interaction Design</span></a>
+          <a class="disc__cell"><span class="disc__i">06</span><span class="disc__t">Design Systems</span></a>
+          <a class="disc__cell"><span class="disc__i">07</span><span class="disc__t">Visual Design</span></a>
+          <a class="disc__cell"><span class="disc__i">08</span><span class="disc__t">Information Architecture</span></a>
+          <a class="disc__cell"><span class="disc__i">09</span><span class="disc__t">SaaS Platform Design</span></a>
+          <a class="disc__cell"><span class="disc__i">10</span><span class="disc__t">Mobile App Design</span></a>
+          <a class="disc__cell"><span class="disc__i">11</span><span class="disc__t">Website Design</span></a>
+          <a class="disc__cell"><span class="disc__i">12</span><span class="disc__t">Problem Solving</span></a>
+        </div>
+      </div>
+
+      <div class="console__foot">
+        <div class="panel">
+          <span class="disc__label"><span class="num">02 /</span> Tooling</span>
+          <div class="tools">
+            <div class="tools__item">Figma</div>
+            <div class="tools__item">Adobe XD</div>
+            <div class="tools__item">Illustrator</div>
+            <div class="tools__item">Photoshop</div>
+            <div class="tools__item">Framer</div>
+            <div class="tools__item">Excel</div>
+          </div>
+        </div>
+        <div class="panel">
+          <span class="disc__label"><span class="num">03 /</span> Certifications</span>
+          <div class="certs">
+            <a class="cert" href="https://www.coursera.org/account/accomplishments/certificate/L8XE5AVNVR59" target="_blank" rel="noopener noreferrer"><span class="cert__t">Google UX Design</span><span class="cert__arr">&rarr;</span></a>
+            <a class="cert" href="https://www.coursera.org/account/accomplishments/specialization/certificate/9E4Q6CG6MEV4" target="_blank" rel="noopener noreferrer"><span class="cert__t">CalArts UI/UX</span><span class="cert__arr">&rarr;</span></a>
+            <a class="cert" href="https://www.coursera.org/account/accomplishments/certificate/TV3JTBVUVESS" target="_blank" rel="noopener noreferrer"><span class="cert__t">Georgia Tech UX</span><span class="cert__arr">&rarr;</span></a>
+            <a class="cert" href="https://www.coursera.org/account/accomplishments/verify/EGT4TI563RU4" target="_blank" rel="noopener noreferrer"><span class="cert__t">Yale · Financial Markets</span><span class="cert__arr">&rarr;</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Contact ===== -->
+<section class="section" id="contact" data-screen-label="Home / Contact">
+  <div class="wrap">
+    <div class="cta-band reveal brackets">
+      <div class="cta-band__grid"></div>
+      <div class="eyebrow no-tick" style="justify-content:center;">// CONTACT</div>
+      <h2>Let's work on<br /><span class="cta-accent">what's next</span>.</h2>
+      <p>Currently designing at Omniful, and open to interesting product problems. I usually reply within a day.</p>
+      <div class="cta-band__row">
+        <a class="btn btn--primary" href="mailto:gouravsharma.ux@gmail.com">gouravsharma.ux@gmail.com</a>
+        <a class="btn" href="https://www.linkedin.com/in/gourav-sharmaux/" target="_blank" rel="noopener">LinkedIn <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div>
+        <div class="footer__big">Gourav Sharma<span class="accent">.</span></div>
+        <p class="dim footer__lede">Product &amp; UI/UX Designer. Designing scalable systems for logistics, SaaS &amp; mobile.</p>
+      </div>
+      <div class="footer__col">
+        <h4>Navigate</h4>
+        <a href="index.html">Index</a>
+        <a href="index.html#work">Work</a>
+        <a href="about.html">About</a>
+        <a href="blog.html">Blogs</a>
+        <a href="glossary.html">Glossary</a>
+        <a href="uploads/cv.pdf" download>Resume ↓</a>
+      </div>
+      <div class="footer__col">
+        <h4>Connect</h4>
+        <a href="mailto:gouravsharma.ux@gmail.com">Email</a>
+        <a href="https://www.linkedin.com/in/gourav-sharmaux/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+    <div class="footer__bar">
+      <span>© 2026 GOURAV SHARMA</span>
+      <span>DESIGNED &amp; BUILT · v1.2 · <span data-clock>--:--:-- UTC</span></span>
+    </div>
+  </div>
+</footer>
+
+<script src="project-art.js"></script>
+<script src="image-slot.js"></script>
+<script src="mockups.js"></script>
+<script>
+  document.querySelectorAll('[data-art]').forEach(function (el) {
+    var k = el.getAttribute('data-art');
+    if (window.PROJECT_ART && window.PROJECT_ART[k]) el.innerHTML = window.PROJECT_ART[k];
+  });
+  if (typeof window.initMockups === 'function') window.initMockups(document);
+</script>
+<script src="case-covers.js"></script>
+<script src="case-scroll.js"></script>
+<script src="cap-console.js"></script>
+<script src="bigfoot.js"></script>
+<script src="easter-egg.js"></script>
+<script src="click-sfx.js"></script>
+<script src="stack-depth.js"></script>
+<script>
+  // Hover-audio over the NAME glyphs.
+  (function () {
+    var nameSpans = [].slice.call(document.querySelectorAll('.hero__name .glitch'));
+    if (!nameSpans.length) return;
+    var blackAudio = new Audio('assets/mask_off.mp3');
+    var goldAudio  = new Audio('assets/levitating_ringtone.mp3');
+    [blackAudio, goldAudio].forEach(function (a) { a.preload = 'auto'; a.volume = 0.85; });
+    window.__soundMuted = localStorage.getItem('soundMuted') === '1';
+    function isGold() { return document.documentElement.classList.contains('gold'); }
+    var sounding = false;
+    function stopAll() { blackAudio.pause(); goldAudio.pause(); sounding = false; }
+    window.__stopHeroSound = stopAll;
+    function playForTheme() {
+      if (window.__soundMuted) return;
+      var on = isGold() ? goldAudio : blackAudio, off = isGold() ? blackAudio : goldAudio;
+      try { off.pause(); } catch (e) {}
+      try { on.currentTime = 0; on.play().catch(function () {}); } catch (e) {}
+      sounding = true;
+    }
+    function inRect(r, x, y) { return r && x >= r.left && x <= r.right && y >= r.top && y <= r.bottom; }
+    // The hero lives in a position:fixed zoom stage, so its name glyphs keep a
+    // bounding box parked at the top of the screen even after they've faded out
+    // on scroll. Gate playback on the hero text actually being visible so the
+    // sound can't fire over that ghost region elsewhere on the page.
+    var heroText = document.querySelector('.hero__text');
+    function heroVisible() {
+      if (!heroText) return false;
+      var cs = getComputedStyle(heroText);
+      // post-zoom the whole stage is hidden via visibility:hidden (inherited)
+      if (cs.visibility === 'hidden' || cs.display === 'none') return false;
+      if (parseFloat(cs.opacity || '1') < 0.6) return false;
+      var r = heroText.getBoundingClientRect();
+      return r.bottom > 0 && r.top < window.innerHeight;
+    }
+    function overName(x, y) {
+      if (!heroVisible()) return false;
+      for (var i = 0; i < nameSpans.length; i++) {
+        var range = document.createRange(); range.selectNodeContents(nameSpans[i]);
+        if (inRect(range.getBoundingClientRect(), x, y)) return true;
+      }
+      return false;
+    }
+    window.addEventListener('mousemove', function (e) {
+      var over = overName(e.clientX, e.clientY);
+      if (over && !sounding) playForTheme(); else if (!over && sounding) stopAll();
+    }, { passive: true });
+    document.addEventListener('mouseleave', stopAll);
+    window.addEventListener('blur', stopAll);
+    // If the user scrolls the hero out of view while the cursor sits still,
+    // no mousemove fires — so cut the sound when the hero stops being visible.
+    window.addEventListener('scroll', function () {
+      if (sounding && !heroVisible()) stopAll();
+    }, { passive: true });
+    new MutationObserver(stopAll).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  })();
+</script>
+<script>
+  // Hero name masked line-rise — fires the moment the hero is revealed
+  // (html.booted), or right away on in-session navigation. Failsafe ensures
+  // the name can never stay hidden behind the mask.
+  (function () {
+    var h1 = document.querySelector('.hero__name');
+    if (!h1) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; // shown by default
+    var de = document.documentElement;
+    var done = false;
+    function fire() { if (done) return; done = true; h1.classList.add('is-hero-rise'); }
+    function whenPainted() { requestAnimationFrame(function () { requestAnimationFrame(fire); }); }
+    if (de.classList.contains('booted')) {
+      whenPainted();
+    } else {
+      var mo = new MutationObserver(function () {
+        if (de.classList.contains('booted')) { mo.disconnect(); whenPainted(); }
+      });
+      mo.observe(de, { attributes: true, attributeFilter: ['class'] });
+    }
+    setTimeout(fire, 14000); // failsafe
+  })();
+</script>
+<script src="tag-rail.js"></script>
+<script src="casecard-soon.js"></script>
+<script src="case-stack.js"></script>
+<script src="nav-scramble.js"></script>
+<script src="main.js"></script>
+<script src="rise.js"></script>
+<script>
+  /* Adaptive gate: only fly in the Three.js Commodore-64 hero on a
+     capable connection. On lite/data-saver, net-quality.js has already
+     added html.c64-failed, so the static hero shows and THREE never loads. */
+  (function () {
+    if (window.__lite) return;
+    var s = document.createElement('script');
+    s.type = 'module';
+    s.src = 'c64-hero.js';
+    document.body.appendChild(s);
+  })();
+</script>
+<script>
+  // All-projects index overlay
+  (function () {
+    var aw = document.getElementById('allwork');
+    if (!aw) return;
+    function open(){ aw.hidden = false; document.body.style.overflow = 'hidden'; }
+    function close(){ aw.hidden = true; document.body.style.overflow = ''; }
+    document.addEventListener('click', function (e) {
+      if (e.target.closest('[data-allwork-open]')) { e.preventDefault(); open(); }
+      else if (e.target.closest('[data-allwork-close]')) { close(); }
+    });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !aw.hidden) close(); });
+  })();
+</script>
+<script>
+  // hero hover-audio now only gates itself; the site-wide mute lives in sound-manager.js
+  (function () {
+    if (typeof window.__applySoundState === 'function') window.__applySoundState();
+  })();
+</script>
+</body>
+</html>
+
