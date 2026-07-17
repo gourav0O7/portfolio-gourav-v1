@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Designing for the unhappy path — Gourav Sharma</title>
+<meta name="description" content="The screens nobody demos are the ones that decide whether people trust your product. A field guide to designing failure on purpose." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<script src="net-quality.js"></script>
+<script src="sound-manager.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@300;400;500;600&display=swap" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="blog-post.css" />
+<script src="theme-toggle.js"></script>
+<script src="page-transition.js"></script>
+<script src="gold-cursor.js"></script>
+</head>
+<body>
+<script src="loader.js"></script>
+
+<!-- ===== Nav ===== -->
+<nav class="nav">
+  <div class="nav__inner">
+    <a class="brand" href="index.html"><span class="brand__mark" aria-hidden="true"><svg class="brand__logo" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect x="0.5" y="0.5" width="31" height="31" rx="6" fill="#0a0c11" stroke="#ff5b2e" stroke-width="1"/><line x1="7" y1="25" x2="25" y2="7" stroke="#ff5b2e" stroke-width="1" stroke-opacity="0.55"/><text x="6" y="13" font-family="Space Grotesk, system-ui, sans-serif" font-size="10" font-weight="600" fill="#ffffff">G</text><text x="20" y="27" font-family="Space Grotesk, system-ui, sans-serif" font-size="10" font-weight="600" fill="#ffffff">S</text></svg><img class="brand__face" src="assets/portrait.png" alt="" /></span><b>GOURAV</b><span>/SHARMA</span></a>
+    <div class="nav__links">
+      <a href="index.html"><span class="idx">01</span>Index</a>
+      <a href="index.html#work"><span class="idx">02</span>Work</a>
+      <a href="about.html"><span class="idx">03</span>About</a>
+      <a href="blog.html" class="active"><span class="idx">04</span>Blogs</a>
+    </div>
+    <a class="btn btn--ghost nav__cta" href="uploads/cv.pdf" download>Resume ↓</a>
+    <button class="nav__burger" aria-label="Menu"><span></span></button>
+  </div>
+</nav>
+<div class="drawer">
+  <a href="index.html"><span class="idx">01</span>Index</a>
+  <a href="index.html#work"><span class="idx">02</span>Work</a>
+  <a href="about.html"><span class="idx">03</span>About</a>
+  <a href="blog.html" class="active"><span class="idx">04</span>Blogs</a>
+  <a href="uploads/cv.pdf" download><span class="idx">→</span>Download Resume</a>
+</div>
+
+<main>
+<article class="article" data-screen-label="Article / Unhappy path">
+  <div class="wrap">
+    <a class="article__back" href="blog.html"><span class="ar">←</span> All writing</a>
+
+    <header class="article__head reveal in">
+      <div class="article__cat"><i class="dot"></i> Product Design <span class="sep">/</span> Featured</div>
+      <h1 class="article__title">Designing for the unhappy path.</h1>
+      <p class="article__dek">Empty states, errors, the spinner that never ends — the screens nobody demos are the ones that decide whether people trust your product.</p>
+      <div class="article__byline">
+        <span class="article__avatar"><picture><source srcset="assets/portrait.webp" type="image/webp" /><img src="assets/portrait.png" alt="Gourav Sharma" loading="lazy" /></picture></span>
+        <span class="article__who"><b>Gourav Sharma</b><span>Product &amp; UI/UX Designer</span></span>
+        <span class="article__stats"><span>JUN 2026</span><span class="accent">9 MIN READ</span></span>
+      </div>
+    </header>
+
+    <figure class="article__cover reveal">
+      <picture><source srcset="assets/blog/cover-unhappy-path.webp" type="image/webp" /><img src="assets/blog/cover-unhappy-path.png" alt="A routed path that breaks at a marked failure point" loading="lazy" /></picture>
+      <span class="article__coverframe"></span>
+    </figure>
+
+    <div class="prose reveal">
+      <p class="lede">Every product demo follows the same script. A clean account, perfect data, a confident click-through where nothing ever goes wrong. We call it the happy path, and we spend most of our time there because it's the version that sells.</p>
+
+      <p>But nobody actually lives on the happy path. Real users arrive with empty accounts, flaky connections, expired sessions, and a payment that just got declined for reasons the bank won't explain. The moment a product meets reality, it spends most of its time on what we politely call the <b>unhappy path</b> — and that's exactly where we tend to design the least.</p>
+
+      <p>I've come to believe the unhappy path isn't an edge case. It's the product. The happy path tells people what you intended; the unhappy path tells them whether they can rely on you when it counts.</p>
+
+      <h2><span class="h2num">01 / The screens nobody demos</span>Failure is a feature, not a footnote</h2>
+
+      <p>Think about the last time you trusted a piece of software. I'd bet it wasn't because the onboarding was slick. It was a moment when something went wrong — a failed upload, a lost connection — and the product caught you. It told you exactly what happened, why, and what to do next. No blame, no dead end.</p>
+
+      <p>That kind of moment doesn't happen by accident. It happens because someone decided, early, that the error state deserved the same care as the hero screen. On the logistics products I've worked on, a driver losing signal mid-delivery isn't a rare event — it's Tuesday. If the app panics, the driver panics, and the operation grinds. So the "offline" state stopped being a footnote and became one of the most designed screens in the whole flow.</p>
+
+      <blockquote>
+        The happy path earns you a first impression. The unhappy path earns you a second visit.
+        <cite>— a thing I keep telling myself</cite>
+      </blockquote>
+
+      <h2><span class="h2num">02 / A working vocabulary</span>The four failures worth designing</h2>
+
+      <p>When I audit a flow now, I look for four specific moments. They cover most of what actually breaks:</p>
+
+      <ul>
+        <li><b>Empty</b> — there's nothing here yet. A new account, a cleared inbox, a search with no results. This is an opportunity disguised as a void.</li>
+        <li><b>Loading</b> — something is happening, but the user can't see it. The gap between action and result is where trust quietly leaks.</li>
+        <li><b>Error</b> — something broke. The question is whether the user feels informed or accused.</li>
+        <li><b>Edge</b> — the long names, the 10,000-row table, the timezone that doesn't exist. The places where your tidy layout meets messy reality.</li>
+      </ul>
+
+      <p>None of these are exciting to design. None of them show up in the launch announcement. All of them decide whether someone comes back.</p>
+
+      <h2><span class="h2num">03 / The craft</span>What a good failure state actually does</h2>
+
+      <p>A well-designed unhappy path does three things, in order. It tells you <b>what happened</b> in plain language — not "Error 0x80004005," but "We couldn't save your changes." It tells you <b>why</b>, if it can — "your session expired." And it hands you a <b>way forward</b> — a retry, a fallback, a clear next step that doesn't require a support ticket.</p>
+
+      <p>Miss any one of those and the state fails its own job. "Something went wrong" with no recovery is just a more polite dead end. The hardest part is usually the tone: an error message is written when the user is already frustrated, so every word carries more weight than it would anywhere else in the product.</p>
+
+      <div class="callout">
+        <div class="callout__lbl">Field note</div>
+        <p>Write your error copy out loud, in the voice of a calm colleague standing next to the user. If it sounds like a server talking, rewrite it. People forgive products that fail honestly far more than products that fail silently.</p>
+      </div>
+
+      <h2><span class="h2num">04 / Making the case</span>How to get failure on the roadmap</h2>
+
+      <p>The honest obstacle isn't skill — it's prioritisation. Unhappy-path work is invisible when it's done well, which makes it a hard sell against a shiny new feature. The reframe that's worked for me: stop calling it error handling and start calling it <b>trust infrastructure</b>. Pull the support tickets. Count how many are really just a missing empty state or an unhelpful error. Put a number on the churn hiding inside "the app felt broken."</p>
+
+      <p>Then design those screens with the same intent you'd give the homepage. Give them a place in the design system. Review them in the same critique. Because the truth I keep relearning is simple: users don't remember the flow that worked. They remember the moment it didn't — and what you did about it.</p>
+
+      <hr />
+
+      <p>So the next time you're polishing a happy path, ask the uncomfortable question: <b>what does this look like when it breaks?</b> The answer is where the real product lives.</p>
+    </div>
+
+    <!-- footer -->
+    <div class="article__foot reveal">
+      <div class="article__tags">
+        <span class="article__tag">Product Design</span>
+        <span class="article__tag">Error States</span>
+        <span class="article__tag">Trust</span>
+        <span class="article__tag">UX</span>
+      </div>
+      <div class="article__share">
+        <span>Found this useful?</span>
+        <a class="btn btn--ghost" href="mailto:gouravsharma.ux@gmail.com">Tell me <span class="arrow">→</span></a>
+        <a class="btn btn--ghost" href="https://www.linkedin.com/in/gourav-sharmaux/" target="_blank" rel="noopener">Share on LinkedIn <span class="arrow">→</span></a>
+      </div>
+    </div>
+
+    <!-- next -->
+    <div class="article__next reveal">
+      <a class="nextpiece" href="post-empty-states.html">
+        <div>
+          <div class="nextpiece__lbl">Next piece</div>
+          <div class="nextpiece__cat">UI/UX</div>
+          <div class="nextpiece__title">The quiet power of empty states</div>
+        </div>
+        <div class="nextpiece__go"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H8M17 7V16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </a>
+    </div>
+  </div>
+</article>
+</main>
+
+<div data-bigfoot></div>
+
+<script src="image-slot.js"></script>
+<script src="bigfoot.js"></script>
+<script src="easter-egg.js"></script>
+<script src="click-sfx.js"></script>
+<script src="nav-scramble.js"></script>
+<script src="main.js"></script>
+<script src="rise.js"></script>
+</body>
+</html>
