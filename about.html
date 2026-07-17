@@ -1,0 +1,1009 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>About — Gourav Sharma</title>
+<meta name="description" content="About Gourav Sharma — Product &amp; UI/UX Designer. Experience, education and approach." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<script src="net-quality.js"></script>
+<script src="sound-manager.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@300;400;500;600&display=swap" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+/* ---------- About hero ---------- */
+.about-hero { padding-top: calc(var(--nav-h) + clamp(40px, 5.5vw, 80px)); padding-bottom: var(--sp-section); }
+.about-lede { font-size: clamp(34px, 6.2vw, 86px); font-weight: 600; letter-spacing: -0.035em; line-height: 0.99; margin: var(--sp-5) 0 0; max-width: 17ch; text-wrap: balance; }
+.about-lede .accent { color: var(--accent); }
+.about-hero__grid { display: grid; grid-template-columns: 1.75fr 1fr; gap: clamp(28px, 4vw, 60px); align-items: end; margin-top: clamp(32px, 4.5vw, 64px); }
+.about-hero__col { display: flex; flex-direction: column; gap: var(--sp-5); }
+.about-hero__wtitle { font-size: clamp(20px, 2vw, 26px); font-weight: 600; letter-spacing: -0.01em; }
+.about-hero__wtitle span { color: var(--text-faint); font-weight: 400; }
+.about-hero__bio { font-size: clamp(16px, 1.4vw, 19px); line-height: 1.62; color: var(--text); max-width: 46ch; }
+.about-hero__bio b { color: var(--accent); font-weight: 500; }
+.about-hero__bio p + p { margin-top: var(--sp-4); }
+.about-hero__meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-top: clamp(28px, 4vw, 56px); }
+.about-hero__meta div { background: var(--bg); padding: var(--sp-4) var(--sp-5); }
+.about-hero__meta dt { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-faint); }
+.about-hero__meta dd { font-size: 15px; margin-top: var(--sp-1); color: var(--text); }
+
+/* profile picture — scrub frames by moving the cursor up/down; frames slide in from the top */
+.profilepic { position: relative; margin: 0; aspect-ratio: 4/5; overflow: hidden; border: 1px solid var(--line-accent); background: var(--bg-1); cursor: ns-resize; }
+.profilepic__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 22%; will-change: transform; backface-visibility: hidden; }
+.profilepic__frame { position: absolute; inset: 0; pointer-events: none; z-index: 4; }
+.profilepic__frame::before, .profilepic__frame::after { content: ""; position: absolute; width: 18px; height: 18px; border: 2px solid var(--accent); }
+.profilepic__frame::before { top: 9px; left: 9px; border-right: 0; border-bottom: 0; }
+.profilepic__frame::after { bottom: 9px; right: 9px; border-left: 0; border-top: 0; }
+.profilepic__cap { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 14px 16px; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); background: linear-gradient(0deg, rgba(7,8,11,0.88), transparent); }
+.profilepic__hint { color: var(--text-faint); }
+.profilepic:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* ---------- Timeline ---------- */
+.timeline { position: relative; padding-bottom: 8vh; }
+.tl-item {
+  display: grid; grid-template-columns: 200px 1fr; gap: var(--sp-6);
+  padding: var(--sp-6) 0;
+  border-top: 1px solid var(--line);
+  position: sticky;
+  top: var(--nav-h);
+  background: var(--bg);
+  min-height: 300px;
+  align-content: start;
+}
+.tl-item:last-child { border-bottom: 1px solid var(--line); }
+/* every row pins at the same spot so each fully covers the one before it */
+/* sticky + IntersectionObserver timing is fragile — never let a row get stranded hidden */
+.tl-item.reveal { opacity: 1; transform: none; }
+.tl-when { font-family: var(--font-mono); font-size: 12.5px; color: var(--text-dim); letter-spacing: 0.04em; }
+.tl-when .now { color: var(--accent); }
+.tl-where { font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); margin-top: 8px; letter-spacing: 0.08em; text-transform: uppercase; }
+.tl-role { font-size: clamp(20px, 2.6vw, 28px); font-weight: 500; letter-spacing: -0.01em; }
+.tl-co { color: var(--accent); }
+.tl-desc { color: var(--text-dim); margin-top: 12px; max-width: 62ch; line-height: 1.6; font-size: 15.5px; }
+.tl-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 16px; }
+.tl-tags span { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); border: 1px solid var(--line); padding: 5px 9px; }
+.tl-item::before { content: ""; position: absolute; left: -1px; top: -1px; width: 0; height: 1px; background: var(--accent); transition: width 0.5s var(--ease); }
+.tl-item.in::before { width: 56px; }
+
+/* ---------- Two-col blocks (education / certs / internships) ---------- */
+.blocks { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 4vw, 56px); }
+.block h3 { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 22px; display: flex; align-items: center; gap: 10px; }
+.block h3 .n { color: var(--text-faint); }
+.edu { border: 1px solid var(--line); padding: 26px; }
+.edu__deg { font-size: 22px; font-weight: 500; }
+.edu__school { color: var(--accent); font-family: var(--font-mono); font-size: 13px; margin-top: 6px; }
+.edu__row { display: flex; justify-content: space-between; margin-top: 20px; font-family: var(--font-mono); font-size: 12px; color: var(--text-dim); border-top: 1px solid var(--line); padding-top: 16px; }
+.cert-list, .intern-list { display: flex; flex-direction: column; }
+.cert { display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center; padding: 15px 0; border-top: 1px solid var(--line); color: var(--text); transition: background 0.25s var(--ease); }
+.cert:last-child { border-bottom: 1px solid var(--line); }
+.cert .ix { font-family: var(--font-mono); font-size: 11px; color: var(--accent); align-self: baseline; padding-top: 4px; }
+.cert .name { font-size: 15.5px; transition: color 0.25s var(--ease); }
+.cert .by { font-family: var(--font-mono); font-size: 11.5px; color: var(--text-faint); margin-top: 3px; }
+.cert .prog { font-family: var(--font-mono); font-size: 10px; color: var(--amber); border: 1px solid rgba(255,178,77,0.4); padding: 2px 6px; margin-left: 8px; display: inline-block; white-space: nowrap; vertical-align: middle; }
+.cert .verify { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-faint); display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; transition: color 0.25s var(--ease), transform 0.25s var(--ease); }
+a.cert { cursor: pointer; }
+a.cert:hover { background: linear-gradient(90deg, var(--accent-soft), transparent 70%); }
+a.cert:hover .name { color: var(--accent); }
+a.cert:hover .verify { color: var(--accent); transform: translateX(2px); }
+@media (max-width: 540px) {
+  .cert { grid-template-columns: auto 1fr; }
+  .cert .verify { grid-column: 2; padding-top: 6px; }
+}
+.intern { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; padding: 15px 0; border-top: 1px solid var(--line); }
+.intern:last-child { border-bottom: 1px solid var(--line); }
+.intern .co { font-size: 16px; }
+.intern .role { font-family: var(--font-mono); font-size: 11.5px; color: var(--text-dim); margin-top: 4px; }
+.intern .yr { font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); }
+
+/* Spaced sub-heading within a .block (e.g. "02 / Certifications" under Education) */
+.block-h-spaced { margin-top: var(--sp-7) !important; }
+
+/* Footer lede paragraph */
+.footer__lede { margin-top: var(--sp-3); max-width: 36ch; }
+
+/* ---------- Off-hours: Hot Wheels + cars on social ---------- */
+.offhours {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+.ohcard {
+  background: var(--bg);
+  padding: clamp(28px, 3vw, 40px);
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  position: relative;
+  transition: background 0.4s var(--ease);
+  overflow: hidden;
+}
+.ohcard::before {
+  content: "";
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: 2px; background: var(--accent);
+  transform: scaleY(0); transform-origin: top;
+  transition: transform 0.45s var(--ease);
+}
+.ohcard:hover::before { transform: scaleY(1); }
+.ohcard:hover { background: linear-gradient(180deg, var(--accent-soft), transparent 70%); }
+
+.ohcard__strip {
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--font-mono); font-size: 10.5px;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--text-faint);
+  padding-bottom: 14px;
+}
+.ohcard__id { color: var(--accent); }
+.ohcard__tag { display: inline-flex; align-items: center; gap: 8px; color: var(--text-dim); }
+.ohcard__tag .pip {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent); display: inline-block;
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+.ohcard__title {
+  font-size: clamp(22px, 2.6vw, 30px);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+}
+.ohcard__lede {
+  color: var(--text-dim);
+  font-size: 15.5px;
+  line-height: 1.6;
+  margin-top: 12px;
+  max-width: 46ch;
+}
+.ohcard__lede b { color: var(--accent); font-weight: 500; }
+
+/* 3D Showroom — drag-to-orbit car, spans the full off-hours grid */
+.ohcar {
+  grid-column: 1 / -1;
+  background: var(--bg);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.ohcar__strip {
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--font-mono); font-size: 10.5px;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-faint);
+  padding: clamp(20px, 2.4vw, 30px) clamp(28px, 3vw, 40px) 14px;
+}
+.ohcar__id { color: var(--accent); }
+.ohcar__tag { display: inline-flex; align-items: center; gap: 8px; color: var(--text-dim); }
+.ohcar__tag .pip {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent); box-shadow: 0 0 8px var(--accent-glow);
+}
+.ohcar__stage {
+  position: relative;
+  height: clamp(440px, 56vw, 720px);
+  border-top: 1px dashed var(--line);
+  border-bottom: 1px dashed var(--line);
+  overflow: hidden;
+  background:
+    radial-gradient(115% 78% at 50% 16%, var(--accent-soft), transparent 58%),
+    radial-gradient(70% 52% at 50% 104%, rgba(0,0,0,0.28), transparent 72%);
+}
+/* receding floor grid — matches the site's technical grid motif */
+.ohcar__stage::after {
+  content: ""; position: absolute; left: -25%; right: -25%; bottom: 0; height: 46%;
+  background-image:
+    linear-gradient(var(--line-2) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line-2) 1px, transparent 1px);
+  background-size: 46px 46px;
+  transform: perspective(440px) rotateX(62deg); transform-origin: bottom center;
+  -webkit-mask-image: linear-gradient(transparent, #000 78%); mask-image: linear-gradient(transparent, #000 78%);
+  opacity: 0.45; pointer-events: none;
+}
+.ohcar__mv {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  background: transparent; --poster-color: transparent;
+  cursor: grab;
+  z-index: 1;
+}
+.ohcar__mv:active { cursor: grabbing; }
+/* corner brackets framing the stage */
+.ohcar__corner {
+  position: absolute; width: 14px; height: 14px; z-index: 2; pointer-events: none;
+  border: 1px solid var(--line-accent);
+}
+.ohcar__corner--tl { top: 14px; left: 14px; border-right: 0; border-bottom: 0; }
+.ohcar__corner--tr { top: 14px; right: 14px; border-left: 0; border-bottom: 0; }
+.ohcar__corner--bl { bottom: 14px; left: 14px; border-right: 0; border-top: 0; }
+.ohcar__corner--br { bottom: 14px; right: 14px; border-left: 0; border-top: 0; }
+.ohcar__hint {
+  position: absolute; right: 16px; bottom: 14px; z-index: 2;
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: var(--font-mono); font-size: 10.5px;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-dim);
+  padding: 7px 11px; border: 1px solid var(--line-2);
+  background: color-mix(in oklab, var(--bg) 70%, transparent);
+  backdrop-filter: blur(3px);
+  pointer-events: none; transition: opacity 0.5s var(--ease);
+}
+.ohcar__hint svg { color: var(--accent); }
+.ohcar.is-touched .ohcar__hint { opacity: 0; }
+/* hide the orbit hint entirely while driving */
+.ohcar.is-playing .ohcar__hint { opacity: 0; }
+
+/* model swap loading veil (large GLBs take a moment to fetch) */
+.ohcar__swap {
+  position: absolute; inset: 0; z-index: 3; display: none;
+  align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--text-dim);
+  background: color-mix(in oklab, var(--bg) 55%, transparent); backdrop-filter: blur(2px);
+}
+.ohcar__swap span::after { content: ""; animation: ohcarDots 1.1s steps(4, end) infinite; }
+@keyframes ohcarDots { 0% { content: ""; } 25% { content: "."; } 50% { content: ".."; } 75% { content: "..."; } }
+.ohcar__stage.is-swapping .ohcar__swap { display: flex; }
+.ohcar.is-playing .ohcar__swap { display: none !important; }
+
+/* ---- Play button ---- */
+.ohcar__play {
+  position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%);
+  z-index: 3; display: inline-flex; align-items: center; gap: 13px;
+  padding: 11px 18px 11px 13px; cursor: pointer;
+  font-family: inherit; color: var(--text); text-align: left;
+  background: color-mix(in oklab, var(--bg) 78%, transparent);
+  border: 1px solid var(--line-accent);
+  backdrop-filter: blur(6px);
+  transition: background 0.3s var(--ease), border-color 0.3s var(--ease), transform 0.25s var(--ease);
+}
+.ohcar__play:hover { background: var(--accent); border-color: var(--accent); color: #fff; transform: translateX(-50%) translateY(-2px); }
+html.gold .ohcar__play:hover { color: var(--bg); }
+.ohcar__play-ic {
+  display: grid; place-items: center; width: 34px; height: 34px; flex-shrink: 0;
+  border: 1px solid currentColor; color: var(--accent);
+}
+.ohcar__play:hover .ohcar__play-ic { color: inherit; }
+.ohcar__play-tx { display: flex; flex-direction: column; gap: 2px; line-height: 1.1; }
+.ohcar__play-h { font-size: 14px; font-weight: 500; letter-spacing: -0.01em; }
+.ohcar__play-s {
+  font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.13em;
+  text-transform: uppercase; color: var(--text-dim);
+}
+.ohcar__play:hover .ohcar__play-s { color: inherit; opacity: 0.85; }
+.ohcar.is-playing .ohcar__play { display: none; }
+
+/* ---- Game surface ---- */
+.ohgame {
+  position: absolute; inset: 0; z-index: 4; background: var(--bg);
+}
+.ohgame[hidden] { display: none; }
+.ohgame__canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+.ohgame__loading {
+  position: absolute; inset: 0; display: grid; place-items: center; z-index: 2;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--text-dim);
+  background: var(--bg);
+}
+.ohgame__loading[hidden] { display: none; }
+.ohgame__hud {
+  position: absolute; left: 16px; top: 14px; z-index: 3; pointer-events: none;
+  display: flex; flex-direction: column; gap: 7px; align-items: flex-start;
+}
+.ohgame__spd, .ohgame__score {
+  display: inline-flex; align-items: baseline; gap: 6px;
+  font-family: var(--font-mono); padding: 7px 12px;
+  border: 1px solid var(--line-2);
+  background: color-mix(in oklab, var(--bg) 60%, transparent);
+  backdrop-filter: blur(3px);
+}
+.ohgame__spd b { font-size: 22px; font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; min-width: 2.4ch; text-align: right; }
+.ohgame__spd i { font-size: 9px; letter-spacing: 0.16em; color: var(--accent); font-style: normal; }
+.ohgame__score b { font-size: 16px; font-weight: 600; color: var(--accent); font-variant-numeric: tabular-nums; min-width: 3.6ch; text-align: right; }
+.ohgame__score i { font-size: 9px; letter-spacing: 0.16em; color: var(--text-dim); font-style: normal; }
+/* boost speed-vignette */
+.ohgame__boost {
+  position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0;
+  transition: opacity 0.18s var(--ease);
+  background:
+    radial-gradient(ellipse 120% 80% at 50% 50%, transparent 52%, color-mix(in oklab, var(--accent) 38%, transparent) 100%);
+  mix-blend-mode: screen;
+}
+.ohgame.is-boost .ohgame__boost { opacity: 1; }
+.ohgame__exit {
+  position: absolute; right: 14px; top: 14px; z-index: 5; cursor: pointer;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--text-dim);
+  padding: 8px 12px; background: color-mix(in oklab, var(--bg) 60%, transparent);
+  border: 1px solid var(--line-2); backdrop-filter: blur(3px);
+  transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+.ohgame__exit:hover { color: var(--accent); border-color: var(--line-accent); }
+.ohgame__keys {
+  position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 3;
+  font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.16em;
+  color: var(--text-faint); pointer-events: none; white-space: nowrap;
+}
+/* on-screen control pads */
+.ohgame__pads {
+  position: absolute; inset: auto 0 0 0; z-index: 4;
+  display: flex; justify-content: space-between; align-items: flex-end;
+  padding: 0 18px 44px; pointer-events: none;
+}
+.gpad { display: flex; gap: 10px; pointer-events: auto; }
+.gpad--drive { flex-direction: column-reverse; }
+.gbtn {
+  width: 56px; height: 56px; display: grid; place-items: center; cursor: pointer;
+  font-size: 16px; color: var(--text);
+  background: color-mix(in oklab, var(--bg) 55%, transparent);
+  border: 1px solid var(--line-2); backdrop-filter: blur(4px);
+  transition: background 0.12s var(--ease), border-color 0.12s var(--ease), transform 0.08s var(--ease);
+  -webkit-user-select: none; user-select: none; touch-action: none;
+}
+.gbtn:hover { border-color: var(--line-accent); }
+.gbtn.is-down { background: var(--accent); border-color: var(--accent); color: #fff; transform: scale(0.95); }
+html.gold .gbtn.is-down { color: var(--bg); }
+@media (hover: hover) and (pointer: fine) {
+  .ohgame__pads { opacity: 0.55; transition: opacity 0.3s var(--ease); }
+  .ohgame:hover .ohgame__pads { opacity: 1; }
+}
+/* ---- Game reward: collect 5 → message → open NIFT ---- */
+.ohreward {
+  position: absolute; inset: 0; z-index: 6;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  background: color-mix(in oklab, var(--bg) 70%, transparent);
+  backdrop-filter: blur(8px);
+  opacity: 0; transition: opacity 0.4s var(--ease);
+}
+.ohreward[hidden] { display: none; }
+.ohreward.is-on { opacity: 1; }
+.ohreward__panel {
+  position: relative;
+  width: min(440px, 94%);
+  border: 1px solid var(--line-accent);
+  background: var(--bg);
+  padding: clamp(24px, 4vw, 38px);
+  box-shadow: 0 40px 80px -30px rgba(255,91,46,0.5);
+  transform: translateY(12px) scale(0.98);
+  transition: transform 0.45s var(--ease);
+}
+.ohreward.is-on .ohreward__panel { transform: none; }
+.ohreward__panel::before, .ohreward__panel::after { content: ""; position: absolute; width: 18px; height: 18px; border: 2px solid var(--accent); pointer-events: none; }
+.ohreward__panel::before { top: -2px; left: -2px; border-right: 0; border-bottom: 0; }
+.ohreward__panel::after { bottom: -2px; right: -2px; border-left: 0; border-top: 0; }
+.ohreward__head { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); display: flex; align-items: center; gap: 10px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+.ohreward__pip { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent-glow); animation: blink 1s steps(1) infinite; flex-shrink: 0; }
+.ohreward__sep { color: var(--text-faint); margin-left: auto; }
+.ohreward__score { font-size: clamp(42px, 7vw, 60px); font-weight: 500; letter-spacing: -0.03em; margin-top: 20px; line-height: 1; }
+.ohreward__score span { display: block; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-faint); margin-top: 12px; }
+.ohreward__msg { font-size: clamp(17px, 2.4vw, 21px); font-weight: 500; line-height: 1.36; letter-spacing: -0.01em; margin-top: 22px; color: var(--text); text-wrap: balance; }
+.ohreward__sub { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-top: 16px; display: flex; align-items: center; gap: 9px; }
+.ohreward__bar { height: 2px; background: var(--bg-3); margin-top: 22px; overflow: hidden; }
+.ohreward__bar i { display: block; height: 100%; width: 0; background: var(--accent); box-shadow: 0 0 12px var(--accent-glow); transition: width 3s linear; }
+.ohreward__go { margin-top: 22px; width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 10px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; padding: 14px; border: 1px solid var(--accent); color: var(--accent); transition: background 0.25s var(--ease), color 0.25s var(--ease); }
+.ohreward__go:hover { background: var(--accent); color: #0a0c11; }
+html.gold .ohreward__go:hover { color: var(--bg); }
+.ohreward__go span { transition: transform 0.25s var(--ease); }
+.ohreward__go:hover span { transform: translateX(3px); }
+@media (prefers-reduced-motion: reduce) {
+  .ohreward, .ohreward__panel, .ohreward__bar i { transition: none; }
+  .ohreward__pip { animation: none; }
+}
+
+/* full-screen wipe transition into the NIFT page */
+.nift-wipe { position: fixed; inset: 0; z-index: 99999; background: var(--accent); transform: scaleY(0); transform-origin: bottom; transition: transform 0.6s var(--ease); pointer-events: none; }
+.nift-wipe.is-on { transform: scaleY(1); }
+
+.ohcar__foot {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  gap: 20px; flex-wrap: wrap;
+  padding: clamp(20px, 2.4vw, 28px) clamp(28px, 3vw, 40px);
+}
+.ohcar__title {
+  font-size: clamp(22px, 2.6vw, 30px); font-weight: 500;
+  letter-spacing: -0.015em; line-height: 1.1;
+}
+.ohcar__sub {
+  color: var(--text-dim); font-size: 15px; line-height: 1.6;
+  margin-top: 10px; max-width: 52ch;
+}
+.ohcar__credit {
+  font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-faint); text-align: right; line-height: 1.7; white-space: nowrap;
+}
+@media (max-width: 820px) {
+  .ohcar__stage { height: clamp(360px, 74vw, 560px); }
+  .ohcar__credit { text-align: left; }
+}
+
+/* Hot Wheels shelf — single duotone photo (matches the portrait treatment) */
+.ohshelf {
+  display: block;
+}
+.hwphoto {
+  margin: 0;
+  position: relative;
+  border: 1px solid var(--line-2);
+  overflow: hidden;
+  background: var(--bg-1);
+}
+/* theme colour wash — accent in amber, ink-gold in the gold duotone */
+.hwphoto::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    repeating-linear-gradient(0deg, rgba(255,91,46,0.05) 0 1px, transparent 1px 4px),
+    linear-gradient(180deg, rgba(255,91,46,0.16), transparent 38%);
+  mix-blend-mode: screen;
+}
+.hwphoto img {
+  display: block;
+  width: 100%;
+  height: clamp(200px, 23vw, 270px);
+  object-fit: cover;
+  object-position: center 38%;
+  filter: grayscale(1) contrast(1.06) brightness(0.94);
+  transition: filter 0.5s var(--ease);
+}
+.hwphoto:hover img { filter: grayscale(1) contrast(1.04) brightness(1.02); }
+/* gold duotone — same sepia/ink treatment as the main portrait */
+html.gold .hwphoto img { filter: sepia(1) saturate(3.2) hue-rotate(-12deg) brightness(0.92) contrast(1.06); }
+html.gold .hwphoto:hover img { filter: sepia(1) saturate(3.2) hue-rotate(-12deg) brightness(1) contrast(1.04); }
+html.gold .hwphoto::after {
+  background:
+    repeating-linear-gradient(0deg, rgba(26,18,6,0.06) 0 1px, transparent 1px 4px),
+    linear-gradient(180deg, rgba(26,18,6,0.16), transparent 38%);
+}
+
+/* Channel buttons */
+.ohchans { display: flex; flex-direction: column; gap: 8px; }
+.ohchan {
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  color: var(--text);
+  transition: 0.25s var(--ease);
+}
+.ohchan__lbl {
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+}
+.ohchan__name {
+  font-family: var(--font-display);
+  font-size: 17px;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+.ohchan__arr {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 16px;
+  transition: transform 0.25s var(--ease);
+}
+.ohchan:hover { background: var(--accent-soft); border-color: var(--accent); }
+.ohchan:hover .ohchan__arr { transform: translateX(3px); }
+.ohchan:hover .ohchan__lbl { color: var(--accent); }
+
+.ohcard__foot {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  align-items: center;
+  font-family: var(--font-mono); font-size: 10.5px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-faint);
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  margin-top: auto;
+}
+.ohcard__foot .sep { color: var(--line-2); }
+.ohcard__foot .val { color: var(--text-dim); letter-spacing: 0.04em; text-transform: none; }
+
+@media (max-width: 900px) {
+  .about-hero__grid { grid-template-columns: 1fr; align-items: start; }
+  .profilepic { max-width: 440px; }
+  .blocks { grid-template-columns: 1fr; gap: 48px; }
+  .offhours { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .tl-item { grid-template-columns: 1fr; gap: 12px; position: relative; top: auto !important; min-height: 0; }
+  .about-hero__meta { grid-template-columns: 1fr 1fr; }
+  .ohshelf { grid-template-columns: repeat(2, 1fr); }
+  .ohchan { grid-template-columns: 56px 1fr auto; gap: 12px; }
+}
+</style>
+<script src="theme-toggle.js"></script>
+<script src="page-transition.js"></script>
+<script src="gold-cursor.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script>
+  /* Adaptive: load model-viewer only on a capable connection, and only when
+     the 3D car nears the viewport. On lite/data-saver it's skipped entirely
+     and the static "Loading model" placeholder remains. */
+  (function () {
+    if (window.__lite) return;
+    function loadMV() {
+      if (document.querySelector('script[data-model-viewer]')) return;
+      var s = document.createElement('script');
+      s.type = 'module';
+      s.src = 'https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js';
+      s.setAttribute('data-model-viewer', '1');
+      document.head.appendChild(s);
+    }
+    function arm() {
+      var car = document.querySelector('model-viewer');
+      if (!car) { loadMV(); return; }
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (es) {
+          if (es.some(function (e) { return e.isIntersecting; })) { io.disconnect(); loadMV(); }
+        }, { rootMargin: '600px 0px' });
+        io.observe(car);
+      } else { loadMV(); }
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', arm);
+    else arm();
+  })();
+</script>
+</head>
+<body>
+<script src="loader.js"></script>
+
+<!-- ===== Nav ===== -->
+<nav class="nav">
+  <div class="nav__inner">
+    <a class="brand" href="index.html"><span class="brand__mark" aria-hidden="true"><svg class="brand__logo" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect x="0.5" y="0.5" width="31" height="31" rx="6" fill="#0a0c11" stroke="#ff5b2e" stroke-width="1"/><line x1="7" y1="25" x2="25" y2="7" stroke="#ff5b2e" stroke-width="1" stroke-opacity="0.55"/><text x="6" y="13" font-family="Space Grotesk, system-ui, sans-serif" font-size="10" font-weight="600" fill="#ffffff">G</text><text x="20" y="27" font-family="Space Grotesk, system-ui, sans-serif" font-size="10" font-weight="600" fill="#ffffff">S</text></svg><img class="brand__face" src="assets/portrait.png" alt="" /></span><b>GOURAV</b><span>/SHARMA</span></a>
+    <div class="nav__links">
+      <a href="index.html"><span class="idx">01</span>Index</a>
+      <a href="index.html#work"><span class="idx">02</span>Work</a>
+      <a href="about.html" class="active"><span class="idx">03</span>About</a>
+      <a href="blog.html"><span class="idx">04</span>Blogs</a>
+    </div>
+    <a class="btn btn--ghost nav__cta" href="uploads/cv.pdf" download>Resume ↓</a>
+    <button class="nav__burger" aria-label="Menu"><span></span></button>
+  </div>
+</nav>
+<div class="drawer">
+  <a href="index.html"><span class="idx">01</span>Index</a>
+  <a href="index.html#work"><span class="idx">02</span>Work</a>
+  <a href="about.html" class="active"><span class="idx">03</span>About</a>
+  <a href="blog.html"><span class="idx">04</span>Blogs</a>
+  <a href="uploads/cv.pdf" download><span class="idx">→</span>Download Resume</a>
+</div>
+
+<main>
+<!-- ===== About hero ===== -->
+<header class="about-hero" data-screen-label="About / Intro">
+  <div class="wrap">
+    <div class="eyebrow reveal in">Profile // 003</div>
+    <h1 class="about-lede reveal">Designing <span class="accent">clarity</span> into complex systems.</h1>
+    <div class="about-hero__grid">
+      <figure class="profilepic reveal" data-delay="1" data-photo-scrub tabindex="0" aria-label="Portrait of Gourav Sharma — move the cursor up and down over the photo to flip through frames">
+        <img class="profilepic__img" src="assets/profile/01.jpg" alt="Gourav Sharma" />
+        <img class="profilepic__img" src="assets/profile/01.jpg" alt="" aria-hidden="true" />
+        <span class="profilepic__frame" aria-hidden="true"></span>
+        <figcaption class="profilepic__cap">
+          <span data-photo-label>FRAME 01 · DIWALI</span>
+          <span class="profilepic__hint">↕ scrub</span>
+        </figcaption>
+      </figure>
+      <div class="about-hero__col reveal" data-delay="2">
+        <div class="about-hero__bio">
+          <p>I'm a Product &amp; UI/UX Designer with <b>3.5+ years</b> designing SaaS, mobile and web products, from research to design systems. <b>B.Des</b>, NIFT Kolkata.</p>
+        </div>
+      </div>
+    </div>
+    <dl class="about-hero__meta reveal" data-delay="1">
+      <div><dt>Based in</dt><dd>Gurgaon, Haryana · IND</dd></div>
+      <div><dt>Currently</dt><dd>Product Designer 2 · Omniful</dd></div>
+      <div><dt>Focus</dt><dd>SaaS · Mobile · Design Systems</dd></div>
+      <div><dt>Status</dt><dd><span class="accent">◆</span> Open to opportunities</dd></div>
+    </dl>
+  </div>
+</header>
+
+<!-- ===== Experience ===== -->
+<section class="section" data-screen-label="About / Experience">
+  <div class="wrap">
+    <div class="head-row reveal">
+      <div>
+        <div class="eyebrow">Experience</div>
+        <h2 class="section-title">Trajectory.</h2>
+      </div>
+      <div class="head-row__count">[ 2021 — PRESENT ]</div>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-item reveal">
+        <div>
+          <div class="tl-when"><span class="now">●</span> JUN 2024 — PRESENT</div>
+          <div class="tl-where">Omniful · Gurgaon, Haryana</div>
+        </div>
+        <div>
+          <div class="tl-role">Product Designer 2 <span class="tl-co">· Omniful</span></div>
+          <p class="tl-desc">Leading UX for TMS and delivery-app modules — vehicle management, trip flows, PoD and payments. Designed the end-to-end Stock on Wheel module across admin and driver apps, built demand forecasting and redesigned order creation in WMS/OMS, and maintain a shared UI library scaling across TMS, OMS, WMS and web.</p>
+          <div class="tl-tags"><span>TMS</span><span>Driver App</span><span>WMS / OMS</span><span>Design System</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item reveal">
+        <div>
+          <div class="tl-when">SEP 2023 — JUN 2024</div>
+          <div class="tl-where">Edgistify · Thane, Maharashtra</div>
+        </div>
+        <div>
+          <div class="tl-role">Product Designer 1 <span class="tl-co">· Edgistify</span></div>
+          <p class="tl-desc">Owned features from first brief to engineering handoff. Designed the B2B side of EdgeOS, a route-optimization web app for Bisleri, and a web picker app that sped up picking on the warehouse floor.</p>
+          <div class="tl-tags"><span>EdgeOS B2B</span><span>Route Optimization</span><span>Picker App</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item reveal">
+        <div>
+          <div class="tl-when">JUL 2022 — SEP 2023</div>
+          <div class="tl-where">Edgistify · Thane, Maharashtra</div>
+        </div>
+        <div>
+          <div class="tl-role">Executive UI/UX Designer <span class="tl-co">· Edgistify</span></div>
+          <p class="tl-desc">Redesigned the company website around its actual business and services, ran the user research that shaped it, and improved the B2C side of EdgeOS through wireframes, prototypes and testing.</p>
+          <div class="tl-tags"><span>Web Redesign</span><span>User Research</span><span>EdgeOS B2C</span></div>
+        </div>
+      </div>
+
+      <div class="tl-item reveal">
+        <div>
+          <div class="tl-when">FEB 2021 — JUL 2022</div>
+          <div class="tl-where">Edgistify · Thane, Maharashtra</div>
+        </div>
+        <div>
+          <div class="tl-role">Visual &amp; UI/UX Designer <span class="tl-co">· Internship</span></div>
+          <p class="tl-desc">Redesigned the website UI, made graphics for social, ads and the web, designed pitch decks, and worked on the EdgeOS interface alongside the marketing team.</p>
+          <div class="tl-tags"><span>Visual Design</span><span>Branding</span><span>Pitch Decks</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Education + Certs ===== -->
+<section class="section" data-screen-label="About / Education">
+  <div class="wrap">
+    <div class="blocks">
+      <div class="block reveal">
+        <h3><span class="n">01 /</span> Education</h3>
+        <div class="edu">
+          <div class="edu__deg">Bachelor of Design</div>
+          <div class="edu__school">National Institute of Fashion Technology — Kolkata</div>
+          <div class="edu__row"><span>CGPA 8.2</span><span>2018 — 2022</span></div>
+        </div>
+        <h3 class="block-h-spaced"><span class="n">02 /</span> Certifications</h3>
+        <div class="cert-list">
+          <a class="cert" href="https://www.coursera.org/account/accomplishments/certificate/L8XE5AVNVR59" target="_blank" rel="noopener noreferrer"><span class="ix">001</span><div><div class="name">Google · UX Design</div><div class="by">Professional Certificate · Google</div></div><span class="verify">Verify &rarr;</span></a>
+          <a class="cert" href="https://www.coursera.org/account/accomplishments/specialization/certificate/9E4Q6CG6MEV4" target="_blank" rel="noopener noreferrer"><span class="ix">002</span><div><div class="name">CalArts · UI / UX Design</div><div class="by">Specialization · California Institute of the Arts</div></div><span class="verify">Verify &rarr;</span></a>
+          <a class="cert" href="https://www.coursera.org/account/accomplishments/certificate/TV3JTBVUVESS" target="_blank" rel="noopener noreferrer"><span class="ix">003</span><div><div class="name">Georgia Tech · User Experience Design</div><div class="by">Introduction · Georgia Institute of Technology</div></div><span class="verify">Verify &rarr;</span></a>
+          <a class="cert" href="https://www.coursera.org/account/accomplishments/verify/EGT4TI563RU4" target="_blank" rel="noopener noreferrer"><span class="ix">004</span><div><div class="name">Yale · Financial Markets</div><div class="by">Yale University</div></div><span class="verify">Verify &rarr;</span></a>
+          <div class="cert"><span class="ix">005</span><div><div class="name">Bocconi · Private Equity &amp; Venture Capital <span class="prog">IN PROGRESS</span></div><div class="by">Università Bocconi</div></div></div>
+        </div>
+      </div>
+
+      <div class="block reveal" data-delay="1">
+        <h3><span class="n">03 /</span> Earlier Internships</h3>
+        <div class="intern-list">
+          <div class="intern"><div><div class="co">Firstcry</div><div class="role">Fashion &amp; Graphic Designer · Grad Project</div></div><div class="yr">2022</div></div>
+          <div class="intern"><div><div class="co">Reliance Retail</div><div class="role">Fashion &amp; Graphic Designer · Summer</div></div><div class="yr">2021</div></div>
+          <div class="intern"><div><div class="co">LogiBee</div><div class="role">Graphic &amp; UI Designer</div></div><div class="yr">2021</div></div>
+          <div class="intern"><div><div class="co">Humourbaba</div><div class="role">Graphic Designer</div></div><div class="yr">2021</div></div>
+        </div>
+        <h3 class="block-h-spaced"><span class="n">04 /</span> What I bring</h3>
+        <div class="cap__list">
+          <span style="border:1px solid var(--line);padding:9px 14px;">End-to-end ownership</span>
+          <span style="border:1px solid var(--line);padding:9px 14px;">Systems thinking</span>
+          <span style="border:1px solid var(--line);padding:9px 14px;">Research-led decisions</span>
+          <span style="border:1px solid var(--line);padding:9px 14px;">Cross-team collaboration</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Off-hours: Hot Wheels + Cars on social ===== -->
+<section class="section" data-screen-label="About / Off-hours">
+  <div class="wrap">
+    <div class="head-row reveal">
+      <div>
+        <div class="eyebrow">Off the clock</div>
+        <h2 class="section-title">When I'm not<br />shipping pixels.</h2>
+      </div>
+      <div class="head-row__count">[ OFF HOURS ]</div>
+    </div>
+
+    <div class="offhours">
+      <!-- Hot Wheels -->
+      <article class="ohcard reveal">
+        <div class="ohcard__strip">
+          <span class="ohcard__id">LOG // 001</span>
+          <span class="ohcard__tag"><i class="pip"></i>SCALE 1:64</span>
+        </div>
+        <div>
+          <h3 class="ohcard__title">Hot Wheels collector.</h3>
+          <p class="ohcard__lede">A small shelf of die-cast I've been hunting since I was a kid &mdash; <b>JDM legends</b>, vintage muscle, and the occasional weird concept build. Casting numbers, paint variants, the whole nerd ritual.</p>
+        </div>
+        <div class="ohshelf">
+          <figure class="hwphoto">
+            <picture><source srcset="assets/hotwheels-bw.webp" type="image/webp" /><img src="assets/hotwheels-bw.jpg" alt="Me and my dog with the full Hot Wheels haul laid out on the floor" loading="lazy" /></picture>
+          </figure>
+        </div>
+        <div class="ohcard__foot">
+          <span>SHELF</span><span class="sep">//</span><span class="val">The whole haul &mdash; and the co-pilot</span>
+        </div>
+      </article>
+
+      <!-- Cars on social -->
+      <article class="ohcard reveal" data-delay="1">
+        <div class="ohcard__strip">
+          <span class="ohcard__id">LOG // 002</span>
+          <span class="ohcard__tag"><i class="pip"></i>BROADCAST</span>
+        </div>
+        <div>
+          <h3 class="ohcard__title">Cars on social.</h3>
+          <p class="ohcard__lede">When I'm not designing software, I'm posting about cars &mdash; <b>design DNA, silhouettes, history, why a shape lasts</b>. Slowly building a corner of the internet around it.</p>
+        </div>
+        <div class="ohchans">
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener" class="ohchan">
+            <span class="ohchan__lbl">// CH 01</span>
+            <span class="ohchan__name">Instagram</span>
+            <span class="ohchan__arr">&rarr;</span>
+          </a>
+          <a href="https://www.youtube.com/" target="_blank" rel="noopener" class="ohchan">
+            <span class="ohchan__lbl">// CH 02</span>
+            <span class="ohchan__name">YouTube</span>
+            <span class="ohchan__arr">&rarr;</span>
+          </a>
+        </div>
+        <div class="ohcard__foot">
+          <span>SIGNAL</span><span class="sep">//</span><span class="val">Open DMs &mdash; talk shop anytime</span>
+        </div>
+      </article>
+
+      <!-- 3D Showroom: drag-to-orbit BMW M3 E30 -->
+      <article class="ohcar reveal">
+        <div class="ohcar__strip">
+          <span class="ohcar__id">LOG // 003</span>
+          <span class="ohcar__tag"><i class="pip"></i><span data-cartag>BMW M3 E30 &middot; REAL-TIME 3D</span></span>
+        </div>
+        <div class="ohcar__stage" data-stage>
+          <model-viewer
+            class="ohcar__mv"
+            src="assets/bmw_m3_e30.glb"
+            alt="BMW M3 E30 — drag to rotate"
+            camera-controls
+            disable-pan
+            touch-action="pan-y"
+            auto-rotate
+            auto-rotate-delay="600"
+            rotation-per-second="16deg"
+            interaction-prompt="none"
+            camera-orbit="40deg 78deg 80%"
+            min-camera-orbit="auto 58deg auto"
+            max-camera-orbit="auto 90deg auto"
+            shadow-intensity="0.9"
+            shadow-softness="1"
+            exposure="1.05"
+            environment-image="neutral"
+            loading="lazy"
+            reveal="auto"></model-viewer>
+          <span class="ohcar__corner ohcar__corner--tl"></span>
+          <span class="ohcar__corner ohcar__corner--tr"></span>
+          <span class="ohcar__corner ohcar__corner--bl"></span>
+          <span class="ohcar__corner ohcar__corner--br"></span>
+          <div class="ohcar__hint" data-hint>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5a7 7 0 1 1-6.3 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M5 4v4h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Drag to rotate
+          </div>
+          <div class="ohcar__swap" data-swap aria-hidden="true"><span>Loading model</span></div>
+
+          <!-- Play button: launch the drive-it mini-game -->
+          <button class="ohcar__play" data-play type="button" aria-label="Play — drive the car">
+            <span class="ohcar__play-ic" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </span>
+            <span class="ohcar__play-tx">
+              <span class="ohcar__play-h">Play</span>
+            </span>
+          </button>
+
+          <!-- Drive-it game surface (lazy-initialised on first Play) -->
+          <div class="ohgame" data-game hidden>
+            <canvas class="ohgame__canvas" data-canvas></canvas>
+            <div class="ohgame__loading" data-game-loading>Loading circuit&hellip;</div>
+            <div class="ohgame__hud" data-hud>
+              <span class="ohgame__spd"><b data-spd>0</b><i>KM/H</i></span>
+              <span class="ohgame__score"><b data-score>0 / 5</b><i>COINS</i></span>
+            </div>
+            <div class="ohgame__boost" data-boost aria-hidden="true"></div>
+            <button class="ohgame__exit" data-exit type="button">Exit <span aria-hidden="true">&times;</span></button>
+            <div class="ohgame__pads">
+              <div class="gpad gpad--steer">
+                <button class="gbtn" data-key="left" type="button" aria-label="Steer left">&#9664;</button>
+                <button class="gbtn" data-key="right" type="button" aria-label="Steer right">&#9654;</button>
+              </div>
+              <div class="gpad gpad--drive">
+                <button class="gbtn" data-key="up" type="button" aria-label="Accelerate">&#9650;</button>
+                <button class="gbtn" data-key="down" type="button" aria-label="Brake / reverse">&#9660;</button>
+              </div>
+            </div>
+            <div class="ohgame__keys" data-game-hint>ARROWS / WASD &middot; COLLECT THE MARKERS &middot; ESC TO EXIT</div>
+
+            <!-- Reward: collect 5 markers → message → open NIFT page -->
+            <div class="ohreward" data-reward hidden>
+              <div class="ohreward__panel">
+                <div class="ohreward__head"><span class="ohreward__pip"></span> Clearance granted <span class="ohreward__sep">// 005</span></div>
+                <div class="ohreward__score">05<span>Markers collected</span></div>
+                <h3 class="ohreward__msg">Okay &mdash; you&rsquo;ve officially spent enough time on my portfolio. You should probably know where it all began.</h3>
+                <p class="ohreward__sub"><span class="ohreward__pip"></span> Opening my college life&hellip;</p>
+                <div class="ohreward__bar"><i></i></div>
+                <button class="ohreward__go" data-reward-cancel type="button"><span>&times;</span> Cancel &mdash; keep driving</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ohcar__foot">
+          <div>
+            <h3 class="ohcar__title" data-cartitle>The shape that started it.</h3>
+            <p class="ohcar__sub" data-carsub>Boxflares, the DTM stance, that razor greenhouse &mdash; the E30 M3 is half the reason the shelf exists. Grab it and spin.</p>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="section" data-screen-label="About / Contact">
+  <div class="wrap">
+    <div class="cta-band reveal brackets">
+      <div class="cta-band__grid"></div>
+      <div class="eyebrow no-tick" style="justify-content:center;">// CONTACT</div>
+      <h2>Have a problem<br />worth solving?</h2>
+      <p>I'm always up for a conversation about product, design systems, or hard logistics problems.</p>
+      <div class="cta-band__row">
+        <a class="btn btn--primary" href="mailto:gouravsharma.ux@gmail.com">gouravsharma.ux@gmail.com</a>
+        <a class="btn" href="index.html#work">View Work <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div>
+        <div class="footer__big">Gourav Sharma<span class="accent">.</span></div>
+        <p class="dim footer__lede">Product &amp; UI/UX Designer. Designing scalable systems for logistics, SaaS &amp; mobile.</p>
+      </div>
+      <div class="footer__col">
+        <h4>Navigate</h4>
+        <a href="index.html">Index</a>
+        <a href="index.html#work">Work</a>
+        <a href="about.html">About</a>
+        <a href="blog.html">Blogs</a>
+        <a href="glossary.html">Glossary</a>
+        <a href="uploads/cv.pdf" download>Resume ↓</a>
+      </div>
+      <div class="footer__col">
+        <h4>Connect</h4>
+        <a href="mailto:gouravsharma.ux@gmail.com">Email</a>
+        <a href="https://www.linkedin.com/in/gourav-sharmaux/" target="_blank" rel="noopener">LinkedIn</a>
+        <!-- behance hidden for now -->
+        <!-- <a href="https://www.behance.net/" target="_blank" rel="noopener">Behance</a> -->
+      </div>
+    </div>
+    <div class="footer__bar">
+      <span>© 2026 GOURAV SHARMA</span>
+      <span>DESIGNED &amp; BUILT · v1.2 · <span data-clock>--:--:-- UTC</span></span>
+    </div>
+  </div>
+</footer>
+
+<script src="image-slot.js"></script>
+<script src="bigfoot.js"></script>
+<script src="easter-egg.js"></script>
+<script src="click-sfx.js"></script>
+<script src="drive-game.js"></script>
+<script>
+/* About profile picture — scrub through frames by moving the cursor up/down */
+(function () {
+  var fig = document.querySelector('[data-photo-scrub]');
+  if (!fig) return;
+  var layers = fig.querySelectorAll('.profilepic__img');
+  var front = layers[0], back = layers[1];
+  var label = fig.querySelector('[data-photo-label]');
+  var photos = [
+    { src: 'assets/profile/01.jpg', pos: '58% 24%', tag: 'FRAME 01 · DIWALI' },
+    { src: 'assets/profile/02.jpg', pos: 'center 14%', tag: 'FRAME 02 · GOA' },
+    { src: 'assets/profile/03.jpg', pos: 'center 14%', tag: 'FRAME 03 · GOOD BOY' },
+    { src: 'assets/profile/04.jpg', pos: 'center 52%', tag: 'FRAME 04 · ROAD TRIP' },
+    { src: 'assets/profile/05.jpg', pos: 'center 58%', tag: 'FRAME 05 · KART' },
+    { src: 'assets/profile/06.jpg', pos: 'center 56%', tag: 'FRAME 06 · RISHIKESH' },
+    { src: 'assets/profile/07.jpg', pos: '56% 30%', tag: 'FRAME 07 · BIRTHDAY' }
+  ];
+  photos.forEach(function (p) { var im = new Image(); im.src = p.src; });
+
+  var n = photos.length, cur = 0, lastBand = -1;
+  var STEPS = 6;
+  // initial stacked state: front shows frame 0, back parked above
+  front.style.transform = 'translateY(0) scale(1)'; front.style.zIndex = 2; front.style.opacity = '1'; front.style.objectPosition = photos[0].pos;
+  back.style.transition = 'none'; back.style.transform = 'translateY(-101%) scale(1.06)'; back.style.zIndex = 1;
+
+  function show(idx) {
+    idx = Math.max(0, Math.min(n - 1, idx));
+    if (idx === cur) return;
+    cur = idx;
+    var p = photos[idx];
+    // load the new frame into the back layer, park it above, then slide + settle it down
+    back.src = p.src;
+    back.style.objectPosition = p.pos;
+    back.style.transition = 'none';
+    back.style.transform = 'translateY(-101%) scale(1.06)';
+    back.style.opacity = '0.5';
+    back.style.zIndex = 2; front.style.zIndex = 1;
+    void back.offsetWidth; // reflow so the next transition runs
+    back.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease';
+    back.style.transform = 'translateY(0) scale(1)';
+    back.style.opacity = '1';
+    if (label) label.textContent = p.tag;
+    var t = front; front = back; back = t; // swap roles
+  }
+  function randIdx() {
+    if (n < 2) return 0;
+    var k; do { k = Math.floor(Math.random() * n); } while (k === cur);
+    return k;
+  }
+
+  function scrub(clientY) {
+    var r = fig.getBoundingClientRect();
+    var band = Math.floor(((clientY - r.top) / r.height) * STEPS);
+    if (band === lastBand) return;
+    lastBand = band;
+    show(randIdx());
+  }
+  fig.addEventListener('pointermove', function (e) { scrub(e.clientY); });
+  fig.addEventListener('pointerleave', function () { lastBand = -1; });
+  fig.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); show(randIdx()); }
+  });
+})();
+</script>
+<script>
+/* 3D showroom — fade the "drag to rotate" hint once the user grabs the car */
+(function () {
+  var car = document.querySelector('.ohcar');
+  if (!car) return;
+  var mv = car.querySelector('model-viewer');
+  if (!mv) return;
+  function touched() { car.classList.add('is-touched'); }
+  ['pointerdown', 'wheel', 'touchstart', 'keydown'].forEach(function (ev) {
+    mv.addEventListener(ev, touched, { passive: true });
+  });
+  mv.addEventListener('camera-change', function (e) {
+    if (e.detail && e.detail.source === 'user-interaction') touched();
+  });
+})();
+</script>
+<script src="nav-scramble.js"></script>
+<script src="main.js"></script>
+<script src="rise.js"></script>
+</body>
+</html>
+
