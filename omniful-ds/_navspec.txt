@@ -1,0 +1,90 @@
+
+Vertical Navigation
+Vertical Navigation is the main navigation of our interface. This used to navigate between different
+modules/sections
+
+Our vertical navigation is divided into 2 parts. (i) Primary Navigation and (ii) Secondary Navigation
+Primary navigation: Cells and components
+Below are the different states of primary navigation component.
+Selected state
+
+Hover State
+
+Unselected/Rest State
+
+Orange dot on the components show that somethings under this module is pending and needs
+attention. This orange dot on further on nested components leads to the exact point of attention.
+Home
+Home
+Home
+Below is the primary navigation bar which is combination of above components
+Home
+Orders
+Inventory
+Purchase
+Catalog
+All Hubs
+Settings
+Secondary navigation: Cells and components
+Heading: Heading in secondary navigation shows the selected module from the primary
+navigation
+heading
+All Hubs
+heading
+Menu Heading: Menu Heading in secondary navigation shows the further classification of features/
+sections. These heading can and can not have nested features/section.
+Menu Heading
+Menu Heading
+Sub Heading
+Sub Heading
+Sub Heading
+Sub Heading
+Sub Heading
+Sub Heading
+Sub Heading
+Sub Heading
+Menu Heading
+Menu Heading
+Menu Heading
+Sub Heading
+Sub Heading
+Sub Heading
+Menu Heading
+Menu Heading
+Menu Heading
+Selected and Unselected State of Menu headings, selected states further has opening state
+Menu Heading
+Menu Heading
+Menu Heading
+Sub Heading
+Sub Heading
+Sub Heading
+Sub Heading
+Sub Heading
+Sub Heading
+Sub Heading
+Sub Heading
+Selected and Unselected State of Menu headings (Without Nested Feature/sections)
+Menu Heading
+Menu Heading
+Open and Close states of secondary navigation
+heading
+Menu Heading
+Sub Heading
+Sub Heading
+Sub Heading
+Sub Heading
+Sub Heading
+Sub Heading
+Sub Heading
+Sub Heading
+Menu Heading
+Menu Heading
+Menu Heading
+Menu Heading
+Menu Heading
+Menu Heading
+Menu Heading
+
+-- 1 of 1 --
+
