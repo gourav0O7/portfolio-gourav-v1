@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Omniful — Brand Settings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --color-bg-inverse: #1a1a1a;
+      --color-bg-fill-inverse: #303030;
+      --color-text-inverse: #e3e3e3;
+      --color-text-inverse-secondary: #b5b5b5;
+      --color-text: #303030;
+      --color-text-secondary: #616161;
+      --color-text-link: #005bd3;
+      --color-bg-surface: #ffffff;
+      --color-bg: #f2f2f2;
+      --color-border: #e3e3e3;
+      --color-nav-bg: #ebebeb;
+      --color-required: #8e1f0b;
+      --radius-button: 8px;
+      --radius-card: 12px;
+      --radius-200: 8px;
+      --radius-150: 6px;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--color-bg);
+      min-height: 100vh;
+    }
+
+    /* ── TOP BAR ── */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      background: var(--color-bg-inverse);
+      height: 56px;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      box-shadow: inset 0 -1px 0 rgba(0,0,0,.17);
+    }
+    .top-bar-logo {
+      width: 240px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      padding: 6px 16px;
+      height: 56px;
+    }
+    .logo-text {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .logo-bag {
+      width: 22px; height: 22px;
+      background: #95bf47;
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .top-bar-search {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .search-field {
+      background: #303030;
+      border: 0.66px solid #616161;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding: 6px 8px 6px 6px;
+      width: 344px;
+    }
+    .search-field span { flex:1; font-size:13px; font-weight:450; color:#b5b5b5; line-height:20px; }
+    .search-kbd { font-size:13px; color:#b5b5b5; white-space:nowrap; }
+    .top-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 8px 0 16px;
+      height: 56px;
+    }
+    .icon-btn {
+      background: #303030;
+      border-radius: 8px;
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .user-menu {
+      background: #303030;
+      border-radius: 8px;
+      padding: 2px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .user-menu-name { font-size:12px; font-weight:550; color:#e3e3e3; padding-left:10px; white-space:nowrap; }
+    .avatar {
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      background: #7c5cba;
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ── LAYOUT ── */
+    .layout { display:flex; margin-top:56px; min-height:calc(100vh - 56px); }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 240px;
+      flex-shrink: 0;
+      background: var(--color-nav-bg);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 16px 0;
+      position: fixed;
+      top: 56px; bottom: 0; left: 0;
+      overflow-y: auto;
+    }
+    .sidebar-nav { display:flex; flex-direction:column; gap:24px; }
+    .nav-section { display:flex; flex-direction:column; }
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 16px 4px 20px;
+      font-size: 12px;
+      font-weight: 550;
+      color: #616161;
+      line-height: 16px;
+    }
+    .nav-item { display:flex; flex-direction:column; padding:0 12px; }
+    .nav-item-inner {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 4px 4px 8px;
+      border-radius: 8px;
+      width: 100%;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .nav-item-inner:hover { background: rgba(0,0,0,.05); }
+    .nav-icon { width:20px; height:20px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+    .nav-label { flex:1; font-size:13px; font-weight:550; color:#303030; line-height:20px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .nav-badge { background:rgba(0,0,0,.06); border-radius:8px; padding:2px 8px; height:20px; display:flex; align-items:center; font-size:12px; font-weight:550; color:#616161; }
+    .child-item { display:flex; flex-direction:column; padding:0 12px; }
+    .child-item-inner {
+      display: flex;
+      align-items: center;
+      padding: 4px 4px 4px 36px;
+      border-radius: 8px;
+      width: 100%;
+      cursor: pointer;
+      position: relative;
+    }
+    .child-item-inner:hover { background: rgba(0,0,0,.05); }
+    .child-item-inner.active { background: #fafafa; }
+    .child-label { font-size:13px; font-weight:450; color:#616161; line-height:20px; }
+    .child-item-inner.active .child-label { font-weight:650; color:#303030; letter-spacing:-0.065px; }
+    .child-indicator { position:absolute; left:8px; top:0; width:21px; height:28px; overflow:hidden; }
+    .child-indicator-line { position:absolute; left:9px; top:0; bottom:0; width:1.5px; background:#b5b5b5; }
+    .child-indicator-curve { position:absolute; left:9px; top:0; width:11.5px; height:18.5px; border-left:1.5px solid #b5b5b5; border-bottom:1.5px solid #b5b5b5; border-bottom-left-radius:6px; }
+
+    /* ── MAIN ── */
+    .main-content { margin-left:240px; flex:1; }
+    .page-header {
+      background: #f1f1f1;
+      border-bottom: 0.5px solid #e0e0e0;
+      padding: 0 14px;
+    }
+    .page-header-inner { display:flex; align-items:center; justify-content:space-between; padding:8px 0; }
+    .page-title { font-size:14px; font-weight:650; color:#303030; line-height:24px; letter-spacing:-0.2px; }
+    .page-body { padding:32px 40px; display:flex; flex-direction:column; gap:32px; }
+
+    /* ── PAGE HEADING ── */
+    .page-heading-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .page-heading h1 { font-size:20px; font-weight:650; color:#303030; line-height:28px; }
+    .page-heading p { font-size:13px; font-weight:450; color:#616161; line-height:20px; margin-top:4px; }
+    .btn-save-disabled {
+      background: rgba(0,0,0,.17);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: not-allowed;
+      line-height: 16px;
+    }
+
+    /* ── MAIN CARD ── */
+    .main-card {
+      background: var(--color-bg-surface);
+      border-radius: 12px;
+      box-shadow: inset 1px 0 0 rgba(0,0,0,.13), inset -1px 0 0 rgba(0,0,0,.13), inset 0 -1px 0 rgba(0,0,0,.17), inset 0 1px 0 rgba(204,204,204,.5);
+      padding: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    /* ── FORM AREA ── */
+    .form-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      flex: 1;
+      min-width: 0;
+    }
+    .form-section {
+      background: #fff;
+      border: 1px solid #e3e3e3;
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .form-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .form-label {
+      font-size: 13px;
+      font-weight: 450;
+      color: #303030;
+      line-height: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .form-label .required { color: var(--color-required); }
+    .form-label .info-icon {
+      width: 16px; height: 16px;
+      background: #e3e3e3;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: #616161;
+      cursor: help;
+    }
+    .drop-zone {
+      width: 28px; height: 28px;
+      border: 0.66px dashed #8a8a8a;
+      border-radius: 8px;
+      background: #fdfdfd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .drop-zone-error {
+      border-color: var(--color-required);
+      background: #fee9e8;
+    }
+    .drop-zone svg { width:14px; height:14px; color:#616161; }
+
+    .field-group { display:flex; flex-direction:column; gap:4px; }
+    .field-label { font-size:13px; font-weight:450; color:#303030; line-height:20px; }
+    .field-input {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 12px;
+      border: 0.66px solid #8a8a8a;
+      border-radius: 8px;
+      background: #fdfdfd;
+      font-size: 13px;
+      font-weight: 450;
+      color: #616161;
+      line-height: 20px;
+      width: 100%;
+    }
+    .color-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .color-preview {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+    .color-input-row { display:flex; align-items:center; gap:8px; }
+    .color-hex-field {
+      padding: 6px 12px;
+      border: 0.66px solid #8a8a8a;
+      border-radius: 8px;
+      background: #fdfdfd;
+      font-size: 13px;
+      font-weight: 450;
+      color: #616161;
+      line-height: 20px;
+      width: 100px;
+    }
+
+    /* ── PHONE PREVIEW ── */
+    .phone-preview {
+      width: 418px;
+      height: 752px;
+      background: #f7f7f7;
+      border-radius: 12px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+    .phone-frame {
+      width: 300px;
+      height: 620px;
+      background: #020204;
+      border-radius: 50px;
+      border: 4px solid #7a7a7a;
+      position: relative;
+      overflow: hidden;
+    }
+    .phone-screen {
+      position: absolute;
+      top: 10px; left: 5px; right: 5px; bottom: 10px;
+      background: #fff;
+      border-radius: 42px;
+      overflow: hidden;
+    }
+    .phone-notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 28px;
+      background: #020204;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .phone-notch-dot {
+      width: 10px; height: 10px;
+      background: #171717;
+      border-radius: 50%;
+    }
+    .phone-camera {
+      width: 10px; height: 10px;
+      background: #333;
+      border-radius: 50%;
+      margin-right: 6px;
+      border: 1px solid #555;
+    }
+    /* Power / volume buttons */
+    .phone-btn-power {
+      position: absolute;
+      right: -5px;
+      top: 140px;
+      width: 4px;
+      height: 60px;
+      background: linear-gradient(180deg,#1c1c1c 0%,#969696 7%,#969696 90%,#1c1c1c 100%);
+      border-radius: 0 2px 2px 0;
+      border: 0.4px solid #747471;
+    }
+    .phone-btn-mute {
+      position: absolute;
+      left: -5px;
+      top: 84px;
+      width: 4px;
+      height: 36px;
+      background: linear-gradient(180deg,#3f3f3f 0%,#b4b4b4 15%,#b4b4b4 85%,#3f3f3f 100%);
+      border-radius: 2px 0 0 2px;
+      border: 0.4px solid #747471;
+    }
+    .phone-btn-vol-up {
+      position: absolute;
+      left: -5px;
+      top: 130px;
+      width: 4px;
+      height: 44px;
+      background: linear-gradient(180deg,#3f3f3f 0%,#b4b4b4 12%,#b4b4b4 88%,#3f3f3f 100%);
+      border-radius: 2px 0 0 2px;
+      border: 0.4px solid #747471;
+    }
+    .phone-btn-vol-down {
+      position: absolute;
+      left: -5px;
+      top: 184px;
+      width: 4px;
+      height: 44px;
+      background: linear-gradient(180deg,#3f3f3f 0%,#b4b4b4 12%,#b4b4b4 88%,#3f3f3f 100%);
+      border-radius: 2px 0 0 2px;
+      border: 0.4px solid #747471;
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="top-bar">
+  <div class="top-bar-logo">
+    <div class="logo-text">
+      <div class="logo-bag">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 4h10l-1.5 8H3.5L2 4z" fill="white"/>
+          <path d="M5 4V3a2 2 0 0 1 4 0v1" stroke="white" stroke-width="1.5" fill="none"/>
+        </svg>
+      </div>
+      <span style="color:#95bf47">shopify</span>
+    </div>
+  </div>
+  <div class="top-bar-search">
+    <div class="search-field">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <circle cx="8.5" cy="8.5" r="5" stroke="#b5b5b5" stroke-width="1.5"/>
+        <path d="M12.5 12.5L16 16" stroke="#b5b5b5" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <span>Search</span>
+      <span class="search-kbd">⌘K</span>
+    </div>
+  </div>
+  <div class="top-bar-right">
+    <div class="icon-btn">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <circle cx="10" cy="10" r="2" stroke="#e3e3e3" stroke-width="1.4"/>
+        <path d="M10 4v1M10 15v1M4 10h1M15 10h1M5.64 5.64l.7.7M13.66 13.66l.7.7M14.36 5.64l-.7.7M6.34 13.66l-.7.7" stroke="#e3e3e3" stroke-width="1.3" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="icon-btn">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M10 2a5.5 5.5 0 0 1 5.5 5.5c0 2.5-.8 4.5-2 6l.5 1H6l.5-1C5.3 12 4.5 10 4.5 7.5A5.5 5.5 0 0 1 10 2z" stroke="#e3e3e3" stroke-width="1.4"/>
+        <path d="M8 14.5a2 2 0 0 0 4 0" stroke="#e3e3e3" stroke-width="1.4"/>
+      </svg>
+    </div>
+    <div class="user-menu">
+      <span class="user-menu-name">Stellar Interiors</span>
+      <div class="avatar">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <rect width="28" height="28" fill="#7c5cba" rx="6"/>
+          <circle cx="14" cy="11" r="4" fill="white" opacity=".9"/>
+          <ellipse cx="14" cy="22" rx="7" ry="4" fill="white" opacity=".9"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-item"><a class="nav-item-inner" href="#"><div class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 8l7-5 7 5v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8z" stroke="#303030" stroke-width="1.5"/></svg></div><span class="nav-label">Home</span></a></div>
+        <div class="nav-item"><a class="nav-item-inner" href="#"><div class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="4" width="14" height="12" rx="2" stroke="#303030" stroke-width="1.4"/></svg></div><span class="nav-label">Orders</span><span class="nav-badge">15</span></a></div>
+        <div class="nav-item"><a class="nav-item-inner" href="#"><div class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="4" y="4" width="12" height="12" rx="2" stroke="#303030" stroke-width="1.4"/></svg></div><span class="nav-label">Products</span></a></div>
+        <div class="nav-item"><a class="nav-item-inner" href="#"><div class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="8" r="3.5" stroke="#303030" stroke-width="1.4"/><path d="M4 17c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#303030" stroke-width="1.4" stroke-linecap="round"/></svg></div><span class="nav-label">Customers</span></a></div>
+        <div class="nav-item"><a class="nav-item-inner" href="#"><div class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="14" rx="2" stroke="#303030" stroke-width="1.4"/></svg></div><span class="nav-label">Content</span></a></div>
+        <div class="nav-item"><a class="nav-item-inner" href="#"><div class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="4" y="8" width="3" height="8" rx="1" fill="#303030"/><rect x="8.5" y="5" width="3" height="11" rx="1" fill="#303030"/><rect x="13" y="3" width="3" height="13" rx="1" fill="#303030"/></svg></div><span class="nav-label">Analytics</span></a></div>
+        <div class="nav-item"><a class="nav-item-inner" href="#"><div class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="6.5" stroke="#303030" stroke-width="1.4"/></svg></div><span class="nav-label">Marketing</span></a></div>
+        <div class="nav-item"><a class="nav-item-inner" href="#"><div class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 10h8" stroke="#303030" stroke-width="1.4" stroke-linecap="round"/></svg></div><span class="nav-label">Discounts</span></a></div>
+      </div>
+
+      <div class="nav-section">
+        <div class="section-title"><span>Sales channels</span><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 5l3 3-3 3" stroke="#616161" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+        <div class="nav-item"><a class="nav-item-inner" href="#"><div class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="5" width="14" height="10" rx="2" stroke="#303030" stroke-width="1.4"/></svg></div><span class="nav-label">Online Store</span></a></div>
+        <div class="nav-item"><a class="nav-item-inner" href="#"><div class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="14" rx="2" stroke="#303030" stroke-width="1.4"/></svg></div><span class="nav-label">Point of Sale</span></a></div>
+        <div class="nav-item"><div class="nav-item-inner"><div class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="14" rx="2" stroke="#303030" stroke-width="1.4"/></svg></div><span class="nav-label">Omniful</span></div></div>
+        <div class="child-item"><div class="child-item-inner"><div class="child-indicator"><div class="child-indicator-line"></div></div><span class="child-label">Pages</span></div></div>
+        <div class="child-item"><div class="child-item-inner active"><div class="child-indicator"><div class="child-indicator-curve"></div></div><span class="child-label">Branding</span></div></div>
+        <div class="child-item"><div class="child-item-inner"><span class="child-label">Themes</span></div></div>
+        <div class="child-item"><div class="child-item-inner"><span class="child-label">Integrations</span></div></div>
+        <div class="child-item"><div class="child-item-inner"><span class="child-label">Notifications</span></div></div>
+        <div class="child-item"><div class="child-item-inner"><span class="child-label">Deep Link</span></div></div>
+        <div class="child-item"><div class="child-item-inner"><span class="child-label">Settings</span></div></div>
+      </div>
+
+      <div class="nav-section">
+        <div class="section-title"><span>Apps</span><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 5l3 3-3 3" stroke="#616161" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+        <div class="nav-item"><a class="nav-item-inner" href="#"><div class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="5" width="10" height="8" rx="1.5" stroke="#303030" stroke-width="1.4"/></svg></div><span class="nav-label">Shopify Email</span></a></div>
+      </div>
+    </div>
+    <div style="padding:0 12px">
+      <div class="nav-item" style="padding:0"><a class="nav-item-inner" href="#"><div class="nav-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.5" stroke="#303030" stroke-width="1.4"/><path d="M10 3v1.5M10 15.5V17M3 10h1.5M15.5 10H17" stroke="#303030" stroke-width="1.4" stroke-linecap="round"/></svg></div><span class="nav-label">Settings</span></a></div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main-content">
+    <div class="page-header">
+      <div class="page-header-inner">
+        <span class="page-title">Logo</span>
+      </div>
+    </div>
+
+    <div class="page-body">
+      <!-- Heading row -->
+      <div class="page-heading-row">
+        <div class="page-heading">
+          <h1>Brand Settings</h1>
+          <p>Brand setting description text here</p>
+        </div>
+        <button class="btn-save-disabled" disabled>Save</button>
+      </div>
+
+      <!-- Main card -->
+      <div class="main-card">
+        <!-- Form column -->
+        <div class="form-col">
+
+          <!-- App Identity -->
+          <div class="form-section">
+            <div class="form-row">
+              <span class="form-label">App Icon <span class="required">*</span> <span class="info-icon">i</span></span>
+              <div class="drop-zone">
+                <svg viewBox="0 0 20 20" fill="none"><path d="M10 13V7M7 10l3-3 3 3" stroke="#616161" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+            <div class="form-row">
+              <span class="form-label">Store Logo <span class="required">*</span> <span class="info-icon">i</span></span>
+              <div class="drop-zone drop-zone-error">
+                <svg viewBox="0 0 20 20" fill="none"><path d="M10 13V7M7 10l3-3 3 3" stroke="#8e1f0b" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">App Display Name <span style="color:#8e1f0b">*</span></label>
+              <div class="field-input">eg. Omniful Clothing</div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">iOS Bundle Identifier <span style="color:#8e1f0b">*</span></label>
+              <div class="field-input">eg.com.omniful.app.Omniful Clothing</div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Android Bundle Identifier <span style="color:#8e1f0b">*</span></label>
+              <div class="field-input">eg. com.omniful.app.Omniful Clothing</div>
+            </div>
+          </div>
+
+          <!-- Branding -->
+          <div class="form-section">
+            <div class="form-row">
+              <span class="form-label">Store Logo <span class="required">*</span> <span class="info-icon">i</span></span>
+              <div class="drop-zone">
+                <svg viewBox="0 0 20 20" fill="none"><path d="M10 13V7M7 10l3-3 3 3" stroke="#616161" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+            <div class="color-row">
+              <span class="form-label">Primary Color <span class="required">*</span> <span class="info-icon">i</span></span>
+              <div class="color-input-row">
+                <div class="color-preview" style="background:#cae6ff;"></div>
+                <div class="color-hex-field">#5468FA</div>
+              </div>
+            </div>
+            <div class="color-row">
+              <span class="form-label">Secondary Color <span class="required">*</span> <span class="info-icon">i</span></span>
+              <div class="color-input-row">
+                <div class="color-preview" style="background:#0c5132;"></div>
+                <div class="color-hex-field">#5468FA</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- URLs -->
+          <div class="form-section">
+            <div class="field-group">
+              <label class="field-label">Privacy Policy URL <span style="color:#8e1f0b">*</span></label>
+              <div class="field-input">eg. Omniful Clothing</div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">Terms of Use URL <span style="color:#8e1f0b">*</span></label>
+              <div class="field-input">eg.com.omniful.app.Omniful Clothing</div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">About Us URL <span style="color:#8e1f0b">*</span></label>
+              <div class="field-input" style="width:320px">eg. com.omniful.app.Omniful Clothing</div>
+            </div>
+          </div>
+
+          <!-- Contact -->
+          <div class="form-section">
+            <div class="field-group">
+              <label class="field-label">Merchant Email <span style="color:#8e1f0b">*</span></label>
+              <div class="field-input">eg. himanshusingh@hotmail.co.uk</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Phone preview -->
+        <div class="phone-preview">
+          <div class="phone-frame">
+            <div class="phone-btn-power"></div>
+            <div class="phone-btn-mute"></div>
+            <div class="phone-btn-vol-up"></div>
+            <div class="phone-btn-vol-down"></div>
+            <div class="phone-screen">
+              <div class="phone-notch">
+                <div class="phone-camera"></div>
+                <div class="phone-notch-dot"></div>
+              </div>
+              <!-- Phone screen content would go here -->
+              <div style="padding-top:40px;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:12px;opacity:.3">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                  <rect x="4" y="4" width="32" height="32" rx="8" fill="#e3e3e3"/>
+                </svg>
+                <span style="font-size:12px;color:#b5b5b5">App Preview</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+
+<script>(function(){function measure(){var de=document.documentElement,b=document.body;var a=de.style.minHeight,c=b.style.minHeight;de.style.minHeight='0';b.style.minHeight='0';var h=Math.max(b.scrollHeight,de.scrollHeight,b.offsetHeight);de.style.minHeight=a;b.style.minHeight=c;return h;}var last=0;function send(){var h=measure();if(h&&Math.abs(h-last)>2){last=h;try{parent.postMessage({__omScreenH:h},'*');}catch(e){}}}window.addEventListener('load',function(){send();setTimeout(send,300);setTimeout(send,900);});window.addEventListener('resize',send);if(window.ResizeObserver){var t;try{new ResizeObserver(function(){clearTimeout(t);t=setTimeout(send,150);}).observe(document.body);}catch(e){}}})();</script>
+</body>
+</html>
+
