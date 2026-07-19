@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Omniful Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+<link rel="stylesheet" href="docs.css" />
+<link rel="stylesheet" href="components.css" />
+</head>
+<body class="omds">
+
+<header class="ds-top">
+  <div class="ds-top__brand">
+    <span class="ds-top__mark">O</span>
+    <span><b>Omniful Design System</b><span>Foundations &amp; components</span></span>
+  </div>
+  <span class="ds-top__ver">v1.0</span>
+  <span class="ds-top__search"></span>
+  <a class="ds-top__back" href="../index.html"><svg viewBox="0 0 16 16" fill="none"><path d="m10 4-4 4 4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Portfolio</a>
+</header>
+
+<aside class="ds-rail">
+  <div class="ds-rail__group">Getting started</div>
+  <a class="ds-rail__link is-on" href="#overview">Overview</a>
+  <div class="ds-rail__group">Foundations</div>
+  <a class="ds-rail__link" href="#color">Color</a>
+  <a class="ds-rail__link" href="#typography">Typography</a>
+  <a class="ds-rail__link" href="#spacing">Spacing &amp; radius</a>
+  <a class="ds-rail__link" href="#elevation">Elevation</a>
+  <a class="ds-rail__link" href="#icons">Icons <span class="cnt">230</span></a>
+  <span id="railComponents"></span>
+</aside>
+
+<main class="ds-main">
+  <div class="ds-wrap">
+
+    <div class="ds-hero" id="overview">
+      <div class="ds-hero__text">
+        <div class="eyebrow">Omniful · Design System</div>
+        <h1>One language for three products</h1>
+        <p>The system behind Omniful's WMS, OMS and delivery platforms. One interactive blue, a disciplined grey ramp, Poppins with mathematical line-heights — and components built for dense operational screens people work in for eight hours a day.</p>
+        <div class="ds-hero__meta">
+          <div><span>Role</span><b>Product Designer · DS owner</b></div>
+          <div><span>Timeline</span><b>2024–25 · ongoing</b></div>
+          <div><span>Platform</span><b>Web · Figma library</b></div>
+        </div>
+        <div class="ds-hero__stats">
+          <div class="ds-hero__stat"><b>55</b><span>design tokens</span></div>
+          <div class="ds-hero__stat"><b>230</b><span>domain icons</span></div>
+          <div class="ds-hero__stat"><b>30+</b><span>components</span></div>
+          <div class="ds-hero__stat"><b>3</b><span>products served</span></div>
+        </div>
+      </div>
+      <div class="ds-hero__visual" aria-hidden="true">
+        <div class="ds-bw">
+          <div class="ds-bw__bar"><span class="ds-bw__dot" style="background:#FF5F57"></span><span class="ds-bw__dot" style="background:#FEBC2E"></span><span class="ds-bw__dot" style="background:#28C840"></span><span class="ds-bw__url">app.omniful.com/overview</span></div>
+          <div class="ds-bw__body">
+            <div class="ds-bw__nav">
+              <span class="ds-bw__brandmark" style="width:30px;height:30px;border-radius:8px;background:var(--om-primary);color:#fff;display:grid;place-items:center;font-weight:700;font-size:13px;margin-bottom:6px">O</span>
+              <span class="n is-on"><svg viewBox="0 0 24 24" fill="none"><path d="M4 11l8-6 8 6M6 10v9h12v-9" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span>
+              <span class="n"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="14" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M4 9h16" stroke="currentColor" stroke-width="1.7"/></svg></span>
+              <span class="n"><svg viewBox="0 0 24 24" fill="none"><path d="M5 19V9m7 10V5m7 14v-7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+              <span class="n"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/><path d="M12 4v2m0 12v2M4 12h2m12 0h2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+            </div>
+            <div class="ds-bw__main">
+              <div class="ds-bw__cards">
+                <div class="ds-bw__stat"><span>Live orders</span><b>148</b></div>
+                <div class="ds-bw__stat"><span>Dispatched</span><b>63</b></div>
+                <div class="ds-bw__stat"><span>Failed</span><b>3</b></div>
+              </div>
+              <div class="ds-bw__panel">
+                <div class="ds-bw__prow"><span class="mono">OM-48291</span><span>Aisha Al-Farsi</span><span class="push om-tag om-tag--green"><span class="dot"></span>Delivered</span></div>
+                <div class="ds-bw__prow"><span class="mono">OM-48292</span><span>Omar Haddad</span><span class="push om-tag om-tag--orange"><span class="dot"></span>Picking</span></div>
+                <div class="ds-bw__prow"><span class="mono">OM-48293</span><span>Fatima Noor</span><span class="push om-tag om-tag--cyan"><span class="dot"></span>In transit</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ FOUNDATIONS ============ -->
+    <section class="ds-sec" id="color">
+      <div class="ds-sec__eyebrow">Foundations</div>
+      <h2>Color</h2>
+      <p class="ds-sec__intro">The palette is deliberately quiet. One vibrant primary carries every interactive affordance; greys do the structure; six accent hues are reserved exclusively for status. The rule an operator learns once: <b>if it's blue you can click it, if it's colored it's a status.</b></p>
+      <div class="ds-lbl">Primary</div>
+      <div class="ds-colorlist" data-colors='[["Primary","#5468FA","Every interactive affordance — buttons, links, focus rings, active states."],["Primary Dark","#495AD9","Hover and pressed states for primary actions."],["Primary Light","#CCD2FD","Borders and dividers on tinted surfaces; selected outlines."],["Primary Lighter","#EEF0FE","Fills for selected rows, subtle buttons and focus halos."]]'></div>
+      <div class="ds-lbl">Text</div>
+      <div class="ds-colorlist" data-colors='[["Ink","#222222","Primary text, headings and high-emphasis values."],["Ink Secondary","#666666","Supporting text, labels and secondary values."],["Ink Tertiary","#999999","Placeholders, captions and metadata."],["Disabled","#C9C9C9","Text and icons in disabled controls."]]'></div>
+      <div class="ds-lbl">Surfaces &amp; borders</div>
+      <div class="ds-colorlist" data-colors='[["Surface","#FFFFFF","Cards, sheets, menus — the base content surface."],["Canvas","#F4F5F7","App background behind cards and panels."],["Surface 2","#F9F9F9","Table headers, footers and inset zones."],["Divider","#EEEFF2","Hairlines between rows, sections and controls."],["Input Border","#DEDEDE","Resting borders on fields, selects and buttons."],["Search Bg","#FAFAFA","Resting fill for search fields, so they read as ‘filter’."]]'></div>
+      <div class="ds-lbl">Status accents — tags only</div>
+      <div class="ds-colorlist" data-colors='[["Green","#067603","Success — delivered, active, in stock. Paired with Green Bg #E6F1E6."],["Red","#C21808","Error — failed, cancelled, out of stock. Paired with Red Bg #FFE5E5."],["Orange","#F9720A","In-progress — picking, pending. Paired with Orange Bg #FEE3CE."],["Purple","#AE1AF7","On-hold and exceptions. Paired with Purple Bg #F7E8FE."],["Cyan","#00CFE8","In transit and informational. Paired with Cyan Bg #E5FCFF."],["Brown","#CD5700","Archived and inactive. Paired with Brown Bg #FFFAEA."]]'></div>
+      <div class="ds-why"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.4"/><path d="M8 7.4v3.4M8 5.1v.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span><b>Why one blue:</b> ops screens are 90% table. A single interactive hue keeps 50-column screens scannable — anything colored is guaranteed to be information, not decoration.</span></div>
+    </section>
+
+    <section class="ds-sec" id="typography">
+      <div class="ds-sec__eyebrow">Foundations</div>
+      <h2>Typography</h2>
+      <p class="ds-sec__intro">One family — Poppins — with a strict rule: <b>line-height = font-size × 1.5</b>. Vertical rhythm is automatic on every screen, with no per-style eyeballing. Body is 14/21 because operators read thousands of rows a day.</p>
+      <div class="ds-preview" style="background-image:none"><div style="padding:10px 30px">
+        <div class="ds-type-row"><span class="spec"><b>H1</b>28 / 42 · SemiBold</span><span class="sample" style="font-size:28px;line-height:42px;font-weight:600">Inventory overview</span></div>
+        <div class="ds-type-row"><span class="spec"><b>H2</b>20 / 30 · SemiBold</span><span class="sample" style="font-size:20px;line-height:30px;font-weight:600">Riyadh Central hub</span></div>
+        <div class="ds-type-row"><span class="spec"><b>H3</b>16 / 24 · SemiBold</span><span class="sample" style="font-size:16px;line-height:24px;font-weight:600">Picking wave W-1042</span></div>
+        <div class="ds-type-row"><span class="spec"><b>Body</b>14 / 21 · Regular</span><span class="sample" style="font-size:14px;line-height:21px">Orders sync every two minutes from all connected stores.</span></div>
+        <div class="ds-type-row"><span class="spec"><b>Body Medium</b>14 / 21 · Medium</span><span class="sample" style="font-size:14px;line-height:21px;font-weight:500">36 orders ready for dispatch</span></div>
+        <div class="ds-type-row"><span class="spec"><b>SubBody</b>12 / 18 · Regular</span><span class="sample" style="font-size:12px;line-height:18px">Last updated 2 minutes ago</span></div>
+        <div class="ds-type-row"><span class="spec"><b>Assistive</b>11 / 16.5 · Regular</span><span class="sample" style="font-size:11px;line-height:16.5px;color:var(--om-ink-3)">Used across shipments and invoices</span></div>
+      </div></div>
+    </section>
+
+    <section class="ds-sec" id="spacing">
+      <div class="ds-sec__eyebrow">Foundations</div>
+      <h2>Spacing &amp; radius</h2>
+      <p class="ds-sec__intro">A 12-step scale with a deliberately tight low end — dense tables need 2px and 4px steps an 8-point grid can't give. Radii pair with component size so corner curvature always looks proportional.</p>
+      <div class="ds-lbl">Spacing scale</div>
+      <div class="ds-preview" style="background-image:none"><div style="padding:18px 30px" id="spaceScale"></div></div>
+      <div class="ds-lbl">Radius scale</div>
+      <div class="ds-preview"><div class="ds-preview__stage" id="radiusScale" style="gap:22px"></div></div>
+    </section>
+
+    <section class="ds-sec" id="elevation">
+      <div class="ds-sec__eyebrow">Foundations</div>
+      <h2>Elevation</h2>
+      <p class="ds-sec__intro">Three shadow levels only. Cards sit nearly flat, popovers float, modals dominate — depth maps to how much attention something demands.</p>
+      <div class="ds-preview" style="background-image:none;background:var(--om-bg2)"><div style="padding:30px"><div class="ds-elev" id="elevScale"></div></div></div>
+    </section>
+
+    <section class="ds-sec" id="icons">
+      <div class="ds-sec__eyebrow">Foundations</div>
+      <h2>Icons</h2>
+      <p class="ds-sec__intro">230 custom glyphs drawn for the domain — Hub, Picking Wave, Manifest, Return Gate Entry — because generic icon packs don't speak warehouse. Single-color <code class="ds-code">currentColor</code> strokes on a 16×16 grid, so any icon inherits any text color.</p>
+      <div class="ds-icons__bar">
+        <label class="om-search" id="iconSearch" style="width:280px">
+          <svg viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.4"/><path d="m10.5 10.5 3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          <input type="text" placeholder="Filter icons…" />
+          <button class="clr" type="button" aria-label="Clear"><svg viewBox="0 0 16 16" width="12" height="12" fill="none"><path d="m4 4 8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        </label>
+        <span class="n" id="iconCount"></span>
+      </div>
+      <div class="ds-icons" id="iconGrid"></div>
+    </section>
+
+    <!-- component sections render here -->
+    <span id="catalogMount"></span>
+
+    <div class="ds-foot">
+      <b>Omniful Design System</b> — designed and documented by Gourav Sharma. Values, tokens and icons extracted from the production Figma library. Every component on this page is live HTML/CSS, not an image.
+    </div>
+  </div>
+</main>
+
+<script src="catalog-actions.js"></script>
+<script src="catalog-forms.js"></script>
+<script src="catalog-more.js"></script>
+<script src="library.js"></script>
+</body>
+</html>
+

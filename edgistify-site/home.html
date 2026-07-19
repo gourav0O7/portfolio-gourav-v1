@@ -1,0 +1,303 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Edgistify — Integrated Supply Chain Solutions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Noto+Serif:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --teal:#00A699;
+    --teal-dk:#008C81;
+    --ink:#0C0C0C;
+    --ink-2:#141414;
+    --line:rgba(255,255,255,0.10);
+    --line-d:#E8E7E6;
+    --paper:#F7F7F7;
+    --muted:#8D8D8D;
+    --muted-2:#A3A3A3;
+    --serif:'Noto Serif',Georgia,serif;
+    --sans:'Outfit',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:#fff;color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1280px;margin:0 auto;padding:0 56px;}
+  .teal{color:var(--teal);}
+
+  /* nav */
+  .nav{position:sticky;top:0;z-index:50;background:rgba(12,12,12,0.86);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);}
+  .nav__in{display:flex;align-items:center;height:74px;}
+  .logo{font-weight:600;font-size:23px;letter-spacing:-0.02em;color:#fff;}
+  .logo b{color:var(--teal);font-weight:700;}
+  .nav__links{display:flex;gap:34px;margin-left:54px;font-size:15px;color:#d6d6d6;font-weight:300;}
+  .nav__links a:hover{color:var(--teal);}
+  .nav__cta{margin-left:auto;}
+  .btn{display:inline-flex;align-items:center;gap:9px;height:46px;padding:0 24px;border-radius:8px;font-family:var(--sans);font-weight:500;font-size:15px;cursor:pointer;border:1px solid transparent;transition:transform .15s ease,background .2s ease,color .2s ease;}
+  .btn--teal{background:var(--teal);color:#fff;}
+  .btn--teal:hover{background:var(--teal-dk);transform:translateY(-1px);}
+  .btn--ghost{border-color:rgba(255,255,255,0.25);color:#fff;background:transparent;}
+  .btn--ghost:hover{border-color:var(--teal);color:var(--teal);}
+  .btn--dark{background:var(--ink);color:#fff;}
+  .btn--dark:hover{background:#000;transform:translateY(-1px);}
+
+  /* hero */
+  .hero{background:var(--ink);color:#fff;position:relative;overflow:hidden;}
+  .hero__in{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;min-height:560px;padding:70px 0 86px;}
+  .hero h1{font-weight:600;font-size:clamp(40px,5.2vw,66px);line-height:1.03;letter-spacing:-0.025em;max-width:11ch;}
+  .hero__sub{margin-top:24px;font-weight:300;font-size:17px;line-height:1.6;color:var(--muted-2);max-width:46ch;}
+  .hero__cta{margin-top:34px;}
+  /* isometric stand-in: layered warehouse/logistics scene built in CSS */
+  .iso{position:relative;height:420px;}
+  .iso__floor{position:absolute;inset:auto 0 40px 0;height:300px;background:
+    linear-gradient(120deg,rgba(0,166,153,0.10),transparent 60%);
+    border-radius:20px;transform:perspective(900px) rotateX(52deg) rotateZ(-2deg);transform-origin:bottom;
+    background-image:linear-gradient(rgba(255,255,255,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.06) 1px,transparent 1px);background-size:46px 46px;border:1px solid rgba(255,255,255,0.08);}
+  .iso__box{position:absolute;border-radius:6px;background:linear-gradient(150deg,#1d1d1d,#101010);border:1px solid rgba(255,255,255,0.10);box-shadow:0 30px 50px -28px rgba(0,0,0,0.8);}
+  .iso__box.t{background:linear-gradient(150deg,rgba(0,166,153,0.32),rgba(0,166,153,0.10));border-color:rgba(0,166,153,0.4);}
+  .iso__b1{width:120px;height:120px;right:90px;top:70px;}
+  .iso__b2{width:96px;height:96px;right:200px;top:130px;}
+  .iso__b3{width:140px;height:90px;right:40px;top:200px;}
+  .iso__b4{width:84px;height:84px;right:230px;top:240px;}
+  .iso__tag{position:absolute;left:0;bottom:0;font-family:var(--sans);font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);}
+
+  /* stats */
+  .stats{margin-top:-44px;position:relative;z-index:5;}
+  .stats__row{display:grid;grid-template-columns:repeat(5,1fr);background:#fff;border:1px solid var(--line-d);border-radius:14px;overflow:hidden;box-shadow:0 30px 60px -42px rgba(0,0,0,0.4);}
+  .stat{padding:30px 26px;border-right:1px solid var(--line-d);}
+  .stat:last-child{border-right:none;}
+  .stat b{font-weight:600;font-size:34px;letter-spacing:-0.02em;display:block;color:var(--ink);}
+  .stat span{margin-top:6px;display:block;color:var(--muted);font-size:14px;font-weight:300;}
+
+  /* brands */
+  .brands{padding:64px 0 20px;}
+  .brands__lab{text-align:center;font-size:14px;color:var(--muted);font-weight:300;}
+  .brands__lab b{color:var(--ink);font-weight:600;}
+  .brands__row{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:28px;}
+  .brands__row i{width:104px;height:54px;border:1px solid var(--line-d);border-radius:10px;display:grid;place-items:center;font-style:normal;font-weight:600;font-size:14px;color:#b9b9b9;background:#fff;}
+
+  /* design serif banner */
+  .designband{background:var(--teal);color:#fff;text-align:center;padding:64px 0;margin-top:64px;position:relative;overflow:hidden;}
+  .designband h2{font-family:var(--serif);font-weight:500;font-size:clamp(44px,7vw,92px);line-height:1;letter-spacing:-0.01em;}
+  .designband p{font-family:var(--sans);font-weight:300;font-size:18px;letter-spacing:0.32em;text-transform:uppercase;margin-top:14px;opacity:0.9;}
+
+  /* solution block */
+  .sol{background:var(--ink);color:#fff;padding:0 0 84px;}
+  .sol__tabs{display:flex;gap:34px;border-bottom:1px solid var(--line);padding:22px 0;font-size:15px;color:var(--muted-2);font-weight:300;overflow-x:auto;}
+  .sol__tabs b{color:var(--teal);font-weight:500;border-bottom:2px solid var(--teal);padding-bottom:22px;margin-bottom:-23px;white-space:nowrap;}
+  .sol__tabs span{white-space:nowrap;}
+  .sol__body{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;padding-top:54px;}
+  .sol h3{font-weight:600;font-size:clamp(30px,3.6vw,44px);letter-spacing:-0.025em;line-height:1.08;}
+  .sol__d{margin-top:18px;color:var(--muted-2);font-weight:300;font-size:16px;line-height:1.6;max-width:42ch;}
+  .sol__metric{margin-top:30px;padding-left:18px;border-left:3px solid var(--teal);}
+  .sol__metric b{font-weight:600;font-size:46px;letter-spacing:-0.02em;display:block;}
+  .sol__metric span{color:var(--muted);font-size:14px;font-weight:300;}
+  .sol__cta{margin-top:34px;display:flex;gap:14px;align-items:center;}
+  .sol__img{height:340px;border-radius:16px;border:1px solid var(--line);background:
+    radial-gradient(120% 90% at 70% 10%,rgba(0,166,153,0.18),transparent 55%),linear-gradient(160deg,#181818,#0e0e0e);
+    background-image:linear-gradient(rgba(255,255,255,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.05) 1px,transparent 1px);background-size:40px 40px;}
+
+  /* industries */
+  .sec{padding:84px 0;}
+  .sec__h{font-weight:600;font-size:clamp(26px,3vw,38px);letter-spacing:-0.025em;text-align:center;}
+  .ind{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:46px;}
+  .ind__c{border:1px solid var(--line-d);border-radius:12px;padding:30px 22px;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;transition:border-color .18s ease,transform .18s ease;}
+  .ind__c:hover{border-color:var(--teal);transform:translateY(-3px);}
+  .ind__ic{width:44px;height:44px;color:var(--teal);}
+  .ind__c span{font-size:14.5px;font-weight:400;color:#3a3a3a;}
+
+  /* pillars (dark) */
+  .why{background:var(--ink);color:#fff;padding:84px 0;}
+  .why__grid{display:grid;grid-template-columns:1fr 1fr;gap:54px;align-items:start;}
+  .why h2{font-weight:600;font-size:clamp(28px,3.4vw,44px);letter-spacing:-0.025em;line-height:1.1;max-width:14ch;}
+  .pil{display:flex;gap:18px;padding:24px 0;border-bottom:1px solid var(--line);}
+  .pil:last-child{border-bottom:none;}
+  .pil__ic{width:46px;height:46px;border-radius:11px;background:rgba(0,166,153,0.14);border:1px solid rgba(0,166,153,0.3);display:grid;place-items:center;color:var(--teal);flex:none;}
+  .pil__t{font-weight:600;font-size:19px;}
+  .pil__d{margin-top:8px;color:var(--muted-2);font-weight:300;font-size:14.5px;line-height:1.55;}
+
+  /* network */
+  .net{background:var(--paper);}
+  .net__grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;}
+  .net h2{font-weight:600;font-size:clamp(26px,3vw,40px);letter-spacing:-0.025em;line-height:1.1;max-width:16ch;}
+  .net__map{height:380px;border-radius:16px;background:
+    radial-gradient(70% 70% at 40% 45%,rgba(0,166,153,0.12),transparent 70%),#fff;border:1px solid var(--line-d);display:grid;place-items:center;color:#cfcfcf;font-size:13px;letter-spacing:0.16em;text-transform:uppercase;}
+  .net__list{display:flex;flex-direction:column;gap:0;}
+  .net__list div{padding:20px 0;border-bottom:1px solid var(--line-d);font-weight:500;font-size:18px;}
+  .net__list div:last-child{border-bottom:none;}
+  .net__list b{color:var(--teal);font-weight:600;}
+
+  /* cta */
+  .cta{background:var(--teal);color:#fff;}
+  .cta__grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;padding:74px 0;}
+  .cta h2{font-family:var(--serif);font-weight:500;font-size:clamp(30px,3.8vw,52px);line-height:1.06;}
+  .cta__form{background:#fff;border-radius:16px;padding:30px;display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .cta__form input{height:48px;border:1px solid var(--line-d);border-radius:8px;padding:0 14px;font-family:var(--sans);font-size:15px;}
+  .cta__form .full{grid-column:1/-1;}
+  .cta__form button{grid-column:1/-1;height:50px;border:none;border-radius:8px;background:var(--ink);color:#fff;font-family:var(--sans);font-weight:500;font-size:16px;cursor:pointer;}
+
+  /* footer */
+  .foot{background:var(--ink);color:#fff;padding:64px 0 40px;}
+  .foot__grid{display:grid;grid-template-columns:1.5fr repeat(3,1fr);gap:34px;}
+  .foot__logo{font-family:var(--serif);font-weight:600;font-size:30px;line-height:1.05;}
+  .foot h4{font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;font-weight:500;}
+  .foot a{display:block;color:var(--muted-2);font-size:15px;font-weight:300;padding:6px 0;}
+  .foot a:hover{color:var(--teal);}
+  .foot__bot{margin-top:44px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:13px;font-weight:300;}
+
+  @media(max-width:900px){
+    .wrap{padding:0 24px;}
+    .hero__in,.sol__body,.why__grid,.net__grid,.cta__grid{grid-template-columns:1fr;}
+    .stats__row{grid-template-columns:repeat(2,1fr);}
+    .ind{grid-template-columns:repeat(2,1fr);}
+    .nav__links{display:none;}
+    .iso{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav__in">
+    <div class="logo"><b>Edg</b>istify</div>
+    <nav class="nav__links"><a>Solutions</a><a>Company</a><a>Resources</a><a>Careers</a></nav>
+    <div class="nav__cta"><a class="btn btn--teal">Contact Us</a></div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero__in">
+    <div>
+      <h1>Superfast Same Day Delivery PAN India</h1>
+      <p class="hero__sub">Edgistify offers integrated supply chain solutions for D2C, B2C and B2B companies across different industries, Pan-India.</p>
+      <div class="hero__cta"><a class="btn btn--teal">Schedule a call →</a></div>
+    </div>
+    <div class="iso">
+      <div class="iso__floor"></div>
+      <div class="iso__box iso__b1 t"></div>
+      <div class="iso__box iso__b2"></div>
+      <div class="iso__box iso__b3 t"></div>
+      <div class="iso__box iso__b4"></div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap stats">
+  <div class="stats__row">
+    <div class="stat"><b>1 Lac+</b><span>Daily Orders</span></div>
+    <div class="stat"><b>75+</b><span>Marketplaces</span></div>
+    <div class="stat"><b>50+</b><span>Cities</span></div>
+    <div class="stat"><b>100+</b><span>Warehouses</span></div>
+    <div class="stat"><b>50+</b><span>Customers</span></div>
+  </div>
+</div>
+
+<section class="brands">
+  <div class="wrap">
+    <p class="brands__lab">Trusted by Over <b>50+ Brands</b></p>
+    <div class="brands__row">
+      <i>Jio</i><i>Bisleri</i><i>Zepto</i><i>Blinkit</i><i>Udaan</i><i>Solar Square</i><i>Enrich</i><i>NÅO</i><i>Pepful</i><i>Plum</i>
+    </div>
+  </div>
+</section>
+
+<section class="designband">
+  <h2>Design</h2>
+  <p>Your Supply Chain</p>
+</section>
+
+<section class="sol">
+  <div class="wrap">
+    <div class="sol__tabs"><b>Warehousing</b><span>Same Day Delivery</span><span>Technology</span><span>Transportation</span><span>Consulting</span><span>Support Services</span></div>
+    <div class="sol__body">
+      <div>
+        <h3>Integrated Warehousing Solutions</h3>
+        <p class="sol__d">Superlative warehouse operations across our D2C, B2C and B2B warehousing & fulfilment offerings.</p>
+        <div class="sol__metric"><b>20%</b><span>Cut Per Order Reduction</span></div>
+        <div class="sol__cta"><a class="btn btn--teal">Get in Touch</a><a class="btn btn--ghost">Read more →</a></div>
+      </div>
+      <div class="sol__img"></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <h2 class="sec__h">Catering to a Wide Spectrum of Industries</h2>
+    <div class="ind">
+      <div class="ind__c"><svg class="ind__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 8h16v11H4z"/><path d="M9 8V5h6v3"/></svg><span>Food &amp; Beverages</span></div>
+      <div class="ind__c"><svg class="ind__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="13" r="6"/><path d="M12 7V3"/></svg><span>Fruits &amp; Vegetables</span></div>
+      <div class="ind__c"><svg class="ind__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 5v14M5 12h14"/></svg><span>Health &amp; Wellness</span></div>
+      <div class="ind__c"><svg class="ind__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M10 7h4"/></svg><span>Pharma</span></div>
+      <div class="ind__c"><svg class="ind__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 7h16l-1.5 12h-13z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg><span>D2C</span></div>
+      <div class="ind__c"><svg class="ind__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h3l2.5 11h9l2-7H7"/></svg><span>Ecommerce</span></div>
+      <div class="ind__c"><svg class="ind__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 11l8-6 8 6v9H4z"/></svg><span>Home &amp; Living</span></div>
+      <div class="ind__c"><svg class="ind__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6"/></svg><span>Industrials</span></div>
+      <div class="ind__c"><svg class="ind__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16"/></svg><span>FMCG</span></div>
+      <div class="ind__c"><svg class="ind__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 3h8l-1 7H9z"/><path d="M10 10v11h4V10"/></svg><span>Cosmetics &amp; Personal Care</span></div>
+      <div class="ind__c"><svg class="ind__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="4" y="6" width="16" height="12" rx="2"/></svg><span>Consumer Goods</span></div>
+      <div class="ind__c"><svg class="ind__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 13l2-5h10l2 5"/><circle cx="8" cy="16" r="1.5"/><circle cx="16" cy="16" r="1.5"/></svg><span>Automotive</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="why">
+  <div class="wrap why__grid">
+    <h2>Embrace the Digital Age &amp; Take Control of Your Supply Chain</h2>
+    <div>
+      <div class="pil"><div class="pil__ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-6 9 6v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div><div><div class="pil__t">Warehouse Network</div><div class="pil__d">Presence across 50+ cities with an extensive network of 100+ warehouses and dark stores.</div></div></div>
+      <div class="pil"><div class="pil__ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="16" height="12" rx="2"/><path d="M8 20h8"/></svg></div><div><div class="pil__t">Tech Platform</div><div class="pil__d">EdgeOS — warehouse & order management with marketplace and carrier integration.</div></div></div>
+      <div class="pil"><div class="pil__ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div><div><div class="pil__t">Supply Chain Expertise</div><div class="pil__d">100+ years of combined supply chain expertise across multiple industries.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec net">
+  <div class="wrap net__grid">
+    <div>
+      <h2>Pan-India Network Serving 18000+ Pin Codes</h2>
+    </div>
+    <div class="net__list">
+      <div><b>50+</b> Cities</div>
+      <div><b>100+</b> Warehouses</div>
+      <div><b>4.5 Lac</b> sqft Managed Space</div>
+      <div><b>Pan-India</b> Delivery</div>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap cta__grid">
+    <h2>Talk to our Supply Chain Experts</h2>
+    <form class="cta__form" onsubmit="return false">
+      <input placeholder="Name" />
+      <input placeholder="Company" />
+      <input class="full" placeholder="Work email" />
+      <input class="full" placeholder="Phone number" />
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot__grid">
+      <div>
+        <div class="foot__logo">Edge Logistics<br>Simplify.</div>
+        <p style="margin-top:16px;color:var(--muted-2);font-size:15px;font-weight:300;max-width:34ch;">India's integrated, tech-first supply chain solutions provider.</p>
+      </div>
+      <div><h4>Company</h4><a>About</a><a>Team</a><a>Careers</a><a>Contact Us</a></div>
+      <div><h4>Resources</h4><a>Blogs</a><a>Newsroom</a><a>Media</a><a>Case Studies</a></div>
+      <div><h4>Solutions</h4><a>Warehousing</a><a>Same Day Delivery</a><a>Transportation</a><a>Technology</a></div>
+    </div>
+    <div class="foot__bot">© 2026 OptiSupply Chain Solution Pvt Ltd · All Rights Reserved</div>
+  </div>
+</footer>
+
+</body>
+</html>
+

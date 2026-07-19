@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Omniful — Pages</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg-inverse: #1a1a1a;
+      --bg-fill-inverse: #303030;
+      --text: #303030;
+      --text-secondary: #616161;
+      --text-inverse-secondary: #b5b5b5;
+      --text-inverse: #e3e3e3;
+      --bg: #f2f2f2;
+      --bg-surface: #ffffff;
+      --border: #e3e3e3;
+      --border-secondary: #ccc;
+      --nav-bg: #ebebeb;
+      --radius-btn: 8px;
+      --radius-card: 12px;
+    }
+    body { font-family:'Inter',-apple-system,sans-serif; background:var(--bg); min-height:100vh; }
+
+    /* TOP BAR */
+    .top-bar { display:flex; align-items:center; background:var(--bg-inverse); height:56px; position:fixed; top:0;left:0;right:0; z-index:100; box-shadow:inset 0 -1px 0 rgba(0,0,0,.17); }
+    .logo { width:240px; display:flex; align-items:center; padding:6px 16px; flex-shrink:0; }
+    .logo-inner { display:flex; align-items:center; gap:6px; font-size:16px; font-weight:700; color:#fff; }
+    .logo-bag { width:22px;height:22px;background:#95bf47;border-radius:4px;display:flex;align-items:center;justify-content:center; }
+    .search-wrap { flex:1;display:flex;align-items:center;justify-content:center; }
+    .search-field { background:#303030; border:0.66px solid #616161; border-radius:8px; display:flex; align-items:center; gap:4px; padding:6px 8px 6px 6px; width:344px; }
+    .search-field span { flex:1;font-size:13px;font-weight:450;color:#b5b5b5;line-height:20px; }
+    .search-field kbd { font-size:13px;color:#b5b5b5;font-family:inherit; }
+    .top-right { display:flex; align-items:center; gap:8px; padding:0 8px 0 16px; height:56px; }
+    .icon-btn { background:#303030;border-radius:8px;padding:6px;display:flex;align-items:center;justify-content:center;cursor:pointer; }
+    .user-pill { background:#303030;border-radius:8px;padding:2px;display:flex;align-items:center;gap:8px;cursor:pointer; }
+    .user-pill span { font-size:12px;font-weight:550;color:#e3e3e3;padding-left:10px;white-space:nowrap; }
+    .avatar { width:28px;height:28px;border-radius:6px;background:#7c5cba;overflow:hidden;display:flex;align-items:center;justify-content:center; }
+
+    /* LAYOUT */
+    .layout { display:flex; margin-top:56px; min-height:calc(100vh - 56px); }
+
+    /* SIDEBAR */
+    .sidebar { width:240px;flex-shrink:0;background:var(--nav-bg);display:flex;flex-direction:column;justify-content:space-between;padding:16px 0;position:fixed;top:56px;bottom:0;left:0;overflow-y:auto; }
+    .sidebar-nav { display:flex;flex-direction:column;gap:24px; }
+    .nav-sec { display:flex;flex-direction:column; }
+    .sec-title { display:flex;align-items:center;justify-content:space-between;padding:4px 16px 4px 20px;font-size:12px;font-weight:550;color:#616161;line-height:16px; }
+    .ni { display:flex;flex-direction:column;padding:0 12px; }
+    .ni a, .ni div { display:flex;align-items:center;gap:8px;padding:4px 4px 4px 8px;border-radius:8px;width:100%;cursor:pointer;text-decoration:none; }
+    .ni a:hover, .ni div:hover { background:rgba(0,0,0,.05); }
+    .ni span.lbl { flex:1;font-size:13px;font-weight:550;color:#303030;line-height:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+    .badge { background:rgba(0,0,0,.06);border-radius:8px;padding:2px 8px;font-size:12px;font-weight:550;color:#616161; }
+    .ci { display:flex;flex-direction:column;padding:0 12px; }
+    .ci-inner { display:flex;align-items:center;padding:4px 4px 4px 36px;border-radius:8px;width:100%;cursor:pointer;position:relative; }
+    .ci-inner:hover { background:rgba(0,0,0,.05); }
+    .ci-inner.act { background:#fafafa; }
+    .ci-lbl { font-size:13px;font-weight:450;color:#616161;line-height:20px; }
+    .ci-inner.act .ci-lbl { font-weight:650;color:#303030; }
+    .ind { position:absolute;left:8px;top:0;width:21px;height:28px;overflow:hidden; }
+    .ind-line { position:absolute;left:9px;top:0;bottom:0;width:1.5px;background:#b5b5b5; }
+    .ind-curve { position:absolute;left:9px;top:0;width:11.5px;height:18.5px;border-left:1.5px solid #b5b5b5;border-bottom:1.5px solid #b5b5b5;border-bottom-left-radius:6px; }
+
+    /* MAIN */
+    .main { margin-left:240px;flex:1;display:flex;flex-direction:column; }
+    .page-hdr { background:#f1f1f1;border-bottom:0.5px solid #e0e0e0;padding:0 14px; }
+    .page-hdr-inner { display:flex;align-items:center;justify-content:space-between;padding:8px 0; }
+    .page-hdr-title { font-size:14px;font-weight:650;color:#303030;line-height:24px;letter-spacing:-0.2px; }
+    .btn-group { display:flex;align-items:center;gap:8px; }
+    .btn { display:flex;align-items:center;justify-content:center;gap:4px;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:550;cursor:pointer;border:none;white-space:nowrap;line-height:16px; }
+    .btn-default { background:#fafafa;color:#303030;box-shadow:inset 0 -1px 0 #ccc,inset 1px 0 0 #ebebeb,inset -1px 0 0 #ebebeb,inset 0 1px 0 #ebebeb; }
+    .btn-primary { background:#303030;color:#fff;box-shadow:inset 0 -1px 0 1px black,inset 0 2px 0 rgba(255,255,255,.2); }
+
+    /* PAGE BODY — builder layout */
+    .page-body { display:flex; flex:1; overflow:hidden; }
+
+    /* LEFT: page list */
+    .pages-panel {
+      width: 240px;
+      flex-shrink: 0;
+      border-right: 1px solid var(--border);
+      background: #f7f7f7;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+    .pages-panel-header {
+      padding: 12px 16px;
+      font-size: 13px;
+      font-weight: 650;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .page-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 450;
+      color: var(--text-secondary);
+      cursor: pointer;
+      border-bottom: 1px solid #f0f0f0;
+      gap: 8px;
+    }
+    .page-item:hover { background: #f0f0f0; }
+    .page-item.active { background: #fff; color: var(--text); font-weight: 550; border-left: 2px solid #303030; }
+    .page-icon { width:20px;height:20px;background:#e3e3e3;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center; }
+
+    /* CENTER: canvas */
+    .canvas-area {
+      flex: 1;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px;
+      overflow-y: auto;
+    }
+    .canvas-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      width: 100%;
+      justify-content: center;
+    }
+    .tab-btn {
+      padding: 6px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 550;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text-secondary);
+    }
+    .tab-btn.active { background: #303030; color: #fff; border-color: #303030; }
+
+    /* Phone canvas */
+    .phone-canvas {
+      width: 375px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,.15);
+      overflow: hidden;
+      min-height: 600px;
+    }
+    .phone-status-bar {
+      height: 44px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      font-size: 12px;
+      color: #303030;
+    }
+    .phone-header {
+      background: #fff;
+      padding: 8px 16px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .phone-search {
+      flex: 1;
+      height: 36px;
+      background: #f5f5f5;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      gap: 6px;
+      font-size: 13px;
+      color: #b5b5b5;
+    }
+    .block-wrapper {
+      position: relative;
+      cursor: pointer;
+    }
+    .block-wrapper:hover { outline: 2px solid #005bd3; }
+    .block-wrapper.selected { outline: 2px solid #303030; }
+
+    /* Banner block */
+    .banner-block {
+      width: 100%;
+      height: 180px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .banner-placeholder { display:flex;flex-direction:column;align-items:center;gap:8px; }
+    .banner-placeholder img { width:40px;height:40px;opacity:.5; }
+    .banner-placeholder span { font-size:12px;color:rgba(255,255,255,.7); }
+
+    /* Strip block */
+    .strip-block {
+      padding: 12px 16px;
+      background: #fff;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .strip-title { font-size:14px;font-weight:650;color:#303030;margin-bottom:8px; }
+    .strip-items { display:flex;gap:12px;overflow-x:auto; }
+    .strip-item {
+      width: 80px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .strip-circle { width:64px;height:64px;border-radius:50%;background:#f0f0f0;border:1px solid #e3e3e3; }
+    .strip-label { font-size:11px;color:#616161;text-align:center; }
+
+    /* Grid block */
+    .grid-block { padding:12px 16px;background:#fff; }
+    .grid-title { font-size:14px;font-weight:650;color:#303030;margin-bottom:8px; }
+    .grid-items { display:flex;gap:8px; }
+    .grid-item { width:80px;height:80px;background:#f5f5f5;border:1px dashed #ccc;border-radius:4px;display:flex;align-items:center;justify-content:center; }
+    .grid-item img { width:40px;height:40px;opacity:.4; }
+
+    /* RIGHT: elements panel */
+    .elements-panel {
+      width: 280px;
+      flex-shrink: 0;
+      border-left: 1px solid var(--border);
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+    .elements-header {
+      padding: 12px 16px;
+      font-size: 13px;
+      font-weight: 650;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+    }
+    .element-section { padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
+    .element-section-title { padding: 0 16px 8px; font-size: 11px; font-weight: 550; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .5px; }
+    .element-items { display:flex;flex-wrap:wrap;gap:8px;padding:0 16px; }
+    .element-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 450;
+      color: var(--text);
+      background: #fafafa;
+      cursor: grab;
+    }
+    .element-chip:hover { background: #f0f0f0;border-color:#ccc; }
+    .element-icon { width:16px;height:16px;background:#e3e3e3;border-radius:3px;flex-shrink:0; }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="top-bar">
+  <div class="logo">
+    <div class="logo-inner">
+      <div class="logo-bag"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 4h10l-1.5 8H3.5L2 4z" fill="white"/><path d="M5 4V3a2 2 0 0 1 4 0v1" stroke="white" stroke-width="1.5" fill="none"/></svg></div>
+      <span style="color:#95bf47">shopify</span>
+    </div>
+  </div>
+  <div class="search-wrap">
+    <div class="search-field">
+      <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5" stroke="#b5b5b5" stroke-width="1.5"/><path d="M12.5 12.5L16 16" stroke="#b5b5b5" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <span>Search</span><kbd>⌘K</kbd>
+    </div>
+  </div>
+  <div class="top-right">
+    <div class="icon-btn"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2a5.5 5.5 0 0 1 5.5 5.5c0 2.5-.8 4.5-2 6l.5 1H6l.5-1C5.3 12 4.5 10 4.5 7.5A5.5 5.5 0 0 1 10 2z" stroke="#e3e3e3" stroke-width="1.4"/><path d="M8 14.5a2 2 0 0 0 4 0" stroke="#e3e3e3" stroke-width="1.4"/></svg></div>
+    <div class="user-pill"><span>Stellar Interiors</span><div class="avatar"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" fill="#7c5cba" rx="6"/><circle cx="14" cy="11" r="4" fill="white" opacity=".9"/><ellipse cx="14" cy="22" rx="7" ry="4" fill="white" opacity=".9"/></svg></div></div>
+  </div>
+</header>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-nav">
+      <div class="nav-sec">
+        <div class="ni"><a href="#"><div class="nav-icon"></div><span class="lbl">Home</span></a></div>
+        <div class="ni"><a href="#"><div class="nav-icon"></div><span class="lbl">Orders</span><span class="badge">15</span></a></div>
+        <div class="ni"><a href="#"><div class="nav-icon"></div><span class="lbl">Products</span></a></div>
+        <div class="ni"><a href="#"><div class="nav-icon"></div><span class="lbl">Customers</span></a></div>
+        <div class="ni"><a href="#"><div class="nav-icon"></div><span class="lbl">Content</span></a></div>
+        <div class="ni"><a href="#"><div class="nav-icon"></div><span class="lbl">Analytics</span></a></div>
+        <div class="ni"><a href="#"><div class="nav-icon"></div><span class="lbl">Marketing</span></a></div>
+        <div class="ni"><a href="#"><div class="nav-icon"></div><span class="lbl">Discounts</span></a></div>
+      </div>
+      <div class="nav-sec">
+        <div class="sec-title"><span>Sales channels</span><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 5l3 3-3 3" stroke="#616161" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+        <div class="ni"><a href="#"><div class="nav-icon"></div><span class="lbl">Online Store</span></a></div>
+        <div class="ni"><a href="#"><div class="nav-icon"></div><span class="lbl">Point of Sale</span></a></div>
+        <div class="ni"><div><div class="nav-icon"></div><span class="lbl">Omniful</span></div></div>
+        <div class="ci"><div class="ci-inner act"><div class="ind"><div class="ind-curve"></div></div><span class="ci-lbl">Pages</span></div></div>
+        <div class="ci"><div class="ci-inner"><span class="ci-lbl">Branding</span></div></div>
+        <div class="ci"><div class="ci-inner"><span class="ci-lbl">Themes</span></div></div>
+        <div class="ci"><div class="ci-inner"><span class="ci-lbl">Integrations</span></div></div>
+        <div class="ci"><div class="ci-inner"><span class="ci-lbl">Notifications</span></div></div>
+        <div class="ci"><div class="ci-inner"><span class="ci-lbl">Deep Link</span></div></div>
+        <div class="ci"><div class="ci-inner"><span class="ci-lbl">Settings</span></div></div>
+      </div>
+      <div class="nav-sec">
+        <div class="sec-title"><span>Apps</span></div>
+        <div class="ni"><a href="#"><div class="nav-icon"></div><span class="lbl">Shopify Email</span></a></div>
+      </div>
+    </div>
+    <div style="padding:0 12px"><div class="ni" style="padding:0"><a href="#"><div class="nav-icon"></div><span class="lbl">Settings</span></a></div></div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+    <!-- Page header -->
+    <div class="page-hdr">
+      <div class="page-hdr-inner">
+        <span class="page-hdr-title">Pages</span>
+        <div class="btn-group">
+          <button class="btn btn-default">Discard</button>
+          <button class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Builder layout -->
+    <div class="page-body">
+
+      <!-- LEFT: Pages list -->
+      <div class="pages-panel">
+        <div class="pages-panel-header">
+          <span>Pages</span>
+          <button class="btn btn-default" style="padding:4px 8px;font-size:11px">+ Add</button>
+        </div>
+
+        <div class="page-item active">
+          <div class="page-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="1.5" fill="#303030"/></svg></div>
+          <span>Home</span>
+        </div>
+        <div class="page-item">
+          <div class="page-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="1.5" stroke="#616161"/></svg></div>
+          <span>Category</span>
+        </div>
+        <div class="page-item">
+          <div class="page-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="1.5" stroke="#616161"/></svg></div>
+          <span>Product Detail</span>
+        </div>
+        <div class="page-item">
+          <div class="page-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="1.5" stroke="#616161"/></svg></div>
+          <span>Cart</span>
+        </div>
+        <div class="page-item">
+          <div class="page-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="1.5" stroke="#616161"/></svg></div>
+          <span>Account</span>
+        </div>
+        <div class="page-item">
+          <div class="page-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="1.5" stroke="#616161"/></svg></div>
+          <span>Wishlist</span>
+        </div>
+        <div class="page-item">
+          <div class="page-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="1.5" stroke="#616161"/></svg></div>
+          <span>Search</span>
+        </div>
+      </div>
+
+      <!-- CENTER: Canvas -->
+      <div class="canvas-area">
+        <div class="canvas-toolbar">
+          <button class="tab-btn active">Mobile</button>
+          <button class="tab-btn">Tablet</button>
+        </div>
+
+        <!-- Phone canvas -->
+        <div class="phone-canvas">
+          <div class="phone-status-bar">
+            <span style="font-size:14px;font-weight:650">9:41</span>
+            <div style="display:flex;gap:4px;align-items:center">
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><rect x="0" y="4" width="3" height="8" rx="1" fill="#303030"/><rect x="4" y="2" width="3" height="10" rx="1" fill="#303030"/><rect x="8" y="0" width="3" height="12" rx="1" fill="#303030"/><rect x="12" y="1" width="3" height="10" rx="1" fill="#e3e3e3"/></svg>
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M8 2C5.2 2 2.7 3.1 1 5l7 7 7-7C13.3 3.1 10.8 2 8 2z" fill="#303030"/></svg>
+              <div style="background:#303030;border-radius:3px;width:22px;height:11px;display:flex;align-items:center;padding:0 2px;gap:1px"><div style="background:#fff;height:7px;flex:1;border-radius:1px"></div><div style="background:rgba(0,0,0,.3);width:2px;height:5px;border-radius:0 1px 1px 0;margin-left:1px"></div></div>
+            </div>
+          </div>
+
+          <!-- App header -->
+          <div class="phone-header">
+            <div class="phone-search">
+              <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><circle cx="8.5" cy="8.5" r="5" stroke="#b5b5b5" stroke-width="1.5"/><path d="M12.5 12.5L16 16" stroke="#b5b5b5" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <span>Search products</span>
+            </div>
+            <div style="width:36px;height:36px;background:#f5f5f5;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 4h10l-1.5 8H3.5L2 4z" stroke="#303030" stroke-width="1.5" fill="none"/><path d="M5 4V3a2 2 0 0 1 4 0v1" stroke="#303030" stroke-width="1.5" fill="none"/></svg>
+            </div>
+          </div>
+
+          <!-- Banner block -->
+          <div class="block-wrapper selected">
+            <div class="banner-block">
+              <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#667eea,#764ba2);"></div>
+              <div class="banner-placeholder">
+                <div style="width:48px;height:48px;background:rgba(255,255,255,.2);border-radius:8px;border:2px dashed rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="3" stroke="rgba(255,255,255,.8)" stroke-width="1.5"/><circle cx="8.5" cy="8.5" r="2" stroke="rgba(255,255,255,.8)" stroke-width="1.5"/><path d="M3 15l6-4 4 3 3-2 5 4" stroke="rgba(255,255,255,.8)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <span style="color:rgba(255,255,255,.8);font-size:12px">Banner</span>
+              </div>
+              <!-- Drag handle -->
+              <div style="position:absolute;top:8px;right:8px;background:rgba(255,255,255,.9);border-radius:4px;padding:3px 4px;display:flex;align-items:center;gap:2px">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4 4h1v1H4zM4 6.5h1v1H4zM4 9h1v1H4zM7 4h1v1H7zM7 6.5h1v1H7zM7 9h1v1H7z" fill="#616161"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Strip block -->
+          <div class="block-wrapper">
+            <div class="strip-block">
+              <div class="strip-title">Categories</div>
+              <div class="strip-items">
+                <div class="strip-item"><div class="strip-circle"></div><span class="strip-label">Electronics</span></div>
+                <div class="strip-item"><div class="strip-circle"></div><span class="strip-label">Fashion</span></div>
+                <div class="strip-item"><div class="strip-circle"></div><span class="strip-label">Home</span></div>
+                <div class="strip-item"><div class="strip-circle"></div><span class="strip-label">Sports</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Grid block -->
+          <div class="block-wrapper">
+            <div class="grid-block">
+              <div class="grid-title">Featured Products</div>
+              <div class="grid-items">
+                <div class="grid-item">
+                  <img src="img/65454708-deae-457b-b828-949fbd467745.png" alt="" />
+                </div>
+                <div class="grid-item">
+                  <img src="img/65454708-deae-457b-b828-949fbd467745.png" alt="" />
+                </div>
+                <div class="grid-item">
+                  <img src="img/65454708-deae-457b-b828-949fbd467745.png" alt="" />
+                </div>
+                <div class="grid-item">
+                  <img src="img/65454708-deae-457b-b828-949fbd467745.png" alt="" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recently viewed -->
+          <div class="block-wrapper">
+            <div class="strip-block" style="border-bottom:none">
+              <div class="strip-title">Recently Viewed</div>
+              <div class="strip-items">
+                <div class="strip-item" style="width:70px">
+                  <div class="grid-item" style="width:70px;height:70px;border-radius:8px">
+                    <img src="img/65454708-deae-457b-b828-949fbd467745.png" alt="" />
+                  </div>
+                  <span class="strip-label">Product</span>
+                </div>
+                <div class="strip-item" style="width:70px">
+                  <div class="grid-item" style="width:70px;height:70px;border-radius:8px">
+                    <img src="img/65454708-deae-457b-b828-949fbd467745.png" alt="" />
+                  </div>
+                  <span class="strip-label">Product</span>
+                </div>
+                <div class="strip-item" style="width:70px">
+                  <div class="grid-item" style="width:70px;height:70px;border-radius:8px">
+                    <img src="img/65454708-deae-457b-b828-949fbd467745.png" alt="" />
+                  </div>
+                  <span class="strip-label">Product</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom nav bar -->
+          <div style="display:flex;align-items:center;justify-content:space-around;padding:8px 0 16px;border-top:1px solid #f0f0f0;background:#fff;margin-top:auto">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 9l8-6 8 6v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9z" fill="#303030"/></svg>
+              <span style="font-size:10px;color:#303030;font-weight:550">Home</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="10" cy="10" r="6" stroke="#b5b5b5" stroke-width="1.5"/><path d="M15 15l3 3" stroke="#b5b5b5" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <span style="font-size:10px;color:#b5b5b5">Search</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 5h16l-2 9H5L3 5z" stroke="#b5b5b5" stroke-width="1.5"/><circle cx="8" cy="18" r="1.5" fill="#b5b5b5"/><circle cx="15" cy="18" r="1.5" fill="#b5b5b5"/></svg>
+              <span style="font-size:10px;color:#b5b5b5">Cart</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+              <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="8" r="3.5" stroke="#b5b5b5" stroke-width="1.5"/><path d="M4 18c0-3.9 3.1-7 7-7s7 3.1 7 7" stroke="#b5b5b5" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <span style="font-size:10px;color:#b5b5b5">Account</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Elements panel -->
+      <div class="elements-panel">
+        <div class="elements-header">Elements</div>
+
+        <div class="element-section">
+          <div class="element-section-title">Layout</div>
+          <div class="element-items">
+            <div class="element-chip"><div class="element-icon"></div>Banner</div>
+            <div class="element-chip"><div class="element-icon"></div>Strip</div>
+            <div class="element-chip"><div class="element-icon"></div>Grid</div>
+            <div class="element-chip"><div class="element-icon"></div>Carousel</div>
+            <div class="element-chip"><div class="element-icon"></div>Spacer</div>
+          </div>
+        </div>
+
+        <div class="element-section">
+          <div class="element-section-title">Commerce</div>
+          <div class="element-items">
+            <div class="element-chip"><div class="element-icon"></div>Products</div>
+            <div class="element-chip"><div class="element-icon"></div>Categories</div>
+            <div class="element-chip"><div class="element-icon"></div>Offers</div>
+            <div class="element-chip"><div class="element-icon"></div>Countdown</div>
+          </div>
+        </div>
+
+        <div class="element-section">
+          <div class="element-section-title">Content</div>
+          <div class="element-items">
+            <div class="element-chip"><div class="element-icon"></div>Text</div>
+            <div class="element-chip"><div class="element-icon"></div>Image</div>
+            <div class="element-chip"><div class="element-icon"></div>Button</div>
+            <div class="element-chip"><div class="element-icon"></div>Video</div>
+          </div>
+        </div>
+
+        <!-- Block settings (when block selected) -->
+        <div style="padding:12px 16px;border-top:2px solid #303030;background:#fafafa;margin-top:auto">
+          <div style="font-size:12px;font-weight:650;color:#303030;margin-bottom:12px">Banner Settings</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div>
+              <div style="font-size:12px;font-weight:450;color:#303030;margin-bottom:4px">Image</div>
+              <div style="height:32px;border:0.66px solid #8a8a8a;border-radius:8px;background:#fdfdfd;display:flex;align-items:center;padding:0 10px;font-size:12px;color:#616161">Upload image...</div>
+            </div>
+            <div>
+              <div style="font-size:12px;font-weight:450;color:#303030;margin-bottom:4px">Link</div>
+              <div style="height:32px;border:0.66px solid #8a8a8a;border-radius:8px;background:#fdfdfd;display:flex;align-items:center;padding:0 10px;font-size:12px;color:#616161">Select target...</div>
+            </div>
+            <div>
+              <div style="font-size:12px;font-weight:450;color:#303030;margin-bottom:4px">Height</div>
+              <div style="display:flex;gap:8px">
+                <div style="height:32px;border:0.66px solid #8a8a8a;border-radius:8px;background:#fdfdfd;display:flex;align-items:center;padding:0 10px;font-size:12px;color:#303030;width:70px">180</div>
+                <div style="height:32px;border:0.66px solid #e3e3e3;border-radius:8px;background:#f5f5f5;display:flex;align-items:center;padding:0 10px;font-size:12px;color:#616161">px</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+
+<script>(function(){function measure(){var de=document.documentElement,b=document.body;var a=de.style.minHeight,c=b.style.minHeight;de.style.minHeight='0';b.style.minHeight='0';var h=Math.max(b.scrollHeight,de.scrollHeight,b.offsetHeight);de.style.minHeight=a;b.style.minHeight=c;return h;}var last=0;function send(){var h=measure();if(h&&Math.abs(h-last)>2){last=h;try{parent.postMessage({__omScreenH:h},'*');}catch(e){}}}window.addEventListener('load',function(){send();setTimeout(send,300);setTimeout(send,900);});window.addEventListener('resize',send);if(window.ResizeObserver){var t;try{new ResizeObserver(function(){clearTimeout(t);t=setTimeout(send,150);}).observe(document.body);}catch(e){}}})();</script>
+</body>
+</html>
+

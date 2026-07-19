@@ -1,0 +1,68 @@
+
+/* Generated from Figma Variables. First mode = :root default.
+   FLOAT tokens are unitless — multiply by 1px in calc() where a length is needed. */
+
+:root {
+  --color: rgb(84,104,250); /* @kind color */
+  --compact: 12;
+  --compressed: 8;
+  --cta-font-size-compact: 12;
+  --cta-font-size-compressed: 11;
+  --cta-font-size-regular: 14;
+  --cta-height-compact: 36;
+  --cta-height-compressed: 24;
+  --cta-height-regular: 40;
+  --cta-icon-compact: 16;
+  --cta-icon-compressed: 12;
+  --cta-icon-regular: 20;
+  --cta-radius-compact: 6;
+  --cta-radius-compressed: 4;
+  --cta-radius-regular: 8;
+  --gray-1000: rgb(255,255,255); /* @kind color */
+  --number: 0;
+  --padding-padding-0: 0;
+  --padding-padding-1: 4;
+  --padding-padding-2: 8;
+  --padding-padding-3: 12;
+  --padding-padding-4: 16;
+  --padding-padding-5: 24;
+  --padding-padding-6: 32;
+  --radius-radius-1: 8;
+  --radius-radius-2-2: 16;
+  --radius-radius-2: 8;
+  --radius-radius-3-2: 24;
+  --radius-radius-3: 16;
+  --radius-radius-4-2: 32;
+  --radius-radius-4: 24;
+  --radius-radius-5: 40;
+  --radius-radius-6: 48;
+  --radius-radius-7: 64;
+  --radius-radius-full: 999;
+  --radius-radius-none: 0;
+  --regular: 16;
+  --spacing-padding-2: 4;
+  --spacing-spacing-0: 0;
+  --spacing-spacing-10: 48;
+  --spacing-spacing-111: 56;
+  --spacing-spacing-1: 2;
+  --spacing-spacing-3: 8;
+  --spacing-spacing-4: 12;
+  --spacing-spacing-5: 16;
+  --spacing-spacing-6: 20;
+  --spacing-spacing-7: 24;
+  --spacing-spacing-8: 32;
+  --spacing-spacing-9: 40;
+  --stroke-stroke-0: 1;
+  --stroke-stroke-1: 2;
+  --stroke-stroke-2: 4;
+  --stroke-stroke-3: 6;
+  --text-field-radius: 8;
+  --text-primary: rgb(255,255,255); /* @kind color */
+}
+
+:root[data-mode="mode-2"] {
+  --gray-1000: rgb(34,34,34); /* @kind color */
+  --text-field-radius: 8;
+  --text-primary: rgb(255,255,255); /* @kind color */
+}
+

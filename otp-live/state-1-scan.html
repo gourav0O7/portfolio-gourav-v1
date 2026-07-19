@@ -1,0 +1,866 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Delivery — Scan & Verify</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Roboto:wght@500&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+body {
+  background: #141414;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 56px 40px 72px;
+  font-family: 'Poppins', sans-serif;
+  gap: 48px;
+  flex-wrap: wrap;
+}
+
+/* ── PHONE WRAPPER ── */
+.phone-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.screen-label {
+  color: #555;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+/* ── PHONE SHELL ── */
+.phone {
+  width: 360px;
+  height: 782px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 36px;
+  background: #f4f5f7;
+  /* premium bezel */
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.06),
+    0 0 0 2px rgba(0,0,0,.6),
+    0 40px 100px rgba(0,0,0,.8),
+    0 8px 24px rgba(0,0,0,.5);
+  flex-shrink: 0;
+}
+
+/* ─────────────────────────────
+   STATUS BAR  (24px, always on top)
+───────────────────────────────*/
+.status-bar {
+  position: absolute;
+  top: 0; left: 0;
+  width: 360px;
+  height: 24px;
+  z-index: 20;
+  background: white;
+}
+.status-bar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+/* ─────────────────────────────
+   HEADER NAV  (sits below status bar visually)
+───────────────────────────────*/
+.header {
+  position: absolute;
+  top: 0; left: 0;
+  width: 360px;
+  height: 72px;               /* spans status-bar + nav row */
+  background: white;
+  z-index: 10;
+}
+/* horizontal rule at bottom of header */
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 100%;
+  height: 1px;
+  background: rgba(0,0,0,.06);
+}
+.header-title {
+  position: absolute;
+  top: 36px;                  /* 24px status-bar + center of 48px nav = 36px */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  color: #222;
+  white-space: nowrap;
+}
+.header-icon {
+  position: absolute;
+  top: 36px;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.header-icon img { width: 100%; height: 100%; display: block; }
+.header-icon--close  { left: 12px; }
+.header-icon--keyboard { right: 12px; }   /* ← was 24px, fixed to 12px */
+
+/* ─────────────────────────────
+   "TO:" BANNER
+───────────────────────────────*/
+.to-bar {
+  position: absolute;
+  top: 72px; left: 0;
+  width: 360px;
+  z-index: 9;
+  background: #eef0fe;
+  padding: 5px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  box-shadow: 0 1px 0 rgba(16,24,40,.04);
+}
+.to-bar .label {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+  color: #000;
+}
+.to-bar .name {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+  color: #000;
+}
+
+/* ─────────────────────────────
+   CAMERA / QR SCANNER
+───────────────────────────────*/
+.camera-area {
+  position: absolute;
+  top: 99px; left: 0;
+  width: 360px;
+  height: 228px;
+  overflow: hidden;
+}
+.camera-bg {
+  position: absolute;
+  inset: 0;
+}
+.camera-bg img {
+  position: absolute;
+  width: 159.26%;
+  height: 132.02%;
+  left: -29.63%;
+  top: 0;
+  object-fit: cover;
+}
+.camera-overlay {
+  position: absolute;
+  inset: 0;
+}
+.camera-overlay img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+/* Scan frame — exact Figma values */
+.scan-frame {
+  position: absolute;
+  top: 28px;
+  left: 28px;
+  width: 304px;
+  height: 140px;
+  border: 1.5px solid rgba(84,104,250,.9);
+  border-radius: 18px;
+  /* subtle glow to show it's active */
+  box-shadow: 0 0 0 1px rgba(84,104,250,.12), 0 0 20px rgba(84,104,250,.16);
+}
+/* Animated scan line sweeping the frame */
+.scan-frame::before {
+  content: '';
+  position: absolute;
+  left: 8px; right: 8px;
+  top: 8px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, #5468fa 20%, #8ea0ff 50%, #5468fa 80%, transparent);
+  box-shadow: 0 0 10px rgba(84,104,250,.8);
+  animation: scanSweep 2.4s cubic-bezier(.5,0,.5,1) infinite;
+}
+@keyframes scanSweep {
+  0%   { transform: translateY(0); opacity: 0; }
+  12%  { opacity: 1; }
+  88%  { opacity: 1; }
+  100% { transform: translateY(122px); opacity: 0; }
+}
+/* Corner brackets */
+.scan-corner {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border: 2.5px solid #fff;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,.25));
+}
+.scan-corner.tl { top: -2px; left: -2px;  border-right: 0; border-bottom: 0; border-top-left-radius: 18px; }
+.scan-corner.tr { top: -2px; right: -2px; border-left: 0;  border-bottom: 0; border-top-right-radius: 18px; }
+.scan-corner.bl { bottom: -2px; left: -2px;  border-right: 0; border-top: 0; border-bottom-left-radius: 18px; }
+.scan-corner.br { bottom: -2px; right: -2px; border-left: 0;  border-top: 0; border-bottom-right-radius: 18px; }
+.flash-btn {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 28px;
+  background: rgba(109,109,109,.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,.7);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.flash-btn img {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+/* ─────────────────────────────
+   PROGRESS COUNTER STRIP
+───────────────────────────────*/
+.progress-bar {
+  position: absolute;
+  top: 327px; left: 0;
+  width: 360px;
+  height: 40px;
+  background: #fafafa;
+  box-shadow: inset 0 1px 0 rgba(16,24,40,.04), 0 1px 3px rgba(16,24,40,.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+}
+.progress-bar span {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6e7178;
+  line-height: 20px;
+  letter-spacing: .25px;
+}
+
+/* ─────────────────────────────
+   PACKAGES SCROLL AREA
+───────────────────────────────*/
+.packages-area {
+  position: absolute;
+  top: 383px;
+  left: 12px;
+  right: 12px;
+  bottom: 64px;              /* don't overlap bottom CTA */
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* hide scrollbar */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 8px;
+}
+.packages-area::-webkit-scrollbar { display: none; }
+
+.tap-hint {
+  font-size: 12px;
+  font-weight: 400;
+  color: #8a8a8a;
+  line-height: 18px;
+  text-align: center;
+  opacity: .9;
+  flex-shrink: 0;
+}
+.packages-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ─────────────────────────────
+   PACKAGE CARD
+───────────────────────────────*/
+.pkg-card {
+  width: 100%;
+  background: #e6f1e6;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 0.5px rgba(16,24,40,.08), 0 10px 30px -18px rgba(16,24,40,.18);
+  transition: transform .25s cubic-bezier(.32,.72,0,1), box-shadow .25s cubic-bezier(.32,.72,0,1);
+}
+.pkg-card:active {
+  transform: scale(.985);
+  box-shadow: 0 0 0 0.5px rgba(16,24,40,.08), 0 4px 14px -10px rgba(16,24,40,.2);
+}
+/* White content section */
+.pkg-inner {
+  background: white;
+  display: flex;
+  gap: 12px;
+  align-items: center;        /* vertically center icon with text */
+  padding: 14px 16px;
+  /* NO border-radius here — outer clip handles top corners,
+     and we want the green strip to show at the bottom */
+}
+/* Green footer strip inside each card */
+.pkg-footer {
+  height: 5px;
+  background: #e6f1e6;
+}
+.pkg-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.pkg-awb-label {
+  font-size: 10px;
+  font-weight: 400;
+  color: #666;
+  line-height: 14px;
+}
+.pkg-awb-number {
+  font-size: 14px;
+  font-weight: 600;
+  color: #222;
+  line-height: 20px;
+}
+.pkg-meta {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.cod-tag {
+  background: #eeeff2;
+  border-radius: 6px;
+  padding: 1px 9px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #222;
+  line-height: 16px;
+  white-space: nowrap;
+}
+/* CSS dot — no image dependency */
+.meta-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #bbb;
+  flex-shrink: 0;
+}
+.pkg-price {
+  font-size: 11px;
+  color: #666;
+  line-height: 16px;
+}
+.pkg-price .amount { font-weight: 500; }
+.pkg-price .currency { font-weight: 400; }
+/* Verified package state */
+.pkg-card.verified .pkg-inner { background: #f4fbf6; }
+.pkg-card.verified .pkg-footer { background: #1f9d57; }
+.pkg-verified-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #e6f6ec;
+  color: #137a42;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .2px;
+  padding: 3px 8px 3px 6px;
+  border-radius: 99px;
+  white-space: nowrap;
+}
+.pkg-icon {
+  width: 54px;
+  height: 64px;
+  flex-shrink: 0;
+}
+.pkg-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* ─────────────────────────────
+   BOTTOM CTA BAR
+───────────────────────────────*/
+.bottom-cta {
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 360px;
+  height: 64px;
+  background: white;
+  box-shadow: 0 -1px 0 rgba(16,24,40,.05), 0 -10px 24px -14px rgba(16,24,40,.14);
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+}
+.cta-btn {
+  flex: 1;
+  height: 46px;
+  background: #eef0fe;        /* disabled/unverified state */
+  border-radius: 12px;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: not-allowed;
+}
+.cta-btn span {
+  font-size: 14px;
+  font-weight: 500;
+  color: #97a0e8;
+  line-height: 20px;
+  letter-spacing: .1px;
+}
+
+/* ═══════════════════════════════════════════════
+   PHONE 2 ONLY — DARK OVERLAY + BOTTOM SHEET
+═══════════════════════════════════════════════ */
+.dark-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.65);
+  z-index: 20;
+  /* phone overflow:hidden clips this — no border-radius needed */
+}
+
+/* ── BOTTOM SHEET WRAPPER ── */
+.bottom-sheet {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 360px;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Close / avatar pill above sheet */
+.bs-dismiss {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+}
+.bs-dismiss-circle {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  background: rgba(20,20,22,.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,.25);
+}
+.bs-dismiss-circle img { display: none; }
+.bs-dismiss-circle img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.bs-dismiss-icon {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 24px;
+  height: 24px;
+}
+.bs-dismiss-icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── WHITE CARD ── */
+.bs-card {
+  width: 360px;
+  background: white;
+  border-radius: 28px 28px 0 0;
+  box-shadow: 0 -12px 40px -12px rgba(0,0,0,.35);
+  display: flex;
+  flex-direction: column;
+  gap: 0;                     /* controlled via inner spacing */
+  overflow: hidden;
+}
+
+/* ── BLUE HEADER ROW ── */
+.bs-grabber {
+  width: 36px;
+  height: 5px;
+  border-radius: 99px;
+  background: rgba(16,24,40,.14);
+  margin: 8px auto 0;
+  flex-shrink: 0;
+}
+.bs-header {
+  background: #eef0fe;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  flex-shrink: 0;
+}
+.bs-shield {
+  width: 38px;
+  height: 38px;
+  background: white;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+}
+.bs-shield img {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+.bs-header-title {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  color: #222;
+  text-transform: capitalize;
+  letter-spacing: .1px;
+}
+
+/* ── OTP BODY ── */
+.bs-body {
+  padding: 20px 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.bs-awb {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.bs-awb-label {
+  font-size: 10px;
+  font-weight: 400;
+  color: #666;
+  line-height: 14px;
+}
+.bs-awb-number {
+  font-size: 14px;
+  font-weight: 600;
+  color: #222;
+  line-height: 20px;
+}
+.bs-otp-hint {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  font-size: 14px;
+  line-height: 22px;
+  flex-wrap: wrap;
+}
+.bs-otp-hint .h-label {
+  font-weight: 400;
+  color: #666;
+  white-space: nowrap;
+}
+.bs-otp-hint .h-number {
+  font-weight: 500;
+  color: #222;
+  white-space: nowrap;
+}
+
+/* OTP 4-box row */
+.otp-boxes {
+  display: flex;
+  gap: 16px;                  /* even gap — 4 boxes in 328px: (328-48)/4 = 70px each */
+}
+.otp-box {
+  flex: 1;
+  min-width: 0;
+  height: 50px;
+  background: #f6f7f9;
+  border: 1px solid rgba(16,24,40,.1);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 21px;
+  font-weight: 600;
+  color: #1d2230;
+  font-variant-numeric: tabular-nums;
+  transition: border-color .2s ease, background .2s ease, box-shadow .2s ease;
+}
+.otp-box.active {
+  background: white;
+  border-color: #5468fa;
+  box-shadow: 0 0 0 3.5px rgba(84,104,250,.14);
+  position: relative;
+}
+.otp-box.active::after {
+  content: '';
+  width: 2px;
+  height: 22px;
+  background: #5468fa;
+  border-radius: 1px;
+  animation: otpCaret 1.06s steps(1) infinite;
+}
+@keyframes otpCaret { 50% { opacity: 0; } }
+/* filled digit */
+.otp-box.filled {
+  background: white;
+  border-color: rgba(84,104,250,.55);
+  color: #1d2230;
+}
+
+/* Resend row */
+.resend-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 20px;
+  flex-wrap: wrap;
+}
+.resend-timer {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  color: #666;
+  white-space: nowrap;
+}
+.resend-timer .rt-label { font-weight: 400; }
+.resend-timer .rt-time  { font-weight: 500; }
+.resend-cta {
+  font-size: 13px;
+  font-weight: 500;
+  color: #9aa0ad;             /* disabled — timer still running (legible grey) */
+  white-space: nowrap;
+}
+
+/* ── ACTION BUTTONS ── */
+.bs-actions {
+  padding: 20px 16px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+}
+.validate-btn {
+  width: 100%;                /* ← was hardcoded 328px, now fluid */
+  height: 46px;
+  background: #eef0fe;        /* disabled — OTP not yet entered (matches State-1 CTA) */
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: not-allowed;
+}
+/* enabled state once all 4 digits are filled */
+.validate-btn.is-ready {
+  background: #5468fa;
+  cursor: pointer;
+  box-shadow: 0 6px 16px -6px rgba(84,104,250,.5);
+  transition: transform .2s cubic-bezier(.32,.72,0,1), box-shadow .2s ease;
+}
+.validate-btn.is-ready:active { transform: scale(.98); }
+.validate-btn span {
+  font-size: 14px;
+  font-weight: 500;
+  color: #97a0e8;
+  line-height: 20px;
+  letter-spacing: .1px;
+}
+.validate-btn.is-ready span { color: white; }
+/* Cancel — white pill button, red text */
+.cancel-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 8px;
+  background: transparent;
+  border-radius: 12px;
+  border: 0;
+  cursor: pointer;
+  transition: background .15s ease;
+}
+.cancel-btn:active { background: rgba(194,24,8,.06); }
+.cancel-btn span {
+  font-size: 13px;
+  font-weight: 500;
+  color: #c21808;
+  line-height: 18px;
+  white-space: nowrap;
+}
+</style>
+
+<style>
+  html,body { background: transparent !important; }
+  body { padding: 0 !important; margin: 0 !important; display: block !important; gap: 0 !important; min-height: 0 !important; }
+  .phone-wrap { gap: 0 !important; }
+  .screen-label { display: none !important; }
+  .phone { border-radius: 0 !important; box-shadow: none !important; margin: 0 !important; }
+</style>
+</head>
+<body>
+<div class="phone-wrap">
+  <span class="screen-label">State 1 · Scan &amp; Verify</span>
+  <div class="phone">
+
+    <div class="status-bar">
+      <img src="img/1fcbeb63-b463-41e4-a940-23e3163bd203.png" alt="" />
+    </div>
+
+    <div class="header">
+      <span class="header-title">Delivery</span>
+      <div class="header-icon header-icon--close">
+        <img src="img/89bef129-681d-4087-9e35-cdfc33a78a1b.png" alt="close" />
+      </div>
+      <div class="header-icon header-icon--keyboard">
+        <img src="img/2006c4d2-3c61-49e6-817f-5a3f023e570b.png" alt="keyboard" />
+      </div>
+    </div>
+
+    <div class="to-bar">
+      <span class="label">To</span>
+      <span class="name">Gourav Sharma</span>
+    </div>
+
+    <div class="camera-area">
+      <div class="camera-bg">
+        <img src="img/ef544cab-623f-4807-9650-3b1c041ed6ed.png" alt="" />
+      </div>
+      <div class="camera-overlay">
+        <img src="img/60dcdc58-2ae0-4180-a380-c5f7a1d5dec2.png" alt="" />
+      </div>
+      <div class="scan-frame"><span class="scan-corner tl"></span><span class="scan-corner tr"></span><span class="scan-corner bl"></span><span class="scan-corner br"></span></div>
+      <div class="flash-btn">
+        <img src="img/fa7f834d-5662-456c-96c6-459c814c742b.png" alt="flash off" />
+      </div>
+    </div>
+
+    <div class="progress-bar">
+      <span>1 of 3 packages verified</span>
+    </div>
+
+    <div class="packages-area">
+      <p class="tap-hint">Tap a card to proceed</p>
+      <div class="packages-list">
+
+        <div class="pkg-card verified">
+          <div class="pkg-inner">
+            <div class="pkg-info">
+              <div>
+                <p class="pkg-awb-label">AWB Number</p>
+                <p class="pkg-awb-number">ON488705168</p>
+              </div>
+              <div class="pkg-meta">
+                <span class="pkg-verified-tag"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4 10-11" stroke="#137a42" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Verified</span>
+                <span class="meta-dot"></span>
+                <p class="pkg-price"><span class="amount">235 </span><span class="currency">SAR</span></p>
+              </div>
+            </div>
+            <div class="pkg-icon">
+              <img src="img/265f87db-662a-48c8-96ba-94291c8e2407.png" alt="package" />
+            </div>
+          </div>
+          <div class="pkg-footer"></div>
+        </div>
+
+        <div class="pkg-card">
+          <div class="pkg-inner">
+            <div class="pkg-info">
+              <div>
+                <p class="pkg-awb-label">AWB Number</p>
+                <p class="pkg-awb-number">ON488705169</p>
+              </div>
+              <div class="pkg-meta">
+                <span class="cod-tag">COD</span>
+                <span class="meta-dot"></span>
+                <p class="pkg-price"><span class="amount">180 </span><span class="currency">SAR</span></p>
+              </div>
+            </div>
+            <div class="pkg-icon">
+              <img src="img/265f87db-662a-48c8-96ba-94291c8e2407.png" alt="package" />
+            </div>
+          </div>
+          <div class="pkg-footer"></div>
+        </div>
+
+        <div class="pkg-card">
+          <div class="pkg-inner">
+            <div class="pkg-info">
+              <div>
+                <p class="pkg-awb-label">AWB Number</p>
+                <p class="pkg-awb-number">ON488705170</p>
+              </div>
+              <div class="pkg-meta">
+                <span class="cod-tag">COD</span>
+                <span class="meta-dot"></span>
+                <p class="pkg-price"><span class="amount">95 </span><span class="currency">SAR</span></p>
+              </div>
+            </div>
+            <div class="pkg-icon">
+              <img src="img/265f87db-662a-48c8-96ba-94291c8e2407.png" alt="package" />
+            </div>
+          </div>
+          <div class="pkg-footer"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="bottom-cta">
+      <div class="cta-btn">
+        <span>Deliver Verified Packages</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════
+     PHONE 2 · OTP Entry Sheet
+════════════════════════════════ -->
+</body>
+</html>

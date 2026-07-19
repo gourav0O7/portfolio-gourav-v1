@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Writing — Gourav Sharma</title>
+<meta name="description" content="Writing by Gourav Sharma — notes on design, arts, UI/UX and product design." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<script src="net-quality.js"></script>
+<script src="sound-manager.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@300;400;500;600&display=swap" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+/* ---------- Writing hero ---------- */
+.writing-hero { padding-top: calc(var(--nav-h) + clamp(40px, 5.5vw, 80px)); padding-bottom: var(--sp-7); }
+.writing-hero__name { font-size: clamp(40px, 8vw, 104px); font-weight: 500; letter-spacing: -0.03em; line-height: 0.94; margin: var(--sp-5) 0 var(--sp-5); }
+.writing-hero__name em { font-style: normal; color: var(--accent); }
+.writing-hero__lede { font-size: clamp(17px, 1.7vw, 21px); line-height: 1.6; color: var(--text-dim); max-width: 60ch; }
+.writing-hero__lede b { color: var(--text); font-weight: 500; }
+
+/* ---------- Filter bar ---------- */
+.filterbar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: var(--sp-7); padding-top: var(--sp-5); border-top: 1px solid var(--line); }
+.filter {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-dim); border: 1px solid var(--line-2); padding: 9px 15px;
+  transition: 0.25s var(--ease); white-space: nowrap;
+}
+.filter:hover { border-color: var(--accent); color: var(--accent); }
+.filter.is-active { background: var(--accent); border-color: var(--accent); color: #0a0c11; }
+html.gold .filter.is-active { color: var(--bg); }
+.filter .c { color: var(--text-faint); margin-left: 6px; }
+.filter.is-active .c { color: inherit; opacity: 0.7; }
+
+/* ---------- Featured post ---------- */
+.feature { display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(24px, 4vw, 56px); align-items: stretch; padding: var(--sp-7) 0; border-bottom: 1px solid var(--line); }
+.feature__cover { position: relative; border: 1px solid var(--line-2); overflow: hidden; min-height: 320px; background: var(--bg-1); }
+.feature__cover image-slot { width: 100%; height: 100%; min-height: 320px; display: block; }
+.feature__coverframe { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+.feature__coverframe::before, .feature__coverframe::after { content: ""; position: absolute; width: 16px; height: 16px; border: 2px solid var(--accent); }
+.feature__coverframe::before { top: 8px; left: 8px; border-right: 0; border-bottom: 0; }
+.feature__coverframe::after { bottom: 8px; right: 8px; border-left: 0; border-top: 0; }
+.feature__body { display: flex; flex-direction: column; justify-content: center; gap: var(--sp-4); }
+.feature__pin { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); display: inline-flex; align-items: center; gap: 8px; }
+.feature__pin .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent-glow); }
+.feature__title { font-size: clamp(28px, 3.6vw, 46px); font-weight: 500; letter-spacing: -0.02em; line-height: 1.06; text-wrap: balance; }
+.feature__dek { color: var(--text-dim); font-size: 16.5px; line-height: 1.6; max-width: 50ch; }
+.feature__meta { display: flex; flex-wrap: wrap; gap: 10px 18px; font-family: var(--font-mono); font-size: 11.5px; color: var(--text-faint); letter-spacing: 0.06em; align-items: center; }
+.feature__meta .cat { color: var(--accent); }
+.feature__cta { margin-top: var(--sp-3); align-self: flex-start; }
+
+/* ---------- Post list (editorial rows) ---------- */
+.head-row__count .draftn { color: var(--accent); }
+.posts { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+.post {
+  display: grid; grid-template-columns: 64px 150px 1fr auto; gap: 28px; align-items: center;
+  padding: 26px 8px; border-bottom: 1px solid var(--line); position: relative;
+  transition: background 0.35s var(--ease), padding 0.35s var(--ease);
+}
+.post::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--accent); transform: scaleY(0); transform-origin: top; transition: transform 0.4s var(--ease); }
+.post:hover { background: linear-gradient(90deg, var(--accent-soft), transparent 60%); padding-left: 20px; }
+.post:hover::before { transform: scaleY(1); }
+.post__idx { font-family: var(--font-mono); font-size: 13px; color: var(--text-faint); letter-spacing: 0.05em; }
+.post:hover .post__idx { color: var(--accent); }
+.post__cat { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); border: 1px solid var(--line-2); padding: 6px 10px; justify-self: start; white-space: nowrap; }
+.post__main { min-width: 0; }
+.post__title { font-size: clamp(19px, 2.3vw, 26px); font-weight: 500; letter-spacing: -0.015em; line-height: 1.12; }
+.post:hover .post__title { color: var(--accent); }
+.post__dek { color: var(--text-dim); font-size: 14.5px; margin-top: 7px; line-height: 1.55; max-width: 64ch; }
+.post__meta { font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); letter-spacing: 0.05em; text-align: right; white-space: nowrap; line-height: 1.8; }
+.post__go { width: 46px; height: 46px; border: 1px solid var(--line-2); display: grid; place-items: center; color: var(--text-dim); transition: 0.3s var(--ease); flex-shrink: 0; }
+.post:hover .post__go { background: var(--accent); border-color: var(--accent); color: #0a0c11; }
+html.gold .post:hover .post__go,
+html.gold .post:hover .pcard__go { color: var(--bg); }
+.post:hover .post__go svg { transform: translate(2px, -2px); }
+.post__go svg { transition: transform 0.3s var(--ease); }
+.post.is-hidden { display: none; }
+
+/* featured cover image */
+.feature__cover img { width: 100%; height: 100%; min-height: 320px; object-fit: cover; display: block; transition: transform 0.6s var(--ease); }
+.feature:hover .feature__cover img { transform: scale(1.03); }
+.feature__cover::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; mix-blend-mode: screen; background: repeating-linear-gradient(0deg, rgba(255,91,46,0.05) 0 1px, transparent 1px 4px); }
+
+/* draft / upcoming rows — visible but not clickable */
+.post.is-draft { opacity: 0.5; cursor: default; }
+.post.is-draft:hover { background: none; padding-left: 8px; }
+.post.is-draft:hover::before { transform: scaleY(0); }
+.post.is-draft:hover .post__title { color: var(--text); }
+.post__soon { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-faint); border: 1px dashed var(--line-2); padding: 9px 11px; white-space: nowrap; justify-self: end; }
+
+.writing-foot { padding: var(--sp-7) 0 0; font-family: var(--font-mono); font-size: 12px; color: var(--text-faint); letter-spacing: 0.06em; }
+.writing-foot .accent { color: var(--accent); }
+
+@media (max-width: 860px) {
+  .feature { grid-template-columns: 1fr; }
+  .feature__cover, .feature__cover image-slot { min-height: 240px; }
+}
+@media (max-width: 720px) {
+  .post { grid-template-columns: 44px 1fr auto; row-gap: 12px; }
+  .post__cat { grid-column: 2 / -1; }
+  .post__meta { grid-column: 2 / 3; text-align: left; }
+  .post__go { display: none; }
+}
+</style>
+<script src="theme-toggle.js"></script>
+<script src="page-transition.js"></script>
+<script src="gold-cursor.js"></script>
+</head>
+<body>
+<script src="loader.js"></script>
+
+<!-- ===== Nav ===== -->
+<nav class="nav">
+  <div class="nav__inner">
+    <a class="brand" href="index.html"><span class="brand__mark" aria-hidden="true"><svg class="brand__logo" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect x="0.5" y="0.5" width="31" height="31" rx="6" fill="#0a0c11" stroke="#ff5b2e" stroke-width="1"/><line x1="7" y1="25" x2="25" y2="7" stroke="#ff5b2e" stroke-width="1" stroke-opacity="0.55"/><text x="6" y="13" font-family="Space Grotesk, system-ui, sans-serif" font-size="10" font-weight="600" fill="#ffffff">G</text><text x="20" y="27" font-family="Space Grotesk, system-ui, sans-serif" font-size="10" font-weight="600" fill="#ffffff">S</text></svg><img class="brand__face" src="assets/portrait.png" alt="" /></span><b>GOURAV</b><span>/SHARMA</span></a>
+    <div class="nav__links">
+      <a href="index.html"><span class="idx">01</span>Index</a>
+      <a href="index.html#work"><span class="idx">02</span>Work</a>
+      <a href="about.html"><span class="idx">03</span>About</a>
+      <a href="blog.html" class="active"><span class="idx">04</span>Blogs</a>
+    </div>
+    <a class="btn btn--ghost nav__cta" href="uploads/cv.pdf" download>Resume ↓</a>
+    <button class="nav__burger" aria-label="Menu"><span></span></button>
+  </div>
+</nav>
+<div class="drawer">
+  <a href="index.html"><span class="idx">01</span>Index</a>
+  <a href="index.html#work"><span class="idx">02</span>Work</a>
+  <a href="about.html"><span class="idx">03</span>About</a>
+  <a href="blog.html" class="active"><span class="idx">04</span>Blogs</a>
+  <a href="uploads/cv.pdf" download><span class="idx">→</span>Download Resume</a>
+</div>
+
+<main>
+<!-- ===== Writing hero ===== -->
+<header class="writing-hero" data-screen-label="Writing / Intro">
+  <div class="wrap">
+    <div class="eyebrow reveal in">Writing // 04</div>
+    <h1 class="writing-hero__name reveal in">Field notes on<br /><em>making things.</em></h1>
+    <p class="writing-hero__lede reveal in">Short essays on <b>design, arts, UI/UX and product</b> &mdash; the decisions behind the pixels, the things I&rsquo;m still figuring out, and the ideas worth arguing about. New pieces land here.</p>
+
+    <div class="filterbar reveal" data-filterbar>
+      <button class="filter is-active" data-filter="all" type="button">All <span class="c">04</span></button>
+      <button class="filter" data-filter="design" type="button">Design <span class="c">01</span></button>
+      <button class="filter" data-filter="uiux" type="button">UI/UX <span class="c">01</span></button>
+      <button class="filter" data-filter="product" type="button">Product <span class="c">01</span></button>
+      <button class="filter" data-filter="arts" type="button">Arts <span class="c">01</span></button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== Featured ===== -->
+<section class="section" style="padding-top:0;" data-screen-label="Writing / Featured">
+  <div class="wrap">
+    <div class="head-row reveal">
+      <div>
+        <div class="eyebrow">Pinned</div>
+        <h2 class="section-title">Latest piece.</h2>
+      </div>
+      <div class="head-row__count">[ PUBLISHED <span class="draftn">04</span> ]</div>
+    </div>
+
+    <a class="feature reveal" href="post-unhappy-path.html" data-cat="product" aria-label="Read: Designing for the unhappy path">
+      <div class="feature__cover">
+        <picture><source srcset="assets/blog/cover-unhappy-path.webp" type="image/webp" /><img src="assets/blog/cover-unhappy-path.png" alt="A routed path that breaks at a marked failure point" loading="lazy" /></picture>
+        <span class="feature__coverframe"></span>
+      </div>
+      <div class="feature__body">
+        <span class="feature__pin"><i class="dot"></i>Featured</span>
+        <h3 class="feature__title">Designing for the unhappy path.</h3>
+        <p class="feature__dek">Empty states, errors, the spinner that never ends &mdash; the screens nobody demos are the ones that decide whether people trust your product. A field guide to designing failure on purpose.</p>
+        <div class="feature__meta">
+          <span class="cat">PRODUCT DESIGN</span>
+          <span>JUN 2026</span>
+          <span>9 MIN READ</span>
+        </div>
+        <span class="btn btn--primary feature__cta">Read piece <span class="arrow">→</span></span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- ===== Post list ===== -->
+<section class="section" style="padding-top:0;" data-screen-label="Writing / Archive">
+  <div class="wrap">
+    <div class="head-row reveal">
+      <div>
+        <div class="eyebrow">Archive</div>
+        <h2 class="section-title">Everything else.</h2>
+      </div>
+      <div class="head-row__count">[ INDEX // 03 ]</div>
+    </div>
+
+    <div class="posts" data-posts>
+      <a class="post reveal" href="post-empty-states.html" data-cat="uiux">
+        <span class="post__idx">/01</span>
+        <span class="post__cat">UI/UX</span>
+        <span class="post__main">
+          <span class="post__title">The quiet power of empty states</span>
+          <span class="post__dek">A blank screen is a first impression. Here&rsquo;s how to make &ldquo;nothing here yet&rdquo; feel like a beginning, not a dead end.</span>
+        </span>
+        <span class="post__meta">MAY 2026<br />6 MIN</span>
+        <span class="post__go"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H8M17 7V16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </a>
+
+      <a class="post reveal" href="post-bauhaus-hierarchy.html" data-cat="arts">
+        <span class="post__idx">/02</span>
+        <span class="post__cat">Arts</span>
+        <span class="post__main">
+          <span class="post__title">What Bauhaus posters taught me about hierarchy</span>
+          <span class="post__dek">A hundred years on, the loudest lesson is still restraint. Notes from a weekend lost in an archive of early modernist print.</span>
+        </span>
+        <span class="post__meta">APR 2026<br />8 MIN</span>
+        <span class="post__go"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H8M17 7V16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </a>
+
+      <a class="post reveal" href="post-type-interface.html" data-cat="design">
+        <span class="post__idx">/03</span>
+        <span class="post__cat">Design</span>
+        <span class="post__main">
+          <span class="post__title">Type is the interface</span>
+          <span class="post__dek">Before color, before layout, before a single icon &mdash; the words and the way they&rsquo;re set carry most of the meaning. A love letter to typography.</span>
+        </span>
+        <span class="post__meta">MAR 2026<br />5 MIN</span>
+        <span class="post__go"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H8M17 7V16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </a>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div>
+        <div class="footer__big">Gourav Sharma<span class="accent">.</span></div>
+        <p class="dim footer__lede">Product &amp; UI/UX Designer. Designing scalable systems for logistics, SaaS &amp; mobile.</p>
+      </div>
+      <div class="footer__col">
+        <h4>Navigate</h4>
+        <a href="index.html">Index</a>
+        <a href="index.html#work">Work</a>
+        <a href="about.html">About</a>
+        <a href="blog.html">Blogs</a>
+        <a href="glossary.html">Glossary</a>
+        <a href="uploads/cv.pdf" download>Resume ↓</a>
+      </div>
+      <div class="footer__col">
+        <h4>Connect</h4>
+        <a href="mailto:gouravsharma.ux@gmail.com">Email</a>
+        <a href="https://www.linkedin.com/in/gourav-sharmaux/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+    <div class="footer__bar">
+      <span>© 2026 GOURAV SHARMA</span>
+      <span>DESIGNED &amp; BUILT · v1.0 · <span data-clock>--:--:-- UTC</span></span>
+    </div>
+  </div>
+</footer>
+
+<script src="image-slot.js"></script>
+<script src="bigfoot.js"></script>
+<script src="easter-egg.js"></script>
+<script src="click-sfx.js"></script>
+<script>
+/* category filter — covers the featured piece and the archive rows,
+   and hides a section header when nothing in it matches */
+(function () {
+  var bar = document.querySelector('[data-filterbar]');
+  if (!bar) return;
+  var posts = [].slice.call(document.querySelectorAll('.posts .post'));
+  var feature = document.querySelector('.feature');
+  var featureSection = feature ? feature.closest('section') : null;
+  var archiveSection = document.querySelector('.posts') ? document.querySelector('.posts').closest('section') : null;
+
+  bar.addEventListener('click', function (e) {
+    var btn = e.target.closest('.filter');
+    if (!btn) return;
+    bar.querySelectorAll('.filter').forEach(function (f) { f.classList.toggle('is-active', f === btn); });
+    var cat = btn.getAttribute('data-filter');
+
+    posts.forEach(function (p) {
+      p.classList.toggle('is-hidden', !(cat === 'all' || p.getAttribute('data-cat') === cat));
+    });
+
+    var featMatch = feature && (cat === 'all' || feature.getAttribute('data-cat') === cat);
+    if (featureSection) featureSection.style.display = featMatch ? '' : 'none';
+
+    var archiveMatch = cat === 'all' || posts.some(function (p) { return p.getAttribute('data-cat') === cat; });
+    if (archiveSection) archiveSection.style.display = archiveMatch ? '' : 'none';
+  });
+})();
+</script>
+<script src="nav-scramble.js"></script>
+<script src="main.js"></script>
+<script src="rise.js"></script>
+</body>
+</html>

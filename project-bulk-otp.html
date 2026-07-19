@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Case Study — Gourav Sharma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<script src="net-quality.js"></script>
+<script src="sound-manager.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@300;400;500;600&display=swap" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="project.css" />
+<link rel="stylesheet" href="project-proto.css" />
+<script src="theme-toggle.js"></script>
+<script src="page-transition.js"></script>
+<script src="gold-cursor.js"></script>
+</head>
+<body data-project="bulk-otp">
+<div id="app"></div>
+<script>window.PROJECT_KEY = "bulk-otp";</script>
+<script src="image-slot.js"></script>
+<script src="projects-data.js"></script>
+<script src="project-art.js"></script>
+<script src="project-screens-otp.js"></script>
+<script src="bigfoot.js"></script>
+<script src="easter-egg.js"></script>
+<script src="click-sfx.js"></script>
+<script src="mockups.js"></script>
+<script src="project.js"></script>
+<script src="nav-scramble.js"></script>
+<script src="rise.js"></script>
+<script>
+/* ---------- Tweaks (host-toggled) ---------- */
+(function () {
+  var TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+    "accent": "#ff5b2e",
+    "phoneScale": 1
+  }/*EDITMODE-END*/;
+
+  var state = { accent: TWEAK_DEFAULTS.accent, phoneScale: TWEAK_DEFAULTS.phoneScale };
+  var panel = null;
+
+  function hexRgb(h) {
+    var m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(h);
+    return m ? [parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16)] : [255, 91, 46];
+  }
+  function apply() {
+    var r = document.documentElement.style;
+    var c = hexRgb(state.accent);
+    r.setProperty('--accent', state.accent);
+    r.setProperty('--accent-2', state.accent);
+    r.setProperty('--accent-soft', 'rgba(' + c.join(',') + ',0.10)');
+    r.setProperty('--accent-glow', 'rgba(' + c.join(',') + ',0.55)');
+    var s = Math.max(0.7, Math.min(1.3, state.phoneScale));
+    var el = document.getElementById('tweak-phone-style');
+    if (!el) { el = document.createElement('style'); el.id = 'tweak-phone-style'; document.head.appendChild(el); }
+    el.textContent = '.otp .otp-phone{--pw:' + Math.round(270 * s) + 'px;--ph:' + Math.round(587 * s) + 'px;--pscale:' + (0.75 * s).toFixed(4) + ';}';
+  }
+  function persist(edits) {
+    try { window.parent.postMessage({ type: '__edit_mode_set_keys', edits: edits }, '*'); } catch (e) {}
+  }
+
+  var SWATCHES = ['#ff5b2e', '#5468FA', '#1F8A5B', '#B98A2F'];
+
+  function buildPanel() {
+    var p = document.createElement('div');
+    p.id = 'tweaks-panel';
+    p.style.cssText = 'position:fixed;right:18px;bottom:18px;z-index:100060;width:228px;background:#0f1118;border:1px solid rgba(255,255,255,0.14);border-radius:12px;padding:14px 16px 16px;font-family:var(--font-mono,monospace);color:#cfd3dd;box-shadow:0 24px 60px -20px rgba(0,0,0,0.8);display:none;';
+    p.innerHTML =
+      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">' +
+        '<span style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#fff;">Tweaks</span>' +
+        '<button id="tweaksClose" style="width:22px;height:22px;border:1px solid rgba(255,255,255,0.16);border-radius:6px;background:none;color:#cfd3dd;font-size:11px;line-height:1;cursor:pointer;">✕</button>' +
+      '</div>' +
+      '<div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#7d8290;margin-bottom:7px;">Accent</div>' +
+      '<div id="tweakSwatches" style="display:flex;gap:8px;margin-bottom:14px;">' +
+        SWATCHES.map(function (c) {
+          return '<button data-c="' + c + '" style="width:26px;height:26px;border-radius:50%;background:' + c + ';border:2px solid ' + (c === state.accent ? '#fff' : 'transparent') + ';cursor:pointer;"></button>';
+        }).join('') +
+      '</div>' +
+      '<div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#7d8290;margin-bottom:7px;">Phone size <span id="tweakScaleVal" style="color:#fff;">' + Math.round(state.phoneScale * 100) + '%</span></div>' +
+      '<input id="tweakScale" type="range" min="0.7" max="1.3" step="0.05" value="' + state.phoneScale + '" style="width:100%;accent-color:' + state.accent + ';cursor:pointer;">';
+    document.body.appendChild(p);
+
+    p.querySelector('#tweaksClose').addEventListener('click', function () {
+      p.style.display = 'none';
+      try { window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*'); } catch (e) {}
+    });
+    p.querySelector('#tweakSwatches').addEventListener('click', function (e) {
+      var b = e.target.closest('[data-c]');
+      if (!b) return;
+      state.accent = b.getAttribute('data-c');
+      p.querySelectorAll('[data-c]').forEach(function (x) { x.style.borderColor = x === b ? '#fff' : 'transparent'; });
+      p.querySelector('#tweakScale').style.accentColor = state.accent;
+      apply();
+      persist({ accent: state.accent });
+    });
+    p.querySelector('#tweakScale').addEventListener('input', function (e) {
+      state.phoneScale = parseFloat(e.target.value) || 1;
+      p.querySelector('#tweakScaleVal').textContent = Math.round(state.phoneScale * 100) + '%';
+      apply();
+      persist({ phoneScale: state.phoneScale });
+    });
+    return p;
+  }
+
+  // listener BEFORE announcing availability
+  window.addEventListener('message', function (e) {
+    var d = e.data;
+    if (!d || typeof d !== 'object') return;
+    if (d.type === '__activate_edit_mode') { if (!panel) panel = buildPanel(); panel.style.display = 'block'; }
+    else if (d.type === '__deactivate_edit_mode') { if (panel) panel.style.display = 'none'; }
+  });
+  try { window.parent.postMessage({ type: '__edit_mode_available' }, '*'); } catch (e) {}
+
+  // apply persisted values on load (only if they differ from stock)
+  if (state.accent !== '#ff5b2e' || state.phoneScale !== 1) apply();
+})();
+</script>
+</body>
+</html>

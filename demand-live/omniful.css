@@ -1,0 +1,84 @@
+
+/* Omniful DS — shared shell styles for demand-forecast screens */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --brand:#5468FA;--brand-dark:#495AD9;--wash:#EEF0FE;--wash-2:#F4F5FD;
+  --ink:#1A1C21;--t2:#5C6068;--t3:#6B7280;--t4:#8A8F98;
+  --line:#E7E9EE;--line-2:#F1F2F7;--bg:#F4F5F7;--white:#fff;
+  --green:#067603;--green-bg:#E6F2E6;--red:#C21808;--red-bg:#FFE9E6;
+}
+body{font-family:'Poppins',sans-serif;background:var(--white);color:var(--ink);width:1512px;min-height:100vh;overflow-x:clip;}
+html{overflow-x:clip;}
+.fname,.cname{display:inline-block;max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:middle;}
+
+/* let Key Metrics tooltip escape the card */
+.km,.km-head,.km-head .l{overflow:visible;}
+.tip{position:relative;}
+.top{height:64px;background:var(--white);border-bottom:1px solid var(--line);display:flex;align-items:center;position:sticky;top:0;z-index:200;}
+.top-logo{min-width:96px;display:flex;align-items:center;justify-content:flex-start;flex:none;padding-left:20px;padding-right:8px;white-space:nowrap;}
+.top-logo b,.top-logo span{white-space:nowrap;}
+.logo-mark{display:flex;align-items:center;gap:7px;}
+.logo-mark .g{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#6E5AE6,#5468FA);display:flex;align-items:center;justify-content:center;}
+.logo-mark .g svg{width:16px;height:16px;}
+.logo-mark b{font-size:19px;font-weight:700;color:#5b53e0;letter-spacing:-.4px;}
+.top-sep{flex:1;}
+.top-right{display:flex;align-items:center;gap:12px;padding-right:20px;}
+.hub-pill,.lang-pill{display:flex;align-items:center;gap:10px;height:40px;padding:0 12px;border:1px solid var(--line);border-radius:9px;background:var(--white);cursor:pointer;}
+.hub-pill .k{font-size:13px;color:var(--t3);}
+.hub-pill .v{font-size:13px;font-weight:500;color:var(--ink);}
+.hub-pill svg,.lang-pill svg{width:14px;height:14px;color:var(--t3);}
+.lang-pill .flag{width:22px;height:15px;border-radius:2px;overflow:hidden;flex:none;display:flex;flex-direction:column;box-shadow:0 0 0 1px rgba(0,0,0,.05);}
+.lang-pill .flag i{flex:1;}
+.lang-pill span{font-size:13px;font-weight:500;color:var(--ink);}
+.ic-btn{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;color:var(--t2);cursor:pointer;position:relative;}
+.ic-btn:hover{background:var(--bg);}
+.ic-btn svg{width:20px;height:20px;}
+.ic-btn .dot{position:absolute;top:8px;right:9px;width:7px;height:7px;border-radius:50%;background:#F59E0B;border:1.5px solid #fff;}
+.user{display:flex;align-items:center;gap:9px;padding-left:6px;cursor:pointer;}
+.user .ava{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#5468FA,#8b96fb);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;position:relative;flex:none;}
+.user .ava::after{content:"";position:absolute;bottom:1px;right:1px;width:9px;height:9px;border-radius:50%;background:#1F9D57;border:2px solid #fff;}
+.user .who b{font-size:13px;font-weight:600;color:var(--ink);display:block;line-height:1.2;}
+.user .who span{font-size:11px;color:var(--t3);}
+.user>svg{width:15px;height:15px;color:var(--t3);}
+
+/* shell */
+.shell{display:flex;}
+
+/* icon rail */
+.rail{width:96px;flex:none;background:var(--white);border-right:1px solid var(--line);padding:10px 0;display:flex;flex-direction:column;align-items:center;gap:3px;position:sticky;top:64px;height:calc(100vh - 64px);align-self:flex-start;z-index:40;}
+.rail-item{width:80px;padding:9px 0 7px;border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;color:var(--t3);}
+.rail-item:hover{background:var(--bg);color:var(--t2);}
+.rail-item svg{width:21px;height:21px;}
+.rail-item span{font-size:10.5px;font-weight:500;letter-spacing:.1px;}
+.rail-item.active{background:var(--brand);color:#fff;}
+.rail-spacer{flex:1;}
+.rail-sep{width:52px;height:1px;background:var(--line);margin:8px 0;}
+
+/* inventory subnav */
+.subnav{width:250px;flex:none;background:var(--white);border-right:1px solid var(--line);padding:16px 12px;position:sticky;top:64px;height:calc(100vh - 64px);align-self:flex-start;overflow-y:auto;z-index:30;}
+.subnav-head{display:flex;align-items:center;justify-content:space-between;padding:4px 8px 14px;}
+.subnav-head b{font-size:19px;font-weight:600;color:var(--ink);letter-spacing:-.3px;}
+.subnav-collapse{width:22px;height:22px;border-radius:6px;background:var(--brand);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.subnav-collapse svg{width:13px;height:13px;color:#fff;}
+.sub-item{display:flex;align-items:center;gap:9px;padding:11px 9px;border-radius:9px;cursor:pointer;color:var(--t2);font-size:13px;font-weight:500;margin-bottom:2px;position:relative;white-space:nowrap;}
+.sub-item>span,.sub-item{min-width:0;}
+.sub-item:hover{background:var(--bg);}
+.sub-item svg.lead{width:17px;height:17px;color:var(--t3);flex:none;}
+.sub-item .cx{margin-left:auto;width:14px;height:14px;color:var(--t4);}
+.sub-item.open{color:var(--ink);}
+.sub-item.open svg.lead{color:var(--brand);}
+.sub-item.open::before{content:"";position:absolute;left:-12px;top:0;bottom:0;width:3px;background:var(--brand);border-radius:0 3px 3px 0;}
+.sub-child{display:flex;align-items:center;padding:10px 10px 10px 37px;border-radius:9px;cursor:pointer;color:var(--t2);font-size:13px;font-weight:500;margin-bottom:2px;}
+.sub-child:hover{background:var(--bg);}
+.sub-child.active{background:var(--brand);color:#fff;font-weight:600;}
+
+/* main */
+.main{flex:1;min-width:0;background:var(--bg);padding:20px 24px 40px;}
+.page-title{font-size:21px;font-weight:600;color:var(--ink);letter-spacing:-.3px;margin-bottom:16px;display:flex;align-items:center;gap:12px;}
+.page-title .back{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--ink);cursor:pointer;}
+.page-title .back:hover{background:var(--white);}
+.page-title .back svg{width:19px;height:19px;}
+
+.shell.navcollapsed .subnav{display:none;}
+.subnav-collapse{transition:transform .2s ease;}
+.shell.navcollapsed .subnav-collapse{transform:rotate(180deg);}

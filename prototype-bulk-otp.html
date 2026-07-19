@@ -1,0 +1,28 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Bulk OTP Verification — Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="prototype/bulk-otp.css" />
+</head>
+<body>
+<div class="stage">
+  <div class="device-wrap"><div class="device"><div id="app"></div></div></div>
+  <div class="caption">
+    <span class="caption__hint">Demo OTP <b>4819</b></span>
+    <div class="netsim" id="netsim">
+      <span class="netsim__lbl">Network</span>
+      <button type="button" data-net="online" class="is-on">Online</button>
+      <button type="button" data-net="slow">Slow</button>
+      <button type="button" data-net="offline">Offline</button>
+    </div>
+    <button id="resetBtn" type="button">Reset</button>
+  </div>
+</div>
+<script src="prototype/bulk-otp.js"></script>
+</body>
+</html>

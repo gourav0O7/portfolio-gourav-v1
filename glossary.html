@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Glossary — Gourav Sharma</title>
+<meta name="description" content="A working glossary of design, UI/UX, product design and arts terms — definitions Gourav Sharma actually uses on the job." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<script src="net-quality.js"></script>
+<script src="sound-manager.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@300;400;500;600&display=swap" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+/* ---------- Glossary hero ---------- */
+.gloss-hero { padding-top: calc(var(--nav-h) + clamp(40px, 5.5vw, 80px)); padding-bottom: var(--sp-6); }
+.gloss-hero__name { font-size: clamp(40px, 8vw, 104px); font-weight: 500; letter-spacing: -0.03em; line-height: 0.94; margin: var(--sp-5) 0 var(--sp-5); }
+.gloss-hero__name em { font-style: normal; color: var(--accent); }
+.gloss-hero__lede { font-size: clamp(17px, 1.7vw, 21px); line-height: 1.6; color: var(--text-dim); max-width: 60ch; }
+.gloss-hero__lede b { color: var(--text); font-weight: 500; }
+
+/* ---------- Sticky tool bar (search + filters + A–Z) ---------- */
+.gloss-bar { position: sticky; top: var(--nav-h); z-index: 60; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.gloss-bar__inner { max-width: var(--maxw); margin: 0 auto; padding: 14px var(--gutter); display: flex; flex-direction: column; gap: 12px; }
+.gloss-bar__row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+/* search */
+.gloss-search { flex: 1 1 280px; min-width: 220px; display: flex; align-items: center; gap: 10px; border: 1px solid var(--line-2); background: var(--bg); padding: 0 14px; height: 46px; transition: border-color 0.2s var(--ease); }
+.gloss-search:focus-within { border-color: var(--accent); }
+.gloss-search__prompt { font-family: var(--font-mono); font-size: 13px; color: var(--accent); }
+.gloss-search input { flex: 1; min-width: 0; background: transparent; border: none; outline: none; color: var(--text); font-family: var(--font-mono); font-size: 14px; letter-spacing: 0.03em; }
+.gloss-search input::placeholder { color: var(--text-faint); }
+.gloss-search__clear { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; color: var(--text-faint); border: 1px solid var(--line); padding: 5px 9px; opacity: 0; pointer-events: none; transition: 0.2s var(--ease); white-space: nowrap; }
+.gloss-search__clear.show { opacity: 1; pointer-events: auto; }
+.gloss-search__clear:hover { color: var(--accent); border-color: var(--line-accent); }
+
+/* result count */
+.gloss-count { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.1em; color: var(--text-faint); white-space: nowrap; }
+.gloss-count b { color: var(--accent); font-weight: 500; }
+
+/* category filters */
+.gloss-filters { display: flex; flex-wrap: wrap; gap: 8px; }
+.gfilter { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); border: 1px solid var(--line-2); padding: 9px 14px; transition: 0.22s var(--ease); white-space: nowrap; }
+.gfilter:hover { border-color: var(--accent); color: var(--accent); }
+.gfilter.is-active { background: var(--accent); border-color: var(--accent); color: #0a0c11; }
+html.gold .gfilter.is-active { color: var(--bg); }
+.gfilter .c { color: var(--text-faint); margin-left: 6px; }
+.gfilter.is-active .c { color: inherit; opacity: 0.72; }
+
+/* A–Z jump rail */
+.gloss-az { display: flex; flex-wrap: wrap; gap: 2px; border-top: 1px solid var(--line); padding-top: 12px; }
+.gloss-az button { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.04em; color: var(--text-dim); width: 26px; height: 26px; display: grid; place-items: center; transition: 0.18s var(--ease); }
+.gloss-az button:hover { color: var(--accent); }
+.gloss-az button.is-disabled { color: var(--text-faint); opacity: 0.28; pointer-events: none; }
+
+/* ---------- Lexicon body ---------- */
+.lexicon { padding-top: clamp(36px, 4vw, 56px); }
+.lex-group { display: grid; grid-template-columns: clamp(64px, 9vw, 132px) 1fr; gap: clamp(18px, 3vw, 48px); border-top: 1px solid var(--line); padding-top: clamp(20px, 2.6vw, 34px); margin-top: clamp(20px, 2.6vw, 34px); }
+.lex-group:first-of-type { border-top: 0; margin-top: 0; padding-top: 0; }
+.lex-group.is-empty { display: none; }
+.lex-group__letter { font-family: var(--font-display); font-weight: 600; font-size: clamp(46px, 7vw, 100px); line-height: 0.82; letter-spacing: -0.04em; }
+.lex-group__terms { display: flex; flex-direction: column; min-width: 0; }
+
+.term { padding: clamp(18px, 2vw, 26px) 8px; border-bottom: 1px solid var(--line); position: relative; transition: background 0.35s var(--ease), padding 0.35s var(--ease); }
+.lex-group__terms .term:last-child { border-bottom: 0; }
+.term::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--accent); transform: scaleY(0); transform-origin: top; transition: transform 0.4s var(--ease); }
+.term:hover { background: linear-gradient(90deg, var(--accent-soft), transparent 62%); padding-left: 20px; }
+.term:hover::before { transform: scaleY(1); }
+.term.is-hidden { display: none; }
+.term__head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+.term__name { font-size: clamp(20px, 2.3vw, 27px); font-weight: 500; letter-spacing: -0.015em; line-height: 1.1; }
+.term:hover .term__name { color: var(--accent); }
+.term__name .term__no { font-family: var(--font-mono); font-size: 12px; font-weight: 400; color: var(--text-faint); letter-spacing: 0.05em; margin-right: 12px; vertical-align: 2px; }
+.term:hover .term__name .term__no { color: var(--accent); }
+.term__name .term__abbr { font-family: var(--font-mono); font-size: 0.5em; color: var(--text-faint); letter-spacing: 0.04em; margin-left: 8px; vertical-align: 3px; }
+.term__cat { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); border: 1px solid var(--line-2); padding: 6px 10px; white-space: nowrap; flex-shrink: 0; }
+.term__def { color: var(--text-dim); font-size: 15.5px; line-height: 1.62; margin-top: 12px; max-width: 70ch; }
+.term__def b { color: var(--text); font-weight: 500; }
+.term__see { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 16px; }
+.term__see-lbl { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-faint); }
+.seelink { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em; color: var(--text-dim); border: 1px solid var(--line); padding: 6px 11px; transition: 0.2s var(--ease); display: inline-flex; align-items: center; gap: 6px; }
+.seelink::before { content: "→"; color: var(--text-faint); font-size: 10px; transition: color 0.2s var(--ease); }
+.seelink:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.seelink:hover::before { color: var(--accent); }
+
+/* jump highlight flash */
+@keyframes termflash { 0% { background: var(--accent-soft); } 100% { background: transparent; } }
+.term.is-flash { animation: termflash 1.6s var(--ease); }
+.term.is-flash::before { transform: scaleY(1); }
+
+/* empty / no-results */
+.gloss-empty { display: none; border: 1px solid var(--line-2); padding: clamp(40px, 6vw, 72px) var(--gutter); text-align: center; }
+.gloss-empty.show { display: block; }
+.gloss-empty__code { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); }
+.gloss-empty__msg { font-size: clamp(20px, 3vw, 30px); font-weight: 500; letter-spacing: -0.02em; margin-top: 16px; }
+.gloss-empty__msg b { color: var(--accent); font-weight: 500; }
+.gloss-empty__reset { margin-top: 22px; }
+
+@media (max-width: 720px) {
+  .lex-group { grid-template-columns: 1fr; gap: 4px; }
+  .lex-group__letter { font-size: clamp(40px, 12vw, 60px); }
+  .gloss-bar__row { gap: 10px; }
+  .gloss-count { order: 3; width: 100%; }
+}
+</style>
+<script src="theme-toggle.js"></script>
+<script src="page-transition.js"></script>
+<script src="gold-cursor.js"></script>
+</head>
+<body>
+<script src="loader.js"></script>
+
+<!-- ===== Nav ===== -->
+<nav class="nav">
+  <div class="nav__inner">
+    <a class="brand" href="index.html"><span class="brand__mark" aria-hidden="true"><svg class="brand__logo" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect x="0.5" y="0.5" width="31" height="31" rx="6" fill="#0a0c11" stroke="#ff5b2e" stroke-width="1"/><line x1="7" y1="25" x2="25" y2="7" stroke="#ff5b2e" stroke-width="1" stroke-opacity="0.55"/><text x="6" y="13" font-family="Space Grotesk, system-ui, sans-serif" font-size="10" font-weight="600" fill="#ffffff">G</text><text x="20" y="27" font-family="Space Grotesk, system-ui, sans-serif" font-size="10" font-weight="600" fill="#ffffff">S</text></svg><img class="brand__face" src="assets/portrait.png" alt="" /></span><b>GOURAV</b><span>/SHARMA</span></a>
+    <div class="nav__links">
+      <a href="index.html"><span class="idx">01</span>Index</a>
+      <a href="index.html#work"><span class="idx">02</span>Work</a>
+      <a href="about.html"><span class="idx">03</span>About</a>
+      <a href="blog.html"><span class="idx">04</span>Blogs</a>
+    </div>
+    <a class="btn btn--ghost nav__cta" href="uploads/cv.pdf" download>Resume ↓</a>
+    <button class="nav__burger" aria-label="Menu"><span></span></button>
+  </div>
+</nav>
+<div class="drawer">
+  <a href="index.html"><span class="idx">01</span>Index</a>
+  <a href="index.html#work"><span class="idx">02</span>Work</a>
+  <a href="about.html"><span class="idx">03</span>About</a>
+  <a href="blog.html"><span class="idx">04</span>Blogs</a>
+  <a href="uploads/cv.pdf" download><span class="idx">→</span>Download Resume</a>
+</div>
+
+<main>
+<!-- ===== Hero ===== -->
+<header class="gloss-hero" data-screen-label="Glossary / Intro">
+  <div class="wrap">
+    <div class="eyebrow reveal in">Reference // Lexicon</div>
+    <h1 class="gloss-hero__name reveal in" data-rise>The design<br /><em>glossary.</em></h1>
+    <p class="gloss-hero__lede reveal in">A working dictionary of the words behind the work &mdash; <b>design, UI/UX, product</b> and <b>arts</b>. No textbook recitals; just the terms I actually reach for, defined the way I&rsquo;d explain them across a desk. Search it, filter it, follow the threads.</p>
+  </div>
+</header>
+
+<!-- ===== Tool bar ===== -->
+<div class="gloss-bar" data-screen-label="Glossary / Toolbar">
+  <div class="gloss-bar__inner">
+    <div class="gloss-bar__row">
+      <label class="gloss-search">
+        <span class="gloss-search__prompt" aria-hidden="true">▸</span>
+        <input type="search" id="gSearch" placeholder="Search the lexicon…" autocomplete="off" spellcheck="false" aria-label="Search glossary terms" />
+        <button type="button" class="gloss-search__clear" id="gClear">CLEAR ✕</button>
+      </label>
+      <div class="gloss-filters" data-gfilters>
+        <button class="gfilter is-active" type="button" data-filter="all">All <span class="c" data-c="all">00</span></button>
+        <button class="gfilter" type="button" data-filter="design">Design <span class="c" data-c="design">00</span></button>
+        <button class="gfilter" type="button" data-filter="uiux">UI/UX <span class="c" data-c="uiux">00</span></button>
+        <button class="gfilter" type="button" data-filter="product">Product <span class="c" data-c="product">00</span></button>
+        <button class="gfilter" type="button" data-filter="arts">Arts <span class="c" data-c="arts">00</span></button>
+      </div>
+      <span class="gloss-count" id="gCount"><b>50</b> / 50 terms</span>
+    </div>
+    <div class="gloss-az" data-az aria-label="Jump to letter"></div>
+  </div>
+</div>
+
+<!-- ===== Lexicon ===== -->
+<section class="section lexicon" id="lexicon" data-screen-label="Glossary / Terms">
+  <div class="wrap">
+    <div data-terms>
+
+      <!-- A -->
+      <div class="lex-group" data-letter="A">
+        <div class="lex-group__letter chrome-text" aria-hidden="true">A</div>
+        <div class="lex-group__terms">
+          <article class="term" id="accessibility" data-cat="uiux">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">001</span>Accessibility<span class="term__abbr">a11y</span></h3><span class="term__cat">UI/UX</span></div>
+            <p class="term__def">Designing so the <b>widest possible range of people</b> can perceive, operate and understand an interface — regardless of vision, motor, hearing or cognitive ability. Not a feature you bolt on; a constraint you design within from the first sketch.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="contrast-ratio">Contrast Ratio</button><button class="seelink" data-jump="wcag">WCAG</button></div>
+          </article>
+          <article class="term" id="affordance" data-cat="uiux">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">002</span>Affordance</h3><span class="term__cat">UI/UX</span></div>
+            <p class="term__def">The <b>perceived properties</b> of an element that suggest how it can be used — a button looks pressable, a slider draggable, a card tappable. The gap between what something can do and what it looks like it can do is where confusion lives.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="signifier">Signifier</button><button class="seelink" data-jump="mental-model">Mental Model</button></div>
+          </article>
+          <article class="term" id="atomic-design" data-cat="design">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">003</span>Atomic Design</h3><span class="term__cat">Design</span></div>
+            <p class="term__def">A methodology that builds interfaces from the smallest parts up: <b>atoms → molecules → organisms → templates → pages</b>. It gives a shared mental shape to a system so designers and engineers name the same things the same way.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="component">Component</button><button class="seelink" data-jump="design-system">Design System</button></div>
+          </article>
+        </div>
+      </div>
+
+      <!-- B -->
+      <div class="lex-group" data-letter="B">
+        <div class="lex-group__letter chrome-text" aria-hidden="true">B</div>
+        <div class="lex-group__terms">
+          <article class="term" id="baseline-grid" data-cat="design">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">004</span>Baseline Grid</h3><span class="term__cat">Design</span></div>
+            <p class="term__def">A horizontal rhythm that snaps text and elements to consistent vertical increments, so type sitting in different columns shares the same invisible footing. It's what makes a dense layout feel calm instead of jittery.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="grid">Grid</button><button class="seelink" data-jump="vertical-rhythm">Vertical Rhythm</button></div>
+          </article>
+          <article class="term" id="bauhaus" data-cat="arts">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">005</span>Bauhaus</h3><span class="term__cat">Arts</span></div>
+            <p class="term__def">The early-20th-century German school that fused craft with industry and still underwrites modern design — <b>form follows function</b>, geometry over ornament, primary colour, honest materials. A hundred years on, the loudest lesson is restraint.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="grid">Grid</button><button class="seelink" data-jump="hierarchy">Hierarchy</button></div>
+          </article>
+        </div>
+      </div>
+
+      <!-- C -->
+      <div class="lex-group" data-letter="C">
+        <div class="lex-group__letter chrome-text" aria-hidden="true">C</div>
+        <div class="lex-group__terms">
+          <article class="term" id="card-sorting" data-cat="product">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">006</span>Card Sorting</h3><span class="term__cat">Product</span></div>
+            <p class="term__def">A research method where users group labelled cards into categories that make sense <b>to them</b> — revealing how people expect content to be organised, rather than how the org chart happens to be drawn.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="information-architecture">Information Architecture</button><button class="seelink" data-jump="mental-model">Mental Model</button></div>
+          </article>
+          <article class="term" id="component" data-cat="design">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">007</span>Component</h3><span class="term__cat">Design</span></div>
+            <p class="term__def">A reusable, self-contained interface element with defined <b>states and properties</b> — the working unit of a design system. Build it once, get it right once, and every screen inherits the fix.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="design-system">Design System</button><button class="seelink" data-jump="atomic-design">Atomic Design</button></div>
+          </article>
+          <article class="term" id="contrast-ratio" data-cat="uiux">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">008</span>Contrast Ratio</h3><span class="term__cat">UI/UX</span></div>
+            <p class="term__def">The measurable difference in luminance between foreground and background. WCAG asks for at least <b>4.5:1</b> for body text and 3:1 for large text — the line between &ldquo;looks nice on my monitor&rdquo; and &ldquo;readable on a phone in sunlight.&rdquo;</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="accessibility">Accessibility</button><button class="seelink" data-jump="wcag">WCAG</button></div>
+          </article>
+        </div>
+      </div>
+
+      <!-- D -->
+      <div class="lex-group" data-letter="D">
+        <div class="lex-group__letter chrome-text" aria-hidden="true">D</div>
+        <div class="lex-group__terms">
+          <article class="term" id="design-system" data-cat="design">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">009</span>Design System</h3><span class="term__cat">Design</span></div>
+            <p class="term__def">A <b>single source of truth</b> — tokens, components, patterns and the guidelines that govern them — that keeps a product coherent as teams and surfaces multiply. Less a library, more a shared language with rules of grammar.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="design-token">Design Token</button><button class="seelink" data-jump="component">Component</button></div>
+          </article>
+          <article class="term" id="design-token" data-cat="design">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">010</span>Design Token</h3><span class="term__cat">Design</span></div>
+            <p class="term__def">A named, platform-agnostic value — a colour, a spacing step, a radius — that carries a <b>design decision into code</b> without redrawing it. Change the token, and every screen referencing it updates at once.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="design-system">Design System</button><button class="seelink" data-jump="modular-scale">Modular Scale</button></div>
+          </article>
+          <article class="term" id="divergent-thinking" data-cat="design">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">011</span>Divergent Thinking</h3><span class="term__cat">Design</span></div>
+            <p class="term__def">Deliberately generating <b>many options before narrowing</b> to one — the wide half of any honest design process. Skip it and you don't choose the best idea, you choose the first one.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="double-diamond">Double Diamond</button><button class="seelink" data-jump="prototype">Prototype</button></div>
+          </article>
+          <article class="term" id="double-diamond" data-cat="product">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">012</span>Double Diamond</h3><span class="term__cat">Product</span></div>
+            <p class="term__def">A process model in four moves — <b>discover, define, develop, deliver</b> — that alternates divergent and convergent thinking. The first diamond finds the right problem; the second finds the right solution.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="divergent-thinking">Divergent Thinking</button><button class="seelink" data-jump="jobs-to-be-done">Jobs to Be Done</button></div>
+          </article>
+        </div>
+      </div>
+
+      <!-- E -->
+      <div class="lex-group" data-letter="E">
+        <div class="lex-group__letter chrome-text" aria-hidden="true">E</div>
+        <div class="lex-group__terms">
+          <article class="term" id="empty-state" data-cat="uiux">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">013</span>Empty State</h3><span class="term__cat">UI/UX</span></div>
+            <p class="term__def">The screen shown when there's <b>no content yet</b> — the first impression nobody demos. Treated well it onboards and points the way; treated as an afterthought it reads as a dead end.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="onboarding">Onboarding</button><button class="seelink" data-jump="microcopy">Microcopy</button></div>
+          </article>
+        </div>
+      </div>
+
+      <!-- F -->
+      <div class="lex-group" data-letter="F">
+        <div class="lex-group__letter chrome-text" aria-hidden="true">F</div>
+        <div class="lex-group__terms">
+          <article class="term" id="figure-ground" data-cat="arts">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">014</span>Figure–Ground</h3><span class="term__cat">Arts</span></div>
+            <p class="term__def">The visual relationship that lets the eye separate a <b>subject from its surroundings</b>. When it's ambiguous the composition feels unstable; when it's clear, the focal point reads instantly.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="negative-space">Negative Space</button><button class="seelink" data-jump="gestalt">Gestalt Principles</button></div>
+          </article>
+          <article class="term" id="fitts-law" data-cat="uiux">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">015</span>Fitts&rsquo;s Law</h3><span class="term__cat">UI/UX</span></div>
+            <p class="term__def">The time to acquire a target is a function of its <b>size and distance</b> — bigger, closer targets are faster to hit. It's why primary actions are large and corners (infinitely deep) are prime real estate.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="hicks-law">Hick&rsquo;s Law</button><button class="seelink" data-jump="responsive-design">Responsive Design</button></div>
+          </article>
+          <article class="term" id="flow" data-cat="product">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">016</span>Flow</h3><span class="term__cat">Product</span></div>
+            <p class="term__def">The state of focused immersion that arrives when <b>challenge meets skill</b>. Good products protect it — they remove friction and resist interrupting; they don't manufacture reasons to pull you back in.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="progressive-disclosure">Progressive Disclosure</button><button class="seelink" data-jump="onboarding">Onboarding</button></div>
+          </article>
+        </div>
+      </div>
+
+      <!-- G -->
+      <div class="lex-group" data-letter="G">
+        <div class="lex-group__letter chrome-text" aria-hidden="true">G</div>
+        <div class="lex-group__terms">
+          <article class="term" id="gestalt" data-cat="design">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">017</span>Gestalt Principles</h3><span class="term__cat">Design</span></div>
+            <p class="term__def">Rules of perception — <b>proximity, similarity, closure, continuity</b> — describing how the mind groups separate parts into wholes. Most layout decisions are just these principles applied on purpose instead of by accident.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="proximity">Proximity</button><button class="seelink" data-jump="figure-ground">Figure–Ground</button></div>
+          </article>
+          <article class="term" id="golden-ratio" data-cat="arts">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">018</span>Golden Ratio</h3><span class="term__cat">Arts</span></div>
+            <p class="term__def">A proportion of roughly <b>1:1.618</b> that recurs in nature and classical composition. A useful starting proportion — not a magic one; a balanced layout owes more to intent than to any single number.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="rule-of-thirds">Rule of Thirds</button><button class="seelink" data-jump="modular-scale">Modular Scale</button></div>
+          </article>
+          <article class="term" id="grid" data-cat="design">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">019</span>Grid</h3><span class="term__cat">Design</span></div>
+            <p class="term__def">The invisible scaffolding of <b>columns, gutters and margins</b> that brings order and alignment to a layout. Constraints that make decisions faster and a composition feel deliberate rather than arranged by hand.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="baseline-grid">Baseline Grid</button><button class="seelink" data-jump="modular-scale">Modular Scale</button></div>
+          </article>
+        </div>
+      </div>
+
+      <!-- H -->
+      <div class="lex-group" data-letter="H">
+        <div class="lex-group__letter chrome-text" aria-hidden="true">H</div>
+        <div class="lex-group__terms">
+          <article class="term" id="heuristic-evaluation" data-cat="uiux">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">020</span>Heuristic Evaluation</h3><span class="term__cat">UI/UX</span></div>
+            <p class="term__def">A fast expert review of an interface against established usability principles. Cheaper and quicker than testing — it catches the obvious problems so user sessions can spend their time on the subtle ones.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="usability-testing">Usability Testing</button></div>
+          </article>
+          <article class="term" id="hicks-law" data-cat="uiux">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">021</span>Hick&rsquo;s Law</h3><span class="term__cat">UI/UX</span></div>
+            <p class="term__def">The more choices you present, the <b>longer the decision takes</b>. The argument for fewer top-level options, sensible defaults, and revealing complexity only when it's asked for.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="fitts-law">Fitts&rsquo;s Law</button><button class="seelink" data-jump="progressive-disclosure">Progressive Disclosure</button></div>
+          </article>
+          <article class="term" id="hierarchy" data-cat="design">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">022</span>Hierarchy</h3><span class="term__cat">Design</span></div>
+            <p class="term__def">The intentional ordering of elements by importance so the eye knows <b>where to look first, second, third</b>. Built from size, weight, colour and space — when everything shouts, nothing is heard.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="gestalt">Gestalt Principles</button><button class="seelink" data-jump="modular-scale">Modular Scale</button></div>
+          </article>
+        </div>
+      </div>
+
+      <!-- I -->
+      <div class="lex-group" data-letter="I">
+        <div class="lex-group__letter chrome-text" aria-hidden="true">I</div>
+        <div class="lex-group__terms">
+          <article class="term" id="information-architecture" data-cat="product">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">023</span>Information Architecture<span class="term__abbr">IA</span></h3><span class="term__cat">Product</span></div>
+            <p class="term__def">The <b>structure and labelling of content</b> so people can find what they need and always know where they are. Invisible when it works; the source of most &ldquo;I can't find anything&rdquo; complaints when it doesn't.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="card-sorting">Card Sorting</button><button class="seelink" data-jump="progressive-disclosure">Progressive Disclosure</button></div>
+          </article>
+          <article class="term" id="iteration" data-cat="product">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">024</span>Iteration</h3><span class="term__cat">Product</span></div>
+            <p class="term__def">Improving a design through <b>repeated cycles</b> of build, test and refine. The opposite of getting it perfect on paper — you ship something honest, learn from contact with reality, and go again.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="prototype">Prototype</button><button class="seelink" data-jump="mvp">MVP</button></div>
+          </article>
+        </div>
+      </div>
+
+      <!-- J -->
+      <div class="lex-group" data-letter="J">
+        <div class="lex-group__letter chrome-text" aria-hidden="true">J</div>
+        <div class="lex-group__terms">
+          <article class="term" id="jobs-to-be-done" data-cat="product">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">025</span>Jobs to Be Done<span class="term__abbr">JTBD</span></h3><span class="term__cat">Product</span></div>
+            <p class="term__def">A lens that frames a product around the <b>progress a person is trying to make</b> — &ldquo;hire&rdquo; the product to do a job — rather than around demographics or features. People don't want a drill; they want a hole.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="persona">Persona</button><button class="seelink" data-jump="user-story">User Story</button></div>
+          </article>
+        </div>
+      </div>
+
+      <!-- K -->
+      <div class="lex-group" data-letter="K">
+        <div class="lex-group__letter chrome-text" aria-hidden="true">K</div>
+        <div class="lex-group__terms">
+          <article class="term" id="kanban" data-cat="product">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">026</span>Kanban</h3><span class="term__cat">Product</span></div>
+            <p class="term__def">A visual workflow board that moves work across columns and <b>limits work-in-progress</b> so bottlenecks surface instead of hiding. Borrowed from a factory floor; at home on any team that values finishing over starting.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="iteration">Iteration</button></div>
+          </article>
+          <article class="term" id="kerning" data-cat="design">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">027</span>Kerning</h3><span class="term__cat">Design</span></div>
+            <p class="term__def">Adjusting the space between <b>specific letter pairs</b> so a word reads evenly — the &ldquo;AV&rdquo; and &ldquo;To&rdquo; that look gappy until you close them up. Per-pair surgery, not the uniform spacing of tracking.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="tracking">Tracking</button><button class="seelink" data-jump="leading">Leading</button></div>
+          </article>
+        </div>
+      </div>
+
+      <!-- L -->
+      <div class="lex-group" data-letter="L">
+        <div class="lex-group__letter chrome-text" aria-hidden="true">L</div>
+        <div class="lex-group__terms">
+          <article class="term" id="leading" data-cat="design">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">028</span>Leading</h3><span class="term__cat">Design</span></div>
+            <p class="term__def">The vertical space between lines of type — <b>line-height</b>, named for the strips of lead once set between rows of metal type. Too tight and lines collide; too loose and they drift apart into unrelated bands.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="kerning">Kerning</button><button class="seelink" data-jump="baseline-grid">Baseline Grid</button></div>
+          </article>
+        </div>
+      </div>
+
+      <!-- M -->
+      <div class="lex-group" data-letter="M">
+        <div class="lex-group__letter chrome-text" aria-hidden="true">M</div>
+        <div class="lex-group__terms">
+          <article class="term" id="mental-model" data-cat="uiux">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">029</span>Mental Model</h3><span class="term__cat">UI/UX</span></div>
+            <p class="term__def">The <b>internal picture</b> a user holds of how a system works. Friction appears precisely where that picture and the actual design disagree — so the cheapest usability win is often matching expectations, not teaching new ones.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="affordance">Affordance</button><button class="seelink" data-jump="skeuomorphism">Skeuomorphism</button></div>
+          </article>
+          <article class="term" id="microcopy" data-cat="uiux">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">030</span>Microcopy</h3><span class="term__cat">UI/UX</span></div>
+            <p class="term__def">The small functional words — <b>button labels, hints, empty states, error messages</b> — that quietly guide and reassure. A few words at the right moment do the work of an entire help page.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="empty-state">Empty State</button><button class="seelink" data-jump="tone-of-voice">Tone of Voice</button></div>
+          </article>
+          <article class="term" id="modular-scale" data-cat="design">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">031</span>Modular Scale</h3><span class="term__cat">Design</span></div>
+            <p class="term__def">A harmonious sequence of sizes derived from a <b>ratio</b>, used to set type and spacing so steps relate to one another musically instead of arbitrarily. The reason a well-tuned layout feels &ldquo;in key.&rdquo;</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="grid">Grid</button><button class="seelink" data-jump="vertical-rhythm">Vertical Rhythm</button></div>
+          </article>
+          <article class="term" id="mvp" data-cat="product">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">032</span>MVP</h3><span class="term__cat">Product</span></div>
+            <p class="term__def">Minimum Viable Product — the <b>smallest build that delivers real value</b> and tests a core assumption with actual users. Minimum and viable carry equal weight; ship too thin and you've only learned that nobody likes a broken thing.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="iteration">Iteration</button><button class="seelink" data-jump="prototype">Prototype</button></div>
+          </article>
+        </div>
+      </div>
+
+      <!-- N -->
+      <div class="lex-group" data-letter="N">
+        <div class="lex-group__letter chrome-text" aria-hidden="true">N</div>
+        <div class="lex-group__terms">
+          <article class="term" id="negative-space" data-cat="arts">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">033</span>Negative Space</h3><span class="term__cat">Arts</span></div>
+            <p class="term__def">The empty area <b>around and between</b> subjects — active, shaped, intentional, never just leftover. Master it and the space starts doing as much work as the thing it surrounds.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="white-space">White Space</button><button class="seelink" data-jump="figure-ground">Figure–Ground</button></div>
+          </article>
+        </div>
+      </div>
+
+      <!-- O -->
+      <div class="lex-group" data-letter="O">
+        <div class="lex-group__letter chrome-text" aria-hidden="true">O</div>
+        <div class="lex-group__terms">
+          <article class="term" id="onboarding" data-cat="product">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">034</span>Onboarding</h3><span class="term__cat">Product</span></div>
+            <p class="term__def">The first-run experience that carries a new user from arrival to their <b>first moment of real value</b> — the &ldquo;aha.&rdquo; Less a tour to sit through, more the shortest honest path to something that works.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="empty-state">Empty State</button><button class="seelink" data-jump="microcopy">Microcopy</button></div>
+          </article>
+        </div>
+      </div>
+
+      <!-- P -->
+      <div class="lex-group" data-letter="P">
+        <div class="lex-group__letter chrome-text" aria-hidden="true">P</div>
+        <div class="lex-group__terms">
+          <article class="term" id="persona" data-cat="product">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">035</span>Persona</h3><span class="term__cat">Product</span></div>
+            <p class="term__def">A composite character built from research that keeps a team designing for <b>real people, not themselves</b>. Useful as a tie-breaker — &ldquo;would Priya the warehouse lead actually tap this?&rdquo; — dangerous when invented from thin air.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="jobs-to-be-done">Jobs to Be Done</button><button class="seelink" data-jump="user-story">User Story</button></div>
+          </article>
+          <article class="term" id="progressive-disclosure" data-cat="uiux">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">036</span>Progressive Disclosure</h3><span class="term__cat">UI/UX</span></div>
+            <p class="term__def">Revealing complexity <b>only as it's needed</b>, keeping the default view simple while the power stays one step away. The cure for interfaces that frighten newcomers and the alternative to dumbing things down.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="hicks-law">Hick&rsquo;s Law</button><button class="seelink" data-jump="information-architecture">Information Architecture</button></div>
+          </article>
+          <article class="term" id="prototype" data-cat="design">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">037</span>Prototype</h3><span class="term__cat">Design</span></div>
+            <p class="term__def">A testable mock — paper, clickable or coded — used to <b>learn before committing to build</b>. Its job isn't to look finished; it's to answer a specific question as cheaply as possible.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="wireframe">Wireframe</button><button class="seelink" data-jump="iteration">Iteration</button></div>
+          </article>
+          <article class="term" id="proximity" data-cat="design">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">038</span>Proximity</h3><span class="term__cat">Design</span></div>
+            <p class="term__def">The Gestalt principle that elements placed <b>near each other read as related</b>. Often the fastest fix for a confusing layout is spacing alone: group what belongs together, separate what doesn't.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="gestalt">Gestalt Principles</button><button class="seelink" data-jump="hierarchy">Hierarchy</button></div>
+          </article>
+        </div>
+      </div>
+
+      <!-- R -->
+      <div class="lex-group" data-letter="R">
+        <div class="lex-group__letter chrome-text" aria-hidden="true">R</div>
+        <div class="lex-group__terms">
+          <article class="term" id="responsive-design" data-cat="uiux">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">039</span>Responsive Design</h3><span class="term__cat">UI/UX</span></div>
+            <p class="term__def">Layouts that <b>adapt fluidly</b> across screen sizes, inputs and contexts — one design that reflows rather than a handful of fixed ones. Designing for the unknown device as much as the one on your desk.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="grid">Grid</button><button class="seelink" data-jump="fitts-law">Fitts&rsquo;s Law</button></div>
+          </article>
+          <article class="term" id="rule-of-thirds" data-cat="arts">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">040</span>Rule of Thirds</h3><span class="term__cat">Arts</span></div>
+            <p class="term__def">A composition guide that places focal points along the lines and intersections of a <b>3×3 grid</b>, off-centre, for tension and balance. A reliable default — and, like all rules, most useful once you know when to break it.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="golden-ratio">Golden Ratio</button><button class="seelink" data-jump="grid">Grid</button></div>
+          </article>
+        </div>
+      </div>
+
+      <!-- S -->
+      <div class="lex-group" data-letter="S">
+        <div class="lex-group__letter chrome-text" aria-hidden="true">S</div>
+        <div class="lex-group__terms">
+          <article class="term" id="signifier" data-cat="uiux">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">041</span>Signifier</h3><span class="term__cat">UI/UX</span></div>
+            <p class="term__def">A perceivable <b>cue that communicates an affordance</b> — the underline that says &ldquo;link,&rdquo; the handle that says &ldquo;drag me.&rdquo; Affordances are possibilities; signifiers are how you announce them.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="affordance">Affordance</button></div>
+          </article>
+          <article class="term" id="skeuomorphism" data-cat="uiux">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">042</span>Skeuomorphism</h3><span class="term__cat">UI/UX</span></div>
+            <p class="term__def">Mimicking <b>real-world materials and textures</b> — stitched leather, paper, felt — so digital objects feel familiar. A bridge for new users that can curdle into decoration once the metaphor has done its teaching.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="mental-model">Mental Model</button><button class="seelink" data-jump="affordance">Affordance</button></div>
+          </article>
+        </div>
+      </div>
+
+      <!-- T -->
+      <div class="lex-group" data-letter="T">
+        <div class="lex-group__letter chrome-text" aria-hidden="true">T</div>
+        <div class="lex-group__terms">
+          <article class="term" id="tone-of-voice" data-cat="product">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">043</span>Tone of Voice</h3><span class="term__cat">Product</span></div>
+            <p class="term__def">The consistent <b>personality of a product's language</b> across every screen, email and error. The difference between software that sounds like a form and software that sounds like someone who's on your side.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="microcopy">Microcopy</button></div>
+          </article>
+          <article class="term" id="tracking" data-cat="design">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">044</span>Tracking</h3><span class="term__cat">Design</span></div>
+            <p class="term__def">Uniform letter-spacing across <b>a whole run of text</b>, distinct from per-pair kerning. Loosened a touch, small caps and all-caps labels breathe; over-tracked body copy just falls apart.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="kerning">Kerning</button><button class="seelink" data-jump="leading">Leading</button></div>
+          </article>
+        </div>
+      </div>
+
+      <!-- U -->
+      <div class="lex-group" data-letter="U">
+        <div class="lex-group__letter chrome-text" aria-hidden="true">U</div>
+        <div class="lex-group__terms">
+          <article class="term" id="usability-testing" data-cat="uiux">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">045</span>Usability Testing</h3><span class="term__cat">UI/UX</span></div>
+            <p class="term__def">Watching <b>real users attempt real tasks</b> to find where a design breaks down — not asking whether they like it, but seeing whether they can do it. Five people will surface most of what's wrong.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="heuristic-evaluation">Heuristic Evaluation</button><button class="seelink" data-jump="iteration">Iteration</button></div>
+          </article>
+          <article class="term" id="user-story" data-cat="product">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">046</span>User Story</h3><span class="term__cat">Product</span></div>
+            <p class="term__def">A short, user-framed statement of need: <b>&ldquo;As a __, I want __, so that __.&rdquo;</b> It keeps a backlog item anchored to a human goal instead of drifting into a spec for its own sake.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="jobs-to-be-done">Jobs to Be Done</button><button class="seelink" data-jump="persona">Persona</button></div>
+          </article>
+        </div>
+      </div>
+
+      <!-- V -->
+      <div class="lex-group" data-letter="V">
+        <div class="lex-group__letter chrome-text" aria-hidden="true">V</div>
+        <div class="lex-group__terms">
+          <article class="term" id="vertical-rhythm" data-cat="design">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">047</span>Vertical Rhythm</h3><span class="term__cat">Design</span></div>
+            <p class="term__def">Consistent spacing that gives a layout an even, <b>predictable cadence</b> down the page — built on the baseline grid and the spacing scale. The quiet reason a page feels composed rather than assembled.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="baseline-grid">Baseline Grid</button><button class="seelink" data-jump="modular-scale">Modular Scale</button></div>
+          </article>
+        </div>
+      </div>
+
+      <!-- W -->
+      <div class="lex-group" data-letter="W">
+        <div class="lex-group__letter chrome-text" aria-hidden="true">W</div>
+        <div class="lex-group__terms">
+          <article class="term" id="wcag" data-cat="uiux">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">048</span>WCAG</h3><span class="term__cat">UI/UX</span></div>
+            <p class="term__def">Web Content Accessibility Guidelines — the international <b>standard for measurable accessible design</b>, organised around four ideas: perceivable, operable, understandable, robust. The yardstick behind most accessibility requirements.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="accessibility">Accessibility</button><button class="seelink" data-jump="contrast-ratio">Contrast Ratio</button></div>
+          </article>
+          <article class="term" id="white-space" data-cat="arts">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">049</span>White Space</h3><span class="term__cat">Arts</span></div>
+            <p class="term__def">The breathing room in a composition — <b>restraint that gives content focus</b>. Rarely the first thing a stakeholder wants to pay for, almost always the thing that makes the work look expensive.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="negative-space">Negative Space</button><button class="seelink" data-jump="hierarchy">Hierarchy</button></div>
+          </article>
+          <article class="term" id="wireframe" data-cat="design">
+            <div class="term__head"><h3 class="term__name"><span class="term__no">050</span>Wireframe</h3><span class="term__cat">Design</span></div>
+            <p class="term__def">A low-fidelity skeleton that settles <b>structure and priority</b> before colour, type or polish enter the room. Deliberately ugly, so the conversation stays about what goes where and why.</p>
+            <div class="term__see"><span class="term__see-lbl">See also</span><button class="seelink" data-jump="prototype">Prototype</button><button class="seelink" data-jump="information-architecture">Information Architecture</button></div>
+          </article>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- No results -->
+    <div class="gloss-empty" data-empty>
+      <div class="gloss-empty__code">// 404 · NO MATCH IN INDEX</div>
+      <div class="gloss-empty__msg">Nothing for &ldquo;<b data-empty-q>—</b>&rdquo; in the lexicon.</div>
+      <button class="btn btn--primary gloss-empty__reset" type="button" data-reset>Reset search <span class="arrow">→</span></button>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div>
+        <div class="footer__big">Gourav Sharma<span class="accent">.</span></div>
+        <p class="dim footer__lede">Product &amp; UI/UX Designer. Designing scalable systems for logistics, SaaS &amp; mobile.</p>
+      </div>
+      <div class="footer__col">
+        <h4>Navigate</h4>
+        <a href="index.html">Index</a>
+        <a href="index.html#work">Work</a>
+        <a href="about.html">About</a>
+        <a href="blog.html">Blogs</a>
+        <a href="glossary.html">Glossary</a>
+        <a href="uploads/cv.pdf" download>Resume ↓</a>
+      </div>
+      <div class="footer__col">
+        <h4>Connect</h4>
+        <a href="mailto:gouravsharma.ux@gmail.com">Email</a>
+        <a href="https://www.linkedin.com/in/gourav-sharmaux/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+    <div class="footer__bar">
+      <span>© 2026 GOURAV SHARMA</span>
+      <span>DESIGNED &amp; BUILT · v1.0 · <span data-clock>--:--:-- UTC</span></span>
+    </div>
+  </div>
+</footer>
+
+<script src="bigfoot.js"></script>
+<script src="easter-egg.js"></script>
+<script src="click-sfx.js"></script>
+<script>
+/* ============================================================
+   Glossary — search, category filter, A–Z jump, see-also links
+   ============================================================ */
+(function () {
+  var root      = document.querySelector('[data-terms]');
+  if (!root) return;
+  var terms     = [].slice.call(root.querySelectorAll('.term'));
+  var groups    = [].slice.call(root.querySelectorAll('.lex-group'));
+  var filterBar = document.querySelector('[data-gfilters]');
+  var azBar     = document.querySelector('[data-az]');
+  var searchEl  = document.getElementById('gSearch');
+  var clearBtn  = document.getElementById('gClear');
+  var countEl   = document.getElementById('gCount');
+  var emptyEl   = document.querySelector('[data-empty]');
+  var emptyQ    = document.querySelector('[data-empty-q]');
+  var resetBtn  = document.querySelector('[data-reset]');
+  var total     = terms.length;
+
+  // cache searchable text + category per term
+  terms.forEach(function (t) {
+    t._text = (t.textContent || '').toLowerCase();
+    t._cat  = t.getAttribute('data-cat');
+  });
+
+  // ---- category counts ----
+  var counts = { all: total, design: 0, uiux: 0, product: 0, arts: 0 };
+  terms.forEach(function (t) { if (counts[t._cat] != null) counts[t._cat]++; });
+  Object.keys(counts).forEach(function (k) {
+    var el = filterBar.querySelector('[data-c="' + k + '"]');
+    if (el) el.textContent = ('0' + counts[k]).slice(-2);
+  });
+
+  // ---- build A–Z rail ----
+  var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  var groupByLetter = {};
+  groups.forEach(function (g) { groupByLetter[g.getAttribute('data-letter')] = g; });
+  letters.forEach(function (L) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = L;
+    b.setAttribute('data-letter', L);
+    if (!groupByLetter[L]) b.classList.add('is-disabled');
+    azBar.appendChild(b);
+  });
+
+  var activeCat = 'all';
+  var query = '';
+
+  function headerOffset() {
+    var nav = document.querySelector('.nav');
+    var bar = document.querySelector('.gloss-bar');
+    return (nav ? nav.offsetHeight : 0) + (bar ? bar.offsetHeight : 0) + 14;
+  }
+
+  function apply() {
+    var q = query.trim().toLowerCase();
+    var shownByLetter = {};
+    var shown = 0;
+
+    terms.forEach(function (t) {
+      var matchCat = activeCat === 'all' || t._cat === activeCat;
+      var matchQ   = !q || t._text.indexOf(q) !== -1;
+      var on = matchCat && matchQ;
+      t.classList.toggle('is-hidden', !on);
+      if (on) {
+        shown++;
+        var L = t.closest('.lex-group').getAttribute('data-letter');
+        shownByLetter[L] = true;
+      }
+    });
+
+    // hide empty letter groups
+    groups.forEach(function (g) {
+      g.classList.toggle('is-empty', !shownByLetter[g.getAttribute('data-letter')]);
+    });
+
+    // disable A–Z buttons with nothing visible
+    [].forEach.call(azBar.children, function (b) {
+      var L = b.getAttribute('data-letter');
+      b.classList.toggle('is-disabled', !shownByLetter[L]);
+    });
+
+    // count + empty state
+    countEl.innerHTML = '<b>' + shown + '</b> / ' + total + ' term' + (total === 1 ? '' : 's');
+    var none = shown === 0;
+    emptyEl.classList.toggle('show', none);
+    if (none) emptyQ.textContent = query.trim() || activeCat;
+
+    clearBtn.classList.toggle('show', !!query);
+  }
+
+  // ---- category filter ----
+  filterBar.addEventListener('click', function (e) {
+    var btn = e.target.closest('.gfilter');
+    if (!btn) return;
+    filterBar.querySelectorAll('.gfilter').forEach(function (f) { f.classList.toggle('is-active', f === btn); });
+    activeCat = btn.getAttribute('data-filter');
+    apply();
+  });
+
+  // ---- search ----
+  searchEl.addEventListener('input', function () { query = searchEl.value; apply(); });
+  clearBtn.addEventListener('click', function () { searchEl.value = ''; query = ''; apply(); searchEl.focus(); });
+  resetBtn.addEventListener('click', function () {
+    searchEl.value = ''; query = '';
+    activeCat = 'all';
+    filterBar.querySelectorAll('.gfilter').forEach(function (f) { f.classList.toggle('is-active', f.getAttribute('data-filter') === 'all'); });
+    apply();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // ---- A–Z jump ----
+  azBar.addEventListener('click', function (e) {
+    var b = e.target.closest('button');
+    if (!b || b.classList.contains('is-disabled')) return;
+    var g = groupByLetter[b.getAttribute('data-letter')];
+    if (!g) return;
+    var y = g.getBoundingClientRect().top + window.scrollY - headerOffset();
+    window.scrollTo({ top: y, behavior: 'smooth' });
+  });
+
+  // ---- see-also: clear filters, scroll to target, flash ----
+  function jumpToTerm(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    // make sure the target is visible
+    searchEl.value = ''; query = '';
+    activeCat = 'all';
+    filterBar.querySelectorAll('.gfilter').forEach(function (f) { f.classList.toggle('is-active', f.getAttribute('data-filter') === 'all'); });
+    apply();
+    var y = el.getBoundingClientRect().top + window.scrollY - headerOffset() - 8;
+    window.scrollTo({ top: y, behavior: 'smooth' });
+    el.classList.remove('is-flash');
+    void el.offsetWidth; // restart animation
+    el.classList.add('is-flash');
+    el.addEventListener('animationend', function once() { el.classList.remove('is-flash'); el.removeEventListener('animationend', once); });
+  }
+  root.addEventListener('click', function (e) {
+    var s = e.target.closest('.seelink');
+    if (!s) return;
+    jumpToTerm(s.getAttribute('data-jump'));
+  });
+
+  apply();
+})();
+</script>
+<script src="nav-scramble.js"></script>
+<script src="main.js"></script>
+<script src="rise.js"></script>
+</body>
+</html>
+

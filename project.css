@@ -1,0 +1,630 @@
+
+/* ============================================================
+   PROJECT (case study) page styles
+   ============================================================ */
+.p-hero { padding-top: calc(var(--nav-h) + clamp(40px, 5.5vw, 80px)); padding-bottom: clamp(30px, 5vw, 56px); }
+.p-back { display: inline-flex; align-items: center; gap: 9px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); transition: color 0.2s var(--ease); margin: -10px -6px 28px; padding: 10px 6px; }
+.p-back:hover { color: var(--accent); }
+.p-back svg { transition: transform 0.25s var(--ease); }
+.p-back:hover svg { transform: translateX(-4px); }
+
+.p-meta-top { display: flex; gap: 22px; flex-wrap: wrap; font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 26px; }
+.p-meta-top .i { color: var(--accent); }
+.p-title { font-size: clamp(44px, 9vw, 124px); font-weight: 500; letter-spacing: -0.04em; line-height: 0.92; }
+.p-one { font-size: clamp(18px, 2.4vw, 28px); line-height: 1.45; color: var(--text); max-width: 46ch; margin-top: 28px; font-weight: 400; }
+.p-one b { color: var(--accent); font-weight: 500; }
+
+/* staggered device duo + staged rise-in entrance */
+.p-herostage { position: relative; z-index: 2; width: 100%; height: 600px; max-width: 640px; margin: 0 auto; }
+.p-herostage__ph { position: absolute; bottom: 0; left: 50%; }
+.p-herostage__ph iframe { display: block; border: 0; background: transparent; filter: drop-shadow(0 34px 56px rgba(0,0,0,0.55)); }
+.p-herostage__ph--main { transform: translateX(-58%); z-index: 2; }
+.p-herostage__ph--main iframe { width: 312px; height: 632px; }
+.p-herostage__ph--alt { transform: translateX(-10%); bottom: 48px; z-index: 1; }
+.p-herostage__ph--alt iframe { width: 262px; height: 540px; }
+@keyframes heroRise { from { opacity: 0; transform: translateY(64px); } }
+@keyframes heroGlowIn { from { opacity: 0; } }
+@keyframes heroFloatMain { 0%,100% { transform: translateX(-58%) translateY(0); } 50% { transform: translateX(-58%) translateY(-12px); } }
+@keyframes heroFloatAlt { 0%,100% { transform: translateX(-10%) translateY(0); } 50% { transform: translateX(-10%) translateY(-8px); } }
+.p-herodevice__glow { animation: heroGlowIn 1.1s ease both; }
+.p-herostage__ph--alt  { animation: heroFloatAlt 7s ease-in-out 1.0s infinite; }
+.p-herostage__ph--main { animation: heroFloatMain 6s ease-in-out 1.2s infinite; }
+.p-herostage__ph--alt iframe  { animation: heroRise 0.9s var(--ease) 0.12s both; }
+.p-herostage__ph--main iframe { animation: heroRise 0.9s var(--ease) 0.34s both; }
+@media (prefers-reduced-motion: reduce) {
+  .p-herodevice__glow, .p-herostage__ph iframe,
+  .p-herostage__ph--alt, .p-herostage__ph--main { animation: none; }
+}
+@media (max-width: 720px) {
+  .p-herodevice { min-height: 540px; padding: 28px 0; }
+  .p-herostage { height: 540px; }
+  .p-herostage__ph--alt { display: none; }
+  .p-herostage__ph--main { transform: translateX(-50%); animation: none; }
+  .p-herostage__ph--main iframe { width: 286px; height: 588px; }
+}
+.p-visual { margin-top: clamp(34px, 5vw, 60px); }
+.p-visual image-slot { width: 100%; aspect-ratio: 16/9; display: block; }
+.p-visual__cap { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint); margin-top: 12px; }
+
+/* hero — live product screens (real prototype, transparent-bg phones), on-theme dark panel */
+.p-herodevice {
+  position: relative; width: 100%; border-radius: 4px; overflow: hidden;
+  border: 1px solid var(--line);
+  background:
+    radial-gradient(120% 90% at 50% 8%, rgba(84,104,250,0.16), transparent 60%),
+    linear-gradient(180deg, var(--bg-1) 0%, var(--bg) 100%);
+  min-height: 600px; display: flex; align-items: center; justify-content: center; padding: 36px 0;
+}
+.p-herodevice__glow { position: absolute; inset: 0; pointer-events: none;
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.022) 0 1px, transparent 1px 30px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.022) 0 1px, transparent 1px 30px);
+  mask-image: radial-gradient(80% 80% at 50% 40%, #000 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(80% 80% at 50% 40%, #000 30%, transparent 100%);
+}
+.p-herodevice::before { content: ""; position: absolute; top: 14px; left: 14px; width: 16px; height: 16px; border: 1px solid var(--line-accent); border-right: 0; border-bottom: 0; pointer-events: none; z-index: 4; }
+.p-herodevice::after  { content: ""; position: absolute; bottom: 14px; right: 14px; width: 16px; height: 16px; border: 1px solid var(--line-accent); border-left: 0; border-top: 0; pointer-events: none; z-index: 4; }
+
+/* meta strip */
+.p-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-top: clamp(40px, 6vw, 72px); }
+.p-strip div { background: var(--bg); padding: 22px 20px; }
+.p-strip dt { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-faint); }
+.p-strip dd { font-size: 16px; margin-top: 9px; color: var(--text); }
+
+/* overview / challenge */
+.p-split { display: grid; grid-template-columns: 240px 1fr; gap: clamp(24px, 5vw, 72px); align-items: start; }
+.p-split__label { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); position: sticky; top: calc(var(--nav-h) + 24px); }
+.p-split__label .n { color: var(--text-faint); display: block; margin-bottom: 8px; }
+.p-prose { font-size: clamp(17px, 1.7vw, 21px); line-height: 1.62; color: var(--text-dim); max-width: 64ch; }
+.p-prose p + p { margin-top: 18px; }
+.p-prose.big { color: var(--text); font-size: clamp(20px, 2.6vw, 30px); line-height: 1.4; font-weight: 400; letter-spacing: -0.01em; }
+
+/* image band */
+.p-band image-slot { width: 100%; aspect-ratio: 21/9; display: block; }
+.p-band--split { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.p-band--split image-slot { aspect-ratio: 4/3; border: 0; }
+
+/* approach sections */
+.p-approach { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.p-step { background: var(--bg); padding: clamp(28px, 4vw, 48px); display: grid; grid-template-columns: 120px 1fr; gap: 28px; align-items: start; transition: background 0.3s var(--ease); }
+.p-step:hover { background: var(--bg-1); }
+.p-step__k { font-family: var(--font-mono); font-size: 13px; color: var(--accent); letter-spacing: 0.08em; }
+.p-step__h { font-size: clamp(20px, 2.6vw, 30px); font-weight: 500; letter-spacing: -0.01em; }
+.p-step__b { color: var(--text-dim); margin-top: 12px; line-height: 1.6; max-width: 60ch; font-size: 15.5px; }
+
+/* outcomes */
+.p-outcomes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.p-outcome { background: var(--bg); padding: clamp(28px, 4vw, 46px) clamp(24px, 3vw, 34px); position: relative; overflow: hidden; }
+.p-outcome::after { content: ""; position: absolute; right: -30px; top: -30px; width: 90px; height: 90px; border: 1px solid var(--line-accent); border-radius: 50%; opacity: 0.5; }
+.p-outcome .n { font-size: clamp(30px, 4vw, 50px); font-weight: 500; letter-spacing: -0.02em; line-height: 1; color: var(--accent); }
+.p-outcome .l { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-top: 14px; max-width: 22ch; }
+
+/* gallery */
+.p-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.p-gallery image-slot { width: 100%; aspect-ratio: 4/3; display: block; }
+.p-gallery image-slot.wide { grid-column: 1 / -1; aspect-ratio: 21/9; }
+
+/* next project */
+.p-next { border-top: 1px solid var(--line); }
+.p-next a { display: grid; grid-template-columns: auto 1fr auto; gap: 24px; align-items: center; padding: clamp(36px, 6vw, 72px) 0; transition: padding 0.35s var(--ease); }
+.p-next a:hover { padding-left: 16px; }
+.p-next__lbl { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-faint); }
+.p-next__title { font-size: clamp(30px, 6vw, 72px); font-weight: 500; letter-spacing: -0.03em; line-height: 1; transition: color 0.25s var(--ease); }
+.p-next a:hover .p-next__title { color: var(--accent); }
+.p-next__arrow { width: 64px; height: 64px; border: 1px solid var(--line-2); display: flex; align-items: center; justify-content: center; color: var(--text-dim); transition: 0.3s var(--ease); flex-shrink: 0; }
+.p-next a:hover .p-next__arrow { background: var(--accent); border-color: var(--accent); color: #0a0c11; }
+
+.p-section { padding-block: var(--sp-section); }
+.p-section--tight { padding-block: clamp(32px, 5vw, 60px); }
+
+/* ============================================================
+   New case-study sections: goals · research · insights · principles
+   · ideation · designSystem · validation
+   ============================================================ */
+
+/* GOALS */
+.p-goals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.p-goals__col { background: var(--bg); padding: clamp(22px, 3vw, 32px); }
+.p-goals__col--metrics { background: var(--bg-1); }
+.p-goals__h { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin-bottom: 18px; }
+.p-goals__list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; }
+.p-goals__list li { color: var(--text-dim); font-size: 15px; line-height: 1.55; padding-left: 18px; position: relative; }
+.p-goals__list li::before { content: "→"; position: absolute; left: 0; top: 0; color: var(--accent); font-family: var(--font-mono); font-size: 13px; }
+
+/* RESEARCH */
+.p-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+.p-chip { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); padding: 6px 12px; border: 1px solid var(--line-2); border-radius: 999px; }
+.p-findings { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.p-finding { background: var(--bg); padding: 22px 24px; display: grid; grid-template-columns: 80px 1fr; gap: 20px; align-items: start; }
+.p-finding__n { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.12em; color: var(--accent); padding-top: 4px; }
+.p-finding p { color: var(--text); font-size: 16px; line-height: 1.55; margin: 0; }
+
+/* INSIGHTS · pains */
+.p-pains { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.p-pain { background: var(--bg); padding: 26px 28px; display: grid; grid-template-columns: 70px 1fr; gap: 20px; align-items: start; }
+.p-pain__n { font-family: var(--font-mono); font-size: 12px; color: var(--accent); letter-spacing: 0.08em; padding-top: 4px; }
+.p-pain h4 { font-size: 18px; font-weight: 500; letter-spacing: -0.005em; margin: 0 0 8px; color: var(--text); }
+.p-pain p { color: var(--text-dim); font-size: 15px; line-height: 1.6; margin: 0; max-width: 60ch; }
+
+/* PRINCIPLES */
+.p-principles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.p-principle { background: var(--bg); padding: clamp(24px, 3vw, 32px); position: relative; }
+.p-principle__n { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 14px; }
+.p-principle h4 { font-size: clamp(18px, 2vw, 22px); font-weight: 500; letter-spacing: -0.01em; margin: 0 0 10px; color: var(--text); }
+.p-principle p { color: var(--text-dim); font-size: 14.5px; line-height: 1.6; margin: 0; max-width: 42ch; }
+
+/* IDEATION */
+.p-alts { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.p-alt { background: var(--bg); padding: 24px 26px; display: grid; grid-template-columns: 60px 1fr; gap: 18px; align-items: start; }
+.p-alt__k { font-family: var(--font-mono); font-size: 13px; color: var(--accent); padding-top: 4px; }
+.p-alt h4 { font-size: 17px; font-weight: 500; margin: 0 0 6px; color: var(--text); }
+.p-alt p { color: var(--text-dim); font-size: 14.5px; line-height: 1.6; margin: 0; max-width: 60ch; }
+.p-tradeoff { margin-top: 24px; padding: 20px 22px; border-left: 2px solid var(--accent); background: var(--bg-1); font-size: 15.5px; line-height: 1.6; color: var(--text); }
+.p-tradeoff__lbl { display: block; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+
+/* DESIGN SYSTEM */
+.p-ds__list { list-style: none; padding: 0; margin: 0; display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.p-ds__list li { background: var(--bg); padding: 16px 22px; color: var(--text); font-size: 15px; display: flex; align-items: center; gap: 14px; }
+.p-ds__list li::before { content: "◆"; color: var(--accent); font-size: 10px; }
+
+/* VALIDATION */
+.p-changes { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.p-change { background: var(--bg); padding: 24px 26px; display: grid; grid-template-columns: 70px 1fr; gap: 20px; align-items: start; }
+.p-change__k { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.12em; color: var(--accent); padding-top: 4px; }
+.p-change h4 { font-size: 18px; font-weight: 500; margin: 0 0 8px; color: var(--text); }
+.p-change p { color: var(--text-dim); font-size: 15px; line-height: 1.6; margin: 0; max-width: 60ch; }
+
+@media (max-width: 860px) {
+  .p-strip { grid-template-columns: 1fr 1fr; }
+  .p-split { grid-template-columns: 1fr; gap: 20px; }
+  .p-split__label { position: static; }
+  .p-outcomes { grid-template-columns: 1fr; }
+  .p-step { grid-template-columns: 1fr; gap: 12px; }
+  .p-band--split { grid-template-columns: 1fr; }
+  .p-goals { grid-template-columns: 1fr; }
+  .p-principles { grid-template-columns: 1fr; }
+  .p-finding, .p-pain, .p-alt, .p-change { grid-template-columns: 1fr; gap: 10px; }
+}
+@media (max-width: 560px) {
+  .p-gallery { grid-template-columns: 1fr; }
+  .p-meta-top { gap: 14px; }
+}
+
+/* ============================================================
+   White-accent pass (case-study scope)
+   Must live here so it wins cascade against earlier project.css
+   rules of equal specificity. Pairs with the styles.css white pass.
+   ============================================================ */
+
+/* Giant outcome numbers — crisp white, decorative ring softened */
+.p-outcome .n        { color: var(--white); }
+.p-outcome::after    { border-color: rgba(255,255,255,0.12); }
+
+/* Section sub-heads (Goals: Business / User / Success metrics) */
+.p-goals__h          { color: var(--white); }
+
+/* Headlines inside the new framework sections */
+.p-pain h4,
+.p-principle h4,
+.p-alt h4,
+.p-change h4         { color: var(--white); }
+
+/* Findings paragraph (the "research" lines) reads as primary statement */
+.p-finding p         { color: var(--white); }
+
+/* Tradeoff callout copy */
+.p-tradeoff          { color: var(--white); }
+
+/* ============================================================
+   White Outcome panel
+   The Outcomes section sits inside a paper-white panel so the
+   detail page gets a deliberate white "moment" matching the
+   homepage stack-cards. Inverts text + dividers accordingly.
+   ============================================================ */
+.p-outcomes-panel {
+  background: var(--bg-1);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: clamp(36px, 5vw, 64px);
+  position: relative;
+  isolation: isolate;
+  box-shadow: 0 30px 70px -34px rgba(0,0,0,0.7);
+  overflow: hidden;
+}
+/* subtle accent corner ticks for system continuity */
+.p-outcomes-panel::before,
+.p-outcomes-panel::after {
+  content: ""; position: absolute; width: 16px; height: 16px;
+  border: 2px solid var(--accent); pointer-events: none;
+}
+.p-outcomes-panel::before { top: 14px; left: 14px; border-right: 0; border-bottom: 0; }
+.p-outcomes-panel::after  { bottom: 14px; right: 14px; border-left: 0; border-top: 0; }
+
+.p-outcomes-panel .eyebrow         { color: var(--accent); }
+.p-outcomes-panel .eyebrow::before { background: var(--accent); }
+.p-outcomes-panel .section-title   { color: var(--text); }
+.p-outcomes-panel .head-row__count { color: var(--text-faint); }
+
+/* outcomes inside the dark panel: accent grid lines + dark tiles */
+.p-outcomes-panel .p-outcomes {
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.p-outcomes-panel .p-outcome    { background: var(--bg); }
+.p-outcomes-panel .p-outcome .n { color: var(--accent); }
+.p-outcomes-panel .p-outcome .l { color: var(--text-dim); }
+.p-outcomes-panel .p-outcome::after { border-color: var(--line-accent); }
+
+@media (max-width: 720px) {
+  .p-outcomes-panel { padding: 28px; }
+}
+
+/* ============================================================
+   PROFESSIONAL REFINEMENT PASS  (case-study scope, wins cascade)
+   Goal: read like a calm, premium editorial case study rather
+   than a dense techy dashboard. Keeps the dark theme + a single
+   accent thread; trades filled-line boxes for hairline dividers
+   and bordered cards, opens the rhythm, drops decorative noise.
+   ============================================================ */
+
+/* — Accent restraint: index/section labels go neutral; only the
+     small section number keeps the accent thread — */
+.p-split__label      { color: var(--text-dim); font-size: 11px; letter-spacing: 0.2em; font-weight: 500; }
+.p-split__label .n   { color: var(--accent); font-size: 11px; margin-bottom: 10px; }
+.p-finding__n,
+.p-pain__n,
+.p-alt__k,
+.p-change__k,
+.p-step__k,
+.p-principle__n      { color: var(--text-faint); }
+.p-goals__h          { color: var(--text-faint); letter-spacing: 0.18em; }
+
+/* — Open the vertical rhythm — */
+.p-section           { padding-block: clamp(60px, 8.5vw, 124px); }
+
+/* — Editorial lists: hairline rows instead of filled-line boxes — */
+.p-findings, .p-pains, .p-alts, .p-changes, .p-ds__list, .p-approach {
+  background: transparent; border: 0; border-top: 1px solid var(--line); gap: 0;
+}
+.p-finding, .p-pain, .p-alt, .p-change, .p-step, .p-ds__list li {
+  background: transparent; border-bottom: 1px solid var(--line);
+}
+.p-step:hover { background: transparent; }
+.p-finding { padding: 30px 0; grid-template-columns: 88px 1fr; }
+.p-pain    { padding: 32px 0; grid-template-columns: 64px 1fr; }
+.p-alt     { padding: 28px 0; grid-template-columns: 56px 1fr; }
+.p-change  { padding: 28px 0; grid-template-columns: 64px 1fr; }
+.p-step    { padding: clamp(34px, 4vw, 52px) 0; grid-template-columns: 110px 1fr; }
+.p-ds__list li { padding: 18px 0; }
+.p-ds__list li::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex: 0 0 auto; }
+
+/* — Goals & Principles: bordered cards, not filled gaps — */
+.p-goals, .p-principles {
+  background: transparent; border: 0; gap: clamp(14px, 1.6vw, 22px);
+}
+.p-goals__col, .p-principle {
+  background: transparent; border: 1px solid var(--line); border-radius: 8px;
+  padding: clamp(26px, 3vw, 36px);
+}
+.p-goals__col--metrics { background: var(--bg-1); }
+
+/* — Meta strip under the hero: clean divided row — */
+.p-strip { background: transparent; border: 0; border-block: 1px solid var(--line); gap: 0; }
+.p-strip div { background: transparent; border: 0; border-left: 1px solid var(--line); padding: 22px 26px; }
+.p-strip div:first-child { border-left: 0; padding-left: 0; }
+
+/* — Tradeoff callout: lighter — */
+.p-tradeoff { background: transparent; border-left: 2px solid var(--line-accent); padding-left: 24px; }
+
+/* — Outcome panel: drop corner ticks + ring, hairline cards — */
+.p-outcomes-panel { background: var(--bg-1); border: 1px solid var(--line); box-shadow: 0 30px 70px -40px rgba(0,0,0,0.6); }
+.p-outcomes-panel::before, .p-outcomes-panel::after { display: none; }
+.p-outcomes-panel .p-outcomes { background: transparent; border: 0; border-radius: 0; gap: clamp(14px, 1.6vw, 22px); }
+.p-outcomes-panel .p-outcome { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; }
+.p-outcome::after { display: none; }
+
+/* — Prose: a touch more air — */
+.p-prose { line-height: 1.7; }
+
+/* — Hero visual: quieter frame caption (text set in project.js) — */
+.p-visual__cap { color: var(--text-faint); font-size: 10px; letter-spacing: 0.16em; margin-top: 14px; }
+
+@media (max-width: 860px) {
+  .p-strip { grid-template-columns: 1fr 1fr; }
+  .p-strip div { border-left: 0; border-top: 1px solid var(--line); padding-left: 0; }
+  .p-strip div:first-child, .p-strip div:nth-child(2) { border-top: 0; }
+}
+
+/* ============================================================
+   WHITE DOCUMENT  —  case-study detail pages
+   ------------------------------------------------------------
+   The page chrome stays in the dark brand theme (nav, hero,
+   next-case, footer). Only the WRITTEN case study — everything
+   inside .case-gatewrap — sits on a clean white document sheet,
+   no grid, no scanlines. Two showcases inside it stay dark on
+   purpose: the "Product" screens section (mockups built to pop
+   on dark) and the Outcomes panel.
+   ============================================================ */
+
+/* The written case study: a full-bleed white sheet. Light tokens are
+   scoped here so the entire narrative inherits them; the dark hero,
+   next-case and footer outside the wrapper are untouched. */
+body[data-project] .case-gatewrap {
+  position: relative;
+  z-index: 1;
+  background: #ffffff;
+  padding-block: clamp(8px, 2vw, 28px);
+
+  --bg:        #ffffff;
+  --bg-1:      #f6f6f8;
+  --bg-2:      #eeeef1;
+  --bg-3:      #e6e6ea;
+
+  --line:        rgba(18, 18, 24, 0.10);
+  --line-2:      rgba(18, 18, 24, 0.16);
+  --line-accent: rgba(216, 80, 28, 0.38);
+
+  --text:       #16171a;
+  --text-dim:   #54565c;
+  --text-faint: #6c6e76;   /* AA on white for small mono labels (~4.6:1) */
+
+  /* The site's "white pass" paints primary copy with var(--white);
+     flipping it to near-black makes those rules read correctly here. */
+  --white:      #16171a;
+
+  --accent:       #d8501c;   /* deepened for AA on white */
+  --accent-2:     #e8682f;
+  --accent-soft:  rgba(216, 80, 28, 0.10);
+
+  color: var(--text);
+}
+
+/* Keep the white sheet pristine: no ambient grid or CRT wash bleeding
+   through. (The dark hero above still keeps the brand grid texture.) */
+body[data-project]::after { display: none !important; }
+body[data-project] .sweep { display: none !important; }
+
+/* — "The Product" screens showcase stays on the white sheet, inheriting
+     the light token scope. The device mockups carry their own dark
+     bezels so they read cleanly against white. — */
+
+/* — Outcomes panel: a deliberate dark moment on the white sheet. — */
+body[data-project] .case-gatewrap .p-outcomes-panel {
+  background: #0a0c11;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 44px 100px -46px rgba(0, 0, 0, 0.55);
+  --bg:        #11141a;
+  --bg-1:      #11141a;
+  --line:        rgba(255, 255, 255, 0.08);
+  --text:       #ffffff;
+  --text-dim:   rgba(255, 255, 255, 0.62);
+  --text-faint: rgba(255, 255, 255, 0.42);
+  --white:      #ffffff;
+  --accent:     #ff7a4d;
+  color: var(--text);
+}
+
+/* Subtle elevation on the metric column reads better than a flat fill. */
+body[data-project] .p-goals__col--metrics { background: var(--bg-1); }
+
+/* ============================================================
+   Cursor over case-study screens & mockups (ALL case studies)
+   The portfolio hides the native cursor (cursor:none) and paints a
+   custom blend dot. But the screen mockups are real markup — full of
+   <button>, <input>, <a> — every one of which the global rule forces
+   to cursor:none. So the pointer VANISHED whenever it moved across a
+   screen/mockup. Here we restore a real, visible cursor over every
+   gallery & mockup, and fade the floating reticle while hovering one
+   so there is a single, clean pointer.
+   ============================================================ */
+@media (hover: hover) and (pointer: fine) {
+  .p-screens, .p-screens *,
+  .p-screens__group, .p-screens__group * { cursor: auto; }
+  /* the Shopify screen cards are click-to-expand → zoom cursor everywhere on them */
+  .p-screens .sb-card, .p-screens .sb-card * { cursor: zoom-in; }
+  /* genuinely interactive chrome stays a pointer / text caret */
+  .p-screens a, .p-screens [role="button"], .p-screens [data-act],
+  .p-screens summary, .p-screens .sb-lb__x { cursor: pointer; }
+  .p-screens input:not([type="checkbox"]):not([type="radio"]),
+  .p-screens textarea { cursor: text; }
+  /* the expanded lightbox lives at <body> level (outside .p-screens) —
+     restore a real cursor there too, or the blend-dot vanishes over the
+     screenshot and the pointer "disappears". */
+  .sb-lb, .sb-lb * { cursor: zoom-out; }
+  .sb-lb__x { cursor: pointer; }
+  /* one clean pointer: drop the floating reticle while over a gallery
+     OR while the lightbox is open. */
+  body:has(.p-screens:hover) .cursor-dot,
+  body:has(.p-screens:hover) .cursor-ring,
+  body:has(.sb-lb.is-open) .cursor-dot,
+  body:has(.sb-lb.is-open) .cursor-ring { opacity: 0 !important; }
+}
+
+/* ============================================================
+   Hero "money shot" — a real product screen framed in a macOS
+   browser window. Used when a case study sets P.heroImage.
+   ============================================================ */
+.p-macwin {
+  margin: 0 auto;
+  max-width: 720px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.14);
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.18), 0 50px 100px -40px rgba(0,0,0,0.62);
+}
+.p-macwin__bar {
+  display: flex; align-items: center; gap: 14px;
+  height: 46px; padding: 0 16px;
+  background: linear-gradient(#ededf0, #e3e4e8);
+  border-bottom: 1px solid #d2d3d9;
+}
+.p-macwin__lights { display: flex; gap: 8px; flex: none; }
+.p-macwin__lights i { width: 12px; height: 12px; border-radius: 50%; background: #ccc; display: block; }
+.p-macwin__lights i:nth-child(1) { background: #ec6a5e; }
+.p-macwin__lights i:nth-child(2) { background: #f4be4f; }
+.p-macwin__lights i:nth-child(3) { background: #61c454; }
+.p-macwin__url {
+  flex: 0 1 420px; margin: 0 auto; height: 28px;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  background: #fafafb; border: 1px solid #d4d5db; border-radius: 7px;
+  font-family: var(--font-mono, monospace); font-size: 12px; color: #6b7280;
+  padding: 0 14px; max-width: 100%;
+}
+.p-macwin__url svg { color: #9aa0ac; flex: none; }
+.p-macwin__sp { flex: none; width: 52px; }
+.p-macwin__view { background: #f1f1f3; display: flex; }
+.p-macwin__view img { display: block; width: 100%; height: auto; }
+/* HTML dummy mockup inside the mac window (no image) */
+.p-macwin__view--mk { display: block; background: #eceef2; }
+.p-macwin__view--mk .mkframe { display: block; }
+@media (max-width: 640px) { .p-macwin__url { flex-basis: 200px; } .p-macwin__sp { width: 20px; } }
+
+/* ============================================================
+   Clean front-facing MacBook — live UI flat on the screen
+   ============================================================ */
+.mbook { position: relative; width: 100%; max-width: 780px; margin: 0 auto; filter: drop-shadow(0 50px 60px rgba(0,0,0,0.5)); }
+/* lid: aluminium frame around a black bezel */
+.mbook__lid {
+  position: relative; z-index: 2;
+  background: linear-gradient(155deg, #d9dbe0 0%, #b9bcc4 48%, #a6a9b2 100%);
+  border-radius: 20px; padding: 11px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.45), inset 0 -2px 4px rgba(0,0,0,0.2);
+}
+.mbook__bezel {
+  position: relative; background: #0a0b0d; border-radius: 11px;
+  padding: 16px 13px 13px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
+}
+.mbook__notch {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 130px; height: 11px; background: #0a0b0d; border-radius: 0 0 8px 8px; z-index: 3;
+}
+.mbook__screen {
+  position: relative; border-radius: 3px; overflow: hidden; background: #000;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.5);
+}
+.mbook__screen .mkframe { display: block; }
+/* base: bottom deck edge + centre dip */
+.mbook__base {
+  position: relative; z-index: 3;
+  width: 116%; height: 15px; margin: -3px auto 0; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(#c9ccd2 0%, #b0b3bb 45%, #898d96 100%);
+  border-radius: 0 0 11px 11px / 0 0 22px 22px;
+  box-shadow: inset 0 2px 2px rgba(255,255,255,0.6), 0 3px 4px rgba(0,0,0,0.3);
+}
+.mbook__dip {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 132px; height: 8px;
+  background: linear-gradient(#8b9099, #b3b7bf);
+  border-radius: 0 0 8px 8px;
+  box-shadow: inset 0 -1px 1px rgba(0,0,0,0.18);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .p-hero .mbook { animation: laptopRise 0.9s var(--ease) both; }
+}
+@keyframes laptopRise { from { opacity: 0; transform: translateY(34px); } }
+@media (max-width: 640px) { .mbook__notch, .mbook__dip { width: 90px; } }
+
+/* ============================================================
+   Case card — real screenshot framed as a peeking browser window
+   (casecard__media--shot variant on the homepage scroller).
+   ============================================================ */
+.casecard__media--shot {
+  background:
+    radial-gradient(120% 80% at 50% -6%, rgba(42,143,224,0.18), transparent 60%),
+    #0e1018 radial-gradient(130% 100% at 50% 120%, rgba(42,143,224,0.16), transparent 64%);
+}
+.casecard__browser {
+  position: absolute; left: 26px; right: 26px; top: 52px;
+  border-radius: 12px; overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: #fff;
+  box-shadow: 0 34px 60px -26px rgba(0,0,0,0.72);
+  transform: translateY(0) scale(1);
+  transition: transform 0.7s var(--ease, cubic-bezier(0.22,1,0.36,1));
+}
+.casecard__browser-bar { height: 26px; background: #e9ebf0; display: flex; align-items: center; gap: 5px; padding: 0 11px; }
+.casecard__browser-bar i { width: 7px; height: 7px; border-radius: 50%; background: #c5c9d3; }
+.casecard__browser-bar i:nth-child(1) { background: #ec6a5e; }
+.casecard__browser-bar i:nth-child(2) { background: #f3bf4f; }
+.casecard__browser-bar i:nth-child(3) { background: #61c454; }
+.casecard__browser img { display: block; width: 100%; height: auto; }
+.casecard:hover .casecard__browser { transform: translateY(-12px) scale(1.025); }
+.casecard__media--shot .casecard__scan { opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .casecard__browser { transition: none; } }
+
+/* ============================================================
+   "Inside this app" — sub-project cards on an umbrella case
+   (e.g. TMS Mobile App → Dual Payment, Bulk OTP). Lives OUTSIDE
+   the white case sheet, so it stays on the dark brand chrome.
+   ============================================================ */
+.p-subprojects { padding-block: clamp(48px, 6vw, 88px); }
+.p-subgrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(14px, 1.6vw, 22px); margin-top: clamp(28px, 3vw, 44px); }
+.p-subcard {
+  display: grid; grid-template-columns: 52px 1fr auto; gap: 18px; align-items: start;
+  padding: clamp(24px, 2.6vw, 34px); border: 1px solid var(--line); border-radius: 10px;
+  background: var(--bg-1); text-decoration: none; color: var(--text);
+  transition: border-color 0.3s var(--ease), transform 0.4s var(--ease), background 0.3s var(--ease);
+}
+.p-subcard:hover { border-color: var(--line-accent); transform: translateY(-4px); background: var(--bg-2); }
+.p-subcard__no { font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: 0.06em; color: var(--accent); padding-top: 4px; }
+.p-subcard__title { font-size: clamp(20px, 2.2vw, 27px); font-weight: 500; letter-spacing: -0.015em; margin: 0; color: var(--text); }
+.p-subcard__desc { color: var(--text-dim); font-size: 15px; line-height: 1.6; margin: 12px 0 0; max-width: 46ch; }
+.p-subcard__tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.p-subcard__tags span { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; }
+.p-subcard__go { width: 44px; height: 44px; border: 1px solid var(--line-2); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--text-dim); transition: 0.3s var(--ease); flex-shrink: 0; }
+.p-subcard:hover .p-subcard__go { background: var(--accent); border-color: var(--accent); color: #0a0c11; transform: translate(2px, -2px); }
+@media (max-width: 760px) {
+  .p-subgrid { grid-template-columns: 1fr; }
+  .p-subcard { grid-template-columns: 40px 1fr auto; gap: 14px; }
+}
+
+
+/* ============================================================
+   CASE COVERS — editorial cover for projects w/o real screens
+   ============================================================ */
+.cvr { position: absolute; inset: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;
+  padding: clamp(20px, 7%, 38px); color: #fff; font-family: 'Space Grotesk', system-ui, sans-serif; isolation: isolate;
+  background:
+    radial-gradient(125% 120% at 86% -12%, color-mix(in srgb, var(--cvr) 58%, transparent) 0%, transparent 56%),
+    linear-gradient(158deg, color-mix(in srgb, var(--cvr) 24%, #0a0c11) 0%, #0a0c11 80%); }
+.cvr__glyph { position: absolute; right: -7%; bottom: -13%; width: 60%; color: var(--cvr); opacity: 0.16; z-index: -1; }
+.cvr__glyph svg { width: 100%; height: 100%; }
+.cvr__top { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em; color: rgba(255,255,255,0.55); }
+.cvr__title { font-size: clamp(21px, 3.1vw, 32px); font-weight: 500; line-height: 1.05; letter-spacing: -0.02em; }
+.cvr__tag { margin-top: 9px; font-size: 12.5px; line-height: 1.45; color: rgba(255,255,255,0.68); max-width: 32ch; }
+
+.cvr--hero { position: relative; aspect-ratio: 16 / 10; max-width: 780px; margin: 0 auto; border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 50px 70px -30px rgba(0,0,0,0.6); }
+.cvr--hero .cvr__title { font-size: clamp(30px, 4.6vw, 52px); }
+.cvr--hero .cvr__tag { font-size: 15px; margin-top: 12px; }
+.cvr--hero .cvr__glyph { width: 48%; }
+@media (prefers-reduced-motion: no-preference) { .p-hero .cvr--hero { animation: laptopRise 0.9s var(--ease) both; } }
+
+/* ============================================================
+   IMPACT — real, measured before→after metrics. Renders only when
+   a case sets P.impact. The struck-through "before" + accent arrow
+   + bold "after" reads as evidence, not the old directional claims.
+   ============================================================ */
+.p-impact { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-top: 8px; }
+.p-impact__card { background: var(--bg); padding: clamp(26px,3.4vw,42px) clamp(22px,2.6vw,32px); }
+.p-impact__nums { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.p-impact__nums .before { font-family: var(--font-mono); font-size: clamp(14px,1.5vw,17px); color: var(--text-faint); text-decoration: line-through; text-decoration-color: var(--line-accent); }
+.p-impact__nums .arrow { color: var(--accent); font-family: var(--font-mono); font-size: 13px; }
+.p-impact__nums .after { font-size: clamp(30px,4vw,50px); font-weight: 500; letter-spacing: -0.02em; line-height: 1; color: var(--white); }
+.p-impact__label { font-size: 15px; color: var(--text); margin-top: 16px; max-width: 26ch; line-height: 1.5; }
+.p-impact__src { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); margin-top: 12px; }
+.p-impact__note { font-family: var(--font-mono); font-size: 12px; color: var(--text-dim); margin-top: 22px; max-width: 72ch; line-height: 1.65; }
+@media (max-width: 720px) { .p-impact { grid-template-columns: 1fr; } }
+
+/* ============================================================
+   RESEARCH EVIDENCE — a sample line + one real user quote, folded
+   into The Challenge. Turns "we did research" into proof of it.
+   ============================================================ */
+.p-evidence__sample { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); }
+.p-evidence__sample .i { color: var(--accent); }
+.p-quote { margin: 16px 0 0; padding: 4px 0 4px 24px; border-left: 2px solid var(--accent); font-size: clamp(18px,2vw,24px); line-height: 1.48; color: var(--text); font-weight: 400; letter-spacing: -0.01em; max-width: 58ch; }
+.p-quote cite { display: block; margin-top: 14px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint); font-style: normal; }

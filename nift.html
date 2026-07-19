@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NIFT Kolkata — The College Years · Gourav Sharma</title>
+<meta name="description" content="Four years at NIFT Kolkata — the origin story behind the designer. A scrapbook of the B.Des years, 2018–2022." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<script src="net-quality.js"></script>
+<script src="sound-manager.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&amp;family=JetBrains+Mono:wght@300;400;500;600&amp;display=swap" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+/* ---------- NIFT hero ---------- */
+.nift-hero { padding-top: calc(var(--nav-h) + var(--sp-section)); padding-bottom: var(--sp-7); position: relative; overflow: hidden; }
+.nift-hero__back { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-faint); display: inline-flex; align-items: center; gap: 9px; transition: color 0.2s var(--ease); margin-bottom: var(--sp-6); }
+.nift-hero__back:hover { color: var(--accent); }
+.nift-hero__back .ar { transition: transform 0.25s var(--ease); }
+.nift-hero__back:hover .ar { transform: translateX(-3px); }
+.nift-hero__name { font-size: clamp(46px, 11vw, 150px); font-weight: 500; letter-spacing: -0.04em; line-height: 0.88; margin: var(--sp-5) 0 var(--sp-6); }
+.nift-hero__name em { font-style: normal; color: var(--accent); }
+.nift-hero__name .chrome { background: var(--chrome); background-size: 100% 200%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; filter: drop-shadow(0 1px 0 rgba(0,0,0,0.4)); }
+.nift-hero__lede { font-size: clamp(17px, 1.7vw, 21px); line-height: 1.62; color: var(--text-dim); max-width: 58ch; }
+.nift-hero__lede b { color: var(--text); font-weight: 500; }
+.nift-hero__meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-top: var(--sp-7); }
+.nift-hero__meta div { background: var(--bg); padding: var(--sp-4) var(--sp-5); }
+.nift-hero__meta dt { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-faint); }
+.nift-hero__meta dd { font-size: 16px; margin-top: var(--sp-2); color: var(--text); }
+.nift-hero__meta dd .accent { color: var(--accent); }
+
+/* ---------- Convocation banner (themed duotone) ---------- */
+.nift-banner { position: relative; margin-top: var(--sp-7); border: 1px solid var(--line-2); overflow: hidden; background: var(--bg-1); }
+.nift-banner__img { width: 100%; aspect-ratio: 16 / 7.4; object-fit: cover; object-position: center 40%; display: block; filter: grayscale(1) contrast(1.06) brightness(0.9); transition: filter 0.6s var(--ease), transform 6s var(--ease); }
+.nift-banner:hover .nift-banner__img { filter: grayscale(0) contrast(1.02) brightness(1); transform: scale(1.03); }
+.nift-banner__scan { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen; background: repeating-linear-gradient(0deg, rgba(255,91,46,0.06) 0 1px, transparent 1px 4px), linear-gradient(180deg, rgba(255,91,46,0.18), transparent 34%); }
+.nift-banner__frame { position: absolute; inset: 8px; border: 1px solid var(--line-accent); pointer-events: none; }
+.nift-banner__frame::before, .nift-banner__frame::after { content: ""; position: absolute; width: 20px; height: 20px; border: 2px solid var(--accent); }
+.nift-banner__frame::before { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
+.nift-banner__frame::after { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
+.nift-banner__id { position: absolute; top: 20px; right: 22px; z-index: 2; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); background: rgba(7,8,11,0.6); border: 1px solid var(--line-accent); padding: 5px 9px; }
+.nift-banner__cap { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; padding: clamp(20px, 4vw, 40px) clamp(18px, 3vw, 34px) clamp(16px, 2.4vw, 26px); display: flex; flex-direction: column; gap: 8px; background: linear-gradient(0deg, rgba(7,8,11,0.92), rgba(7,8,11,0.5) 55%, transparent); }
+.nift-banner__tag { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); display: inline-flex; align-items: center; gap: 9px; }
+.nift-banner__tag .pip { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
+.nift-banner__where { font-size: clamp(15px, 1.8vw, 19px); font-weight: 500; letter-spacing: -0.01em; color: var(--text); }
+/* gold theme — ink-gold duotone, matching the portrait treatment */
+html.gold .nift-banner__img { filter: sepia(1) saturate(3.2) hue-rotate(-12deg) brightness(0.9) contrast(1.06); }
+html.gold .nift-banner:hover .nift-banner__img { filter: sepia(1) saturate(3.2) hue-rotate(-12deg) brightness(1) contrast(1.04); }
+html.gold .nift-banner__scan { background: repeating-linear-gradient(0deg, rgba(26,18,6,0.07) 0 1px, transparent 1px 4px), linear-gradient(180deg, rgba(26,18,6,0.2), transparent 34%); }
+@media (prefers-reduced-motion: reduce) { .nift-banner__img { transition: filter 0.4s var(--ease); } .nift-banner:hover .nift-banner__img { transform: none; } }
+@media (max-width: 560px) { .nift-banner__img { aspect-ratio: 4 / 3.4; object-position: center 36%; } }
+
+/* ---------- Scrapbook: framed photographs on a gallery wall ---------- */
+.scrap { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(36px, 4.6vw, 64px) clamp(28px, 3.6vw, 50px); padding-top: var(--sp-6); }
+.polaroid {
+  position: relative;
+  padding: clamp(13px, 1.5vw, 19px);
+  border-radius: 2px;
+  /* dark beveled frame molding */
+  background: linear-gradient(150deg, #2c271f 0%, #15110d 20%, #221c16 50%, #0d0a08 80%, #251f18 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.05),
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 -2px 3px rgba(0,0,0,0.55),
+    0 1px 0 rgba(255,255,255,0.03),
+    0 34px 58px -24px rgba(0,0,0,0.85),
+    0 14px 26px -16px rgba(0,0,0,0.7);
+  transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease);
+  will-change: transform;
+}
+/* cream mat board the photograph is mounted on */
+.polaroid__mat {
+  position: relative;
+  background: linear-gradient(177deg, #efe9da 0%, #e6dfcd 58%, #ddd5c1 100%);
+  padding: clamp(15px, 1.7vw, 22px) clamp(15px, 1.7vw, 22px) clamp(16px, 1.8vw, 22px);
+  box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,0.20),
+    inset 0 3px 6px rgba(0,0,0,0.28),
+    inset 0 -1px 0 rgba(255,255,255,0.4);
+}
+/* glass sheen across the whole frame */
+.polaroid__glass {
+  position: absolute; inset: clamp(13px, 1.5vw, 19px); z-index: 4;
+  pointer-events: none; mix-blend-mode: screen;
+  background: linear-gradient(122deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.05) 16%, transparent 34%, transparent 60%, rgba(255,255,255,0.045) 84%, rgba(255,255,255,0.10) 100%);
+}
+.scrap .polaroid:nth-child(3n+1) { transform: rotate(-1.8deg); }
+.scrap .polaroid:nth-child(3n+2) { transform: rotate(1.3deg); }
+.scrap .polaroid:nth-child(3n+3) { transform: rotate(-0.9deg); }
+.scrap .polaroid:hover { transform: rotate(0) translateY(-10px) scale(1.015); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.12), inset 0 -2px 3px rgba(0,0,0,0.55), 0 46px 72px -26px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,91,46,0.35), 0 22px 42px -18px rgba(255,91,46,0.28); z-index: 5; }
+/* photograph: recessed behind a beveled mat cut */
+.polaroid__shot { width: 100%; aspect-ratio: 4/3; display: block; --is-bg: #cfc8b8; position: relative; box-shadow: 0 0 0 1px rgba(0,0,0,0.28), 0 0 0 4px #f4efe4, 0 0 0 5px rgba(0,0,0,0.16), inset 0 2px 5px rgba(0,0,0,0.3); }
+.polaroid image-slot { background: #cfc8b8; }
+.polaroid__frame-no { display: inline-block; font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.2em; color: #9a8f7b; margin: 0 0 13px 2px; }
+.polaroid__cap { padding: 18px 2px 2px; }
+.polaroid__tag { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.18em; text-transform: uppercase; color: #b4471f; display: flex; align-items: center; gap: 8px; }
+.polaroid__tag::after { content: ""; flex: 1; height: 1px; background: rgba(0,0,0,0.16); }
+.polaroid__line { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 500; line-height: 1.3; color: #1a1712; margin-top: 9px; letter-spacing: -0.01em; text-wrap: balance; }
+
+/* ---------- Fun "by the numbers" superlatives ---------- */
+.super { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.super div { background: var(--bg); padding: clamp(24px, 3vw, 40px) clamp(20px, 2.4vw, 30px); position: relative; overflow: hidden; transition: background 0.35s var(--ease); }
+.super div::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--accent); transform: scaleY(0); transform-origin: top; transition: transform 0.4s var(--ease); }
+.super div:hover { background: linear-gradient(180deg, var(--accent-soft), transparent 75%); }
+.super div:hover::before { transform: scaleY(1); }
+.super .n { font-size: clamp(34px, 4.6vw, 56px); font-weight: 500; letter-spacing: -0.03em; line-height: 1; }
+.super .n .accent { color: var(--accent); }
+.super .l { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); margin-top: 14px; line-height: 1.6; }
+
+/* ---------- Closing band ---------- */
+.nift-end { border: 1px solid var(--line-accent); padding: clamp(36px, 6vw, 72px) var(--gutter); text-align: center; position: relative; overflow: hidden; }
+.nift-end__grid { position: absolute; inset: 0; background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 40px 40px; opacity: 0.4; -webkit-mask-image: radial-gradient(circle at 50% 50%, #000, transparent 75%); mask-image: radial-gradient(circle at 50% 50%, #000, transparent 75%); }
+.nift-end > * { position: relative; z-index: 1; }
+.nift-end h2 { font-size: clamp(28px, 5vw, 56px); font-weight: 500; letter-spacing: -0.03em; line-height: 1.05; margin: 16px 0 14px; text-wrap: balance; }
+.nift-end h2 .accent { color: var(--accent); }
+.nift-end p { color: var(--text-dim); max-width: 46ch; margin: 0 auto 28px; }
+.nift-end__row { display: inline-flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+
+@media (max-width: 900px) {
+  .scrap { grid-template-columns: repeat(2, 1fr); }
+  .scrap .polaroid:nth-child(2n+1) { transform: rotate(-2deg); }
+  .scrap .polaroid:nth-child(2n) { transform: rotate(1.6deg); }
+  .super { grid-template-columns: 1fr 1fr; }
+  .nift-hero__meta { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px) {
+  .scrap { grid-template-columns: 1fr; gap: 40px; max-width: 360px; margin: 0 auto; }
+  .scrap .polaroid { transform: rotate(-1.5deg) !important; }
+  .super { grid-template-columns: 1fr 1fr; }
+}
+</style>
+<script src="theme-toggle.js"></script>
+<script src="page-transition.js"></script>
+<script src="gold-cursor.js"></script>
+</head>
+<body>
+<script src="loader.js"></script>
+
+<!-- ===== Nav ===== -->
+<nav class="nav">
+  <div class="nav__inner">
+    <a class="brand" href="index.html"><span class="brand__mark" aria-hidden="true"><svg class="brand__logo" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect x="0.5" y="0.5" width="31" height="31" rx="6" fill="#0a0c11" stroke="#ff5b2e" stroke-width="1"/><line x1="7" y1="25" x2="25" y2="7" stroke="#ff5b2e" stroke-width="1" stroke-opacity="0.55"/><text x="6" y="13" font-family="Space Grotesk, system-ui, sans-serif" font-size="10" font-weight="600" fill="#ffffff">G</text><text x="20" y="27" font-family="Space Grotesk, system-ui, sans-serif" font-size="10" font-weight="600" fill="#ffffff">S</text></svg><img class="brand__face" src="assets/portrait.png" alt="" /></span><b>GOURAV</b><span>/SHARMA</span></a>
+    <div class="nav__links">
+      <a href="index.html"><span class="idx">01</span>Index</a>
+      <a href="index.html#work"><span class="idx">02</span>Work</a>
+      <a href="about.html"><span class="idx">03</span>About</a>
+      <a href="blog.html"><span class="idx">04</span>Blogs</a>
+    </div>
+    <a class="btn btn--ghost nav__cta" href="uploads/cv.pdf" download>Resume ↓</a>
+    <button class="nav__burger" aria-label="Menu"><span></span></button>
+  </div>
+</nav>
+<div class="drawer">
+  <a href="index.html"><span class="idx">01</span>Index</a>
+  <a href="index.html#work"><span class="idx">02</span>Work</a>
+  <a href="about.html"><span class="idx">03</span>About</a>
+  <a href="blog.html"><span class="idx">04</span>Blogs</a>
+  <a href="uploads/cv.pdf" download><span class="idx">→</span>Download Resume</a>
+</div>
+
+<main>
+<!-- ===== Hero ===== -->
+<header class="nift-hero" data-screen-label="NIFT / Intro">
+  <div class="wrap">
+    <a class="nift-hero__back" href="index.html"><span class="ar">←</span> Back to index</a>
+    <div class="eyebrow reveal in">Origin File // NIFT Kolkata</div>
+    <h1 class="nift-hero__name reveal in">Four years<br />in <span class="chrome">Kolkata</span><em>.</em></h1>
+    <p class="nift-hero__lede reveal in">Before the design systems and the driver apps, there was a <b>B.Des at NIFT Kolkata</b> &mdash; four years of all-nighters, jury panic, fashion shows, far too much chai, and the city that quietly taught me what design is actually <i>for</i>. A scrapbook from where it all started.</p>
+    <figure class="nift-banner reveal" data-delay="1">
+      <picture><source srcset="assets/nift-convocation.webp" type="image/webp" /><img class="nift-banner__img" src="assets/nift-convocation.jpg" alt="Gourav Sharma receiving his degree on stage at the NIFT Kolkata Convocation Ceremony, Class of 2022" fetchpriority="high" /></picture>
+      <span class="nift-banner__scan"></span>
+      <span class="nift-banner__frame"></span>
+      <span class="nift-banner__id">REC // CONVOCATION</span>
+      <figcaption class="nift-banner__cap">
+        <span class="nift-banner__tag"><i class="pip"></i>NIFT Kolkata &middot; Convocation Ceremony</span>
+        <span class="nift-banner__where">Class of 2022 &middot; the degree, in hand at last &middot; 21&middot;11&middot;2022</span>
+      </figcaption>
+    </figure>
+
+    <dl class="nift-hero__meta reveal" data-delay="2">
+      <div><dt>Degree</dt><dd>Bachelor of Design</dd></div>
+      <div><dt>Campus</dt><dd>NIFT &middot; Kolkata</dd></div>
+      <div><dt>Years</dt><dd>2018 &mdash; 2022</dd></div>
+      <div><dt>Final CGPA</dt><dd><span class="accent">8.2</span> &middot; intact</dd></div>
+    </dl>
+  </div>
+</header>
+
+<!-- ===== Scrapbook ===== -->
+<section class="section" style="padding-top: var(--sp-7);" data-screen-label="NIFT / Scrapbook">
+  <div class="wrap">
+    <div class="head-row reveal">
+      <div>
+        <div class="eyebrow">The reel</div>
+        <h2 class="section-title">Six frames<br />from the roll.</h2>
+      </div>
+      <div class="head-row__count">[ DEVELOPED // 06 ]</div>
+    </div>
+
+    <div class="scrap">
+      <!-- 01 -->
+      <article class="polaroid reveal">
+        <div class="polaroid__mat">
+          <span class="polaroid__frame-no">FRAME 01</span>
+          <img class="polaroid__shot" src="nift-img/01-museum-group.jpg" alt="Orientation · 2018" loading="lazy" style="object-fit:cover;"/>
+          <div class="polaroid__cap">
+            <div class="polaroid__tag">Orientation · 2018</div>
+            <p class="polaroid__line">Whole batch on the museum field trip — day one, everyone still strangers.</p>
+          </div>
+        </div>
+        <span class="polaroid__glass" aria-hidden="true"></span>
+      </article>
+
+      <!-- 02 -->
+      <article class="polaroid reveal" data-delay="1">
+        <div class="polaroid__mat">
+          <span class="polaroid__frame-no">FRAME 02</span>
+          <img class="polaroid__shot" src="nift-img/02-bus-trip.jpg" alt="Study tour · 2019" loading="lazy" style="object-fit:cover;"/>
+          <div class="polaroid__cap">
+            <div class="polaroid__tag">Study tour · 2019</div>
+            <p class="polaroid__line">The annual industry visit. Cotton candy for breakfast, somehow.</p>
+          </div>
+        </div>
+        <span class="polaroid__glass" aria-hidden="true"></span>
+      </article>
+
+      <!-- 03 -->
+      <article class="polaroid reveal" data-delay="2">
+        <div class="polaroid__mat">
+          <span class="polaroid__frame-no">FRAME 03</span>
+          <img class="polaroid__shot" src="nift-img/03-selfie-medal.jpg" alt="Sports meet · 2019" loading="lazy" style="object-fit:cover;"/>
+          <div class="polaroid__cap">
+            <div class="polaroid__tag">Sports meet · 2019</div>
+            <p class="polaroid__line">Squad selfie right after the medal — sweaty and very pleased.</p>
+          </div>
+        </div>
+        <span class="polaroid__glass" aria-hidden="true"></span>
+      </article>
+
+      <!-- 04 -->
+      <article class="polaroid reveal">
+        <div class="polaroid__mat">
+          <span class="polaroid__frame-no">FRAME 04</span>
+          <img class="polaroid__shot" src="nift-img/05-dedication.jpg" alt="Studio · 2020" loading="lazy" style="object-fit:cover;"/>
+          <div class="polaroid__cap">
+            <div class="polaroid__tag">Studio · 2020</div>
+            <p class="polaroid__line">“Dedication dekh rahe ho bande ka” — shooting flat-lays on the pavement.</p>
+          </div>
+        </div>
+        <span class="polaroid__glass" aria-hidden="true"></span>
+      </article>
+
+      <!-- 05 -->
+      <article class="polaroid reveal" data-delay="1">
+        <div class="polaroid__mat">
+          <span class="polaroid__frame-no">FRAME 05</span>
+          <img class="polaroid__shot" src="nift-img/06-jam-drums.jpg" alt="Jam room · 2021" loading="lazy" style="object-fit:cover;"/>
+          <div class="polaroid__cap">
+            <div class="polaroid__tag">Jam room · 2021</div>
+            <p class="polaroid__line">Late-night music between deadlines. Half the batch could play something.</p>
+          </div>
+        </div>
+        <span class="polaroid__glass" aria-hidden="true"></span>
+      </article>
+
+      <!-- 06 -->
+      <article class="polaroid reveal" data-delay="2">
+        <div class="polaroid__mat">
+          <span class="polaroid__frame-no">FRAME 06</span>
+          <img class="polaroid__shot" src="nift-img/07-platform.jpg" alt="Study tour · 2022" loading="lazy" style="object-fit:cover;"/>
+          <div class="polaroid__cap">
+            <div class="polaroid__tag">Study tour · 2022</div>
+            <p class="polaroid__line">4 AM platform, running on chai and zero sleep.</p>
+          </div>
+        </div>
+        <span class="polaroid__glass" aria-hidden="true"></span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===== By the numbers (fun) ===== -->
+<section class="section" style="padding-top: 0;" data-screen-label="NIFT / Numbers">
+  <div class="wrap">
+    <div class="head-row reveal">
+      <div>
+        <div class="eyebrow">// Unofficial transcript</div>
+        <h2 class="section-title">Four years,<br />roughly counted.</h2>
+      </div>
+      <div class="head-row__count">[ STATS // NOT TO SCALE ]</div>
+    </div>
+
+    <div class="super reveal">
+      <div><div class="n">04</div><div class="l">Years on campus<br />&amp; zero regrets</div></div>
+      <div><div class="n">1,460<span class="accent">+</span></div><div class="l">Days of design,<br />deadlines &amp; dosa</div></div>
+      <div><div class="n"><span class="accent">&infin;</span></div><div class="l">Cups of chai<br />survived on</div></div>
+      <div><div class="n">3<span class="accent">AM</span></div><div class="l">The hour every<br />submission was due</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Closing ===== -->
+<section class="section" style="padding-top: 0;" data-screen-label="NIFT / Close">
+  <div class="wrap">
+    <div class="nift-end reveal brackets">
+      <div class="nift-end__grid"></div>
+      <div class="eyebrow no-tick" style="justify-content:center;">// END OF FILE</div>
+      <h2>Kolkata made the designer.<br />The <span class="accent">rest is portfolio.</span></h2>
+      <p>The all-nighters paid off &mdash; here&rsquo;s what they turned into.</p>
+      <div class="nift-end__row">
+        <a class="btn btn--primary" href="index.html#work">See the work <span class="arrow">→</span></a>
+        <a class="btn" href="about.html">More about me <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div>
+        <div class="footer__big">Gourav Sharma<span class="accent">.</span></div>
+        <p class="dim footer__lede">Product &amp; UI/UX Designer. Designing scalable systems for logistics, SaaS &amp; mobile.</p>
+      </div>
+      <div class="footer__col">
+        <h4>Navigate</h4>
+        <a href="index.html">Index</a>
+        <a href="index.html#work">Work</a>
+        <a href="about.html">About</a>
+        <a href="blog.html">Blogs</a>
+        <a href="glossary.html">Glossary</a>
+        <a href="uploads/cv.pdf" download>Resume ↓</a>
+      </div>
+      <div class="footer__col">
+        <h4>Connect</h4>
+        <a href="mailto:gouravsharma.ux@gmail.com">Email</a>
+        <a href="https://www.linkedin.com/in/gourav-sharmaux/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+    <div class="footer__bar">
+      <span>© 2026 GOURAV SHARMA</span>
+      <span>DESIGNED &amp; BUILT · v1.0 · <span data-clock>--:--:-- UTC</span></span>
+    </div>
+  </div>
+</footer>
+
+<script src="image-slot.js"></script>
+<script src="bigfoot.js"></script>
+<script src="easter-egg.js"></script>
+<script src="click-sfx.js"></script>
+<script src="nav-scramble.js"></script>
+<script src="main.js"></script>
+<script src="rise.js"></script>
+</body>
+</html>
