@@ -73,6 +73,8 @@
             '<div class="bigfoot__lbl">Social</div>' +
             '<div class="sociallist">' +
               '<a href="https://www.linkedin.com/in/gourav-sharmaux/" target="_blank" rel="noopener" class="underline">LinkedIn <span class="arrow">\u2192</span></a>' +
+              '<a href="https://www.instagram.com/drivenbygourav/" target="_blank" rel="noopener" class="underline">Instagram <span class="arrow">\u2192</span></a>' +
+              '<a href="https://youtube.com/@drivenbygourav" target="_blank" rel="noopener" class="underline">YouTube <span class="arrow">\u2192</span></a>' +
               '<a href="mailto:gouravsharma.ux@gmail.com" class="underline">Email <span class="arrow">\u2192</span></a>' +
               '<a href="#" data-phone-gate class="underline">Phone <span class="arrow">\u2192</span></a>' +
               // '<a href="https://www.behance.net/" target="_blank" rel="noopener" class="underline">Behance <span class="arrow">→</span></a>' +
