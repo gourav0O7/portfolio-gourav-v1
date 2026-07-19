@@ -17,6 +17,16 @@
 
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // ---- real asset tracking ----
+  // c64-hero.js (injected later, near end of body) reports live progress on
+  // the GLB model + hero video reel here. In __lite mode neither ever loads,
+  // so there's nothing to wait for. Whichever script runs first creates the
+  // shared object; both point at the same one.
+  var AL = window.__assetLoad = window.__assetLoad || { c64: 0, video: 0, c64Done: false, videoDone: false };
+  var waitForAssets = !window.__lite;
+  function assetsReady() { return !waitForAssets || (AL.c64Done && AL.videoDone); }
+  function assetProgress() { return waitForAssets ? Math.min(1, AL.c64 * 0.7 + AL.video * 0.3) : 1; }
+
   // ---- markup ----
   var root = document.createElement('div');
   root.className = 'loader';
@@ -205,27 +215,43 @@
     stopCountdown();
     btn.classList.add('is-engaged');
     setTimeout(function () { btn.style.display = 'none'; }, 320);
+    playSciFi(); // no-op if this wasn't a real user gesture (browser autoplay rule)
 
-    var dur = reduced ? 800 : Math.max(2400, (playSciFi() * 1000) - 200);
-
-    // counter — use setInterval (more reliable across tab throttling
-    // than requestAnimationFrame, which can pause to 1Hz in background)
+    // Progress now tracks REAL loading of the hero's big assets (GLB model +
+    // video reel) via window.__assetLoad, instead of a fixed fake timer.
+    // MIN_MS keeps a brief, readable animation even on a warm cache; MAX_MS
+    // is a safety net so a stalled/broken asset can never trap someone here.
+    var MIN_MS = reduced ? 0 : 900;
+    var MAX_MS = 20000;
     var pctEl = root.querySelector('[data-pct]');
     var bar   = root.querySelector('.loader__bar i');
     var start = performance.now();
-    var pctInt = setInterval(function () {
-      var p = Math.min(1, (performance.now() - start) / dur);
-      var eased = 1 - Math.pow(1 - p, 3);
-      var n = Math.round(eased * 100);
-      pctEl.textContent = ('00' + n).slice(-3);
-      if (bar) bar.style.width = (eased * 100) + '%';
-      if (p >= 1) { clearInterval(pctInt); finish(); }
-    }, 30);
+    var shown = 0;
 
-    // stream logs
+    // stream logs across the minimum visible window
+    var logSpan = Math.max(MIN_MS, 1400);
     logs.forEach(function (line, i) {
-      setTimeout(function () { pushLog(line, i === logs.length - 1); }, (dur / logs.length) * i);
+      setTimeout(function () { pushLog(line, i === logs.length - 1); }, (logSpan / logs.length) * i);
     });
+
+    // counter — use setInterval (more reliable across tab throttling
+    // than requestAnimationFrame, which can pause to 1Hz in background)
+    var pctInt = setInterval(function () {
+      var elapsed = performance.now() - start;
+      var target = assetProgress();
+      shown += (target - shown) * 0.25;
+      var displayCap = target >= 1 ? 1 : 0.99;
+      var n = Math.round(Math.min(shown, displayCap) * 100);
+      pctEl.textContent = ('00' + n).slice(-3);
+      if (bar) bar.style.width = n + '%';
+
+      if ((assetsReady() && elapsed >= MIN_MS) || elapsed >= MAX_MS) {
+        clearInterval(pctInt);
+        pctEl.textContent = '100';
+        if (bar) bar.style.width = '100%';
+        finish();
+      }
+    }, 30);
   }
 
   function finish() {

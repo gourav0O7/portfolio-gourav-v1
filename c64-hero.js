@@ -18,9 +18,16 @@ const SCREEN_TILT = -0.02;
 const POSE_A = { pos: new THREE.Vector3(4.0, 3.5, 11.2), target: new THREE.Vector3(-5.4, 1.95, -0.3), fov: 40 };
 const POSE_B_FOV = 34;
 
+// ---- asset-load bridge: loader.js reads this to know when the hero's
+// big assets (GLB model + video reel) are actually ready, instead of
+// guessing with a fixed timer. ----
+const AL = window.__assetLoad = window.__assetLoad || { c64: 0, video: 0, c64Done: false, videoDone: false };
+function reportProgress(){ window.dispatchEvent(new Event('assetload:progress')); }
+
 const canvas = document.getElementById('c64Canvas');
 const stage  = document.getElementById('introStage');
 if (canvas && stage) boot();
+else { AL.c64Done = true; AL.videoDone = true; reportProgress(); }
 
 function easeInOut(t){ return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2; }
 function lerp(a,b,t){ return a + (b-a)*t; }
@@ -69,9 +76,10 @@ function boot(){
     ready = true;
     document.documentElement.classList.add('c64-ready');
     setLoader(1);
+    AL.c64 = 1; AL.c64Done = true; reportProgress();
     onScroll();
-  }, (e)=>{ const p = e.total ? e.loaded/e.total : 0; setLoader(p); },
-     (err)=>{ console.warn('C64 load failed', err); document.documentElement.classList.add('c64-failed'); });
+  }, (e)=>{ const p = e.total ? e.loaded/e.total : 0; setLoader(p); AL.c64 = p; reportProgress(); },
+     (err)=>{ console.warn('C64 load failed', err); document.documentElement.classList.add('c64-failed'); AL.c64Done = true; reportProgress(); });
 
   function resize(){
     const w = window.innerWidth, h = window.innerHeight;
@@ -185,13 +193,18 @@ function makeTerminal(){
     // Fallback (slow link / no video): DON'T load the portrait photo — leave
     // the CRT on its themed "LOADING" screen instead. mediaReady stays false,
     // so draw() keeps rendering the loading card every frame.
+    AL.video = 1; AL.videoDone = true; reportProgress();
   }
   const vid = document.createElement('video');
   vid.muted = true; vid.loop = true; vid.playsInline = true; vid.preload = 'auto';
   vid.setAttribute('muted', ''); vid.setAttribute('playsinline', '');
   vid.addEventListener('error', useStill);
+  vid.addEventListener('progress', () => {
+    if (vid.duration && vid.buffered.length){ AL.video = Math.min(1, vid.buffered.end(vid.buffered.length - 1) / vid.duration); reportProgress(); }
+  });
   vid.addEventListener('loadeddata', () => {
     if (vid.videoWidth > 0){ media = vid; isVideo = true; mediaReady = true; needFrame = true; vid.play().catch(()=>{}); }
+    AL.video = 1; AL.videoDone = true; reportProgress();
   });
 
   // Connection-aware reel: skip the ~MB video on saveData / slower links and
