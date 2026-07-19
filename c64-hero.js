@@ -279,9 +279,21 @@ function makeTerminal(){
   // ---- audio: play the reel's own sound once the zoom passes 65%, fade out
   //      when the screen hands off / leaves the viewport. Stays muted until
   //      the user has made ANY gesture (browser autoplay rule), so the CRT
-  //      never freezes from an unmute being refused. ----
+  //      never freezes from an unmute being refused.
+  //      The actual mute->unmute transition must happen SYNCHRONOUSLY inside
+  //      the gesture handler itself — doing it later (e.g. from the rAF
+  //      loop, keyed off a flag) is what strict browsers like Safari block.
+  //      updateAudio() below only ever adjusts .volume on an element that's
+  //      already unmuted+playing, which every browser allows freely. ----
   let audioUnlocked = false;
-  function unlockAudio(){ audioUnlocked = true; }
+  function unlockAudio(){
+    if (audioUnlocked) return;
+    audioUnlocked = true;
+    if (window.__soundMuted) return; // respect site-wide mute; updateAudio() re-checks it live
+    if (vid.muted) { vid.muted = false; vid.removeAttribute('muted'); }
+    vid.volume = 0; // start silent — updateAudio() fades it in once scrolled into range
+    if (vid.paused) vid.play().catch(function () {});
+  }
   ['pointerdown','mousedown','touchstart','keydown','wheel','click'].forEach(ev =>
     window.addEventListener(ev, unlockAudio, { passive: true }));
   let curVol = 0;

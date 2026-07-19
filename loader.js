@@ -170,7 +170,10 @@
       osc.start(t); osc.stop(t + 0.05);
       scheduleNext();
     }
-    scheduleNext();
+    // fire the first tick synchronously (still inside the caller's gesture
+    // handler) — strict browsers can block audio started later, e.g. from
+    // a setTimeout/rAF callback with no direct gesture in its call stack.
+    tick();
     return {
       setSpeed: function (mbps) { speed = mbps; },
       stop: function () { stopped = true; if (timer) clearTimeout(timer); }
