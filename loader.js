@@ -22,10 +22,14 @@
   // the GLB model + hero video reel here. In __lite mode neither ever loads,
   // so there's nothing to wait for. Whichever script runs first creates the
   // shared object; both point at the same one.
-  var AL = window.__assetLoad = window.__assetLoad || { c64: 0, video: 0, c64Done: false, videoDone: false };
+  var AL = window.__assetLoad = window.__assetLoad || { c64: 0, video: 0, c64Done: false, videoDone: false, bytesLoaded: 0, bytesTotal: 0 };
   var waitForAssets = !window.__lite;
   function assetsReady() { return !waitForAssets || (AL.c64Done && AL.videoDone); }
-  function assetProgress() { return waitForAssets ? Math.min(1, AL.c64 * 0.7 + AL.video * 0.3) : 1; }
+  function assetProgress() {
+    if (!waitForAssets) return 1;
+    if (AL.bytesTotal) return Math.min(1, AL.bytesLoaded / AL.bytesTotal);
+    return AL.c64Done && AL.videoDone ? 1 : 0;
+  }
 
   // ---- markup ----
   var root = document.createElement('div');
@@ -82,50 +86,28 @@
     return ctx;
   }
 
-  function playSciFi() {
+  // Opening flourish — a short sweep to mark "transmission begun".
+  function playOpenSweep() {
     var c = ensureCtx();
-    if (!c) return 0;
+    if (!c) return;
     if (c.state === 'suspended') c.resume();
-
     var t = c.currentTime + 0.02;
 
-    // master
     var master = c.createGain();
     master.gain.value = 0.0001;
-    master.gain.exponentialRampToValueAtTime(0.22, t + 0.4);
-    master.gain.setValueAtTime(0.22, t + 2.4);
-    master.gain.exponentialRampToValueAtTime(0.0001, t + 3.2);
+    master.gain.exponentialRampToValueAtTime(0.22, t + 0.3);
+    master.gain.setValueAtTime(0.22, t + 1.1);
+    master.gain.exponentialRampToValueAtTime(0.0001, t + 1.6);
     master.connect(c.destination);
 
-    // 1) deep sub drone — slow rise
     var drone = c.createOscillator();
     drone.type = 'sine';
     drone.frequency.setValueAtTime(55, t);
-    drone.frequency.exponentialRampToValueAtTime(82.5, t + 2.6);
-    var dg = c.createGain(); dg.gain.value = 0.55;
+    drone.frequency.exponentialRampToValueAtTime(82.5, t + 1.3);
+    var dg = c.createGain(); dg.gain.value = 0.5;
     drone.connect(dg); dg.connect(master);
-    drone.start(t); drone.stop(t + 3.4);
+    drone.start(t); drone.stop(t + 1.7);
 
-    // 2) shimmer pad — two detuned saws through bandpass
-    var padFilter = c.createBiquadFilter();
-    padFilter.type = 'bandpass';
-    padFilter.frequency.setValueAtTime(380, t);
-    padFilter.frequency.exponentialRampToValueAtTime(2400, t + 2.4);
-    padFilter.Q.value = 1.4;
-
-    var pg = c.createGain(); pg.gain.value = 0.18;
-
-    [220, 277.18, 329.63, 440].forEach(function (f, i) {
-      var o = c.createOscillator();
-      o.type = i % 2 ? 'sawtooth' : 'triangle';
-      o.frequency.value = f;
-      o.detune.value = (i - 1.5) * 8;
-      o.connect(padFilter);
-      o.start(t); o.stop(t + 3.2);
-    });
-    padFilter.connect(pg); pg.connect(master);
-
-    // 3) sweep — a noise burst through a sweeping highpass for sci-fi air
     var noiseBuf = c.createBuffer(1, c.sampleRate * 0.9, c.sampleRate);
     var d = noiseBuf.getChannelData(0);
     for (var i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * 0.5;
@@ -137,25 +119,62 @@
     hp.frequency.exponentialRampToValueAtTime(8000, t + 0.8);
     var ng = c.createGain();
     ng.gain.setValueAtTime(0.0001, t);
-    ng.gain.exponentialRampToValueAtTime(0.18, t + 0.25);
+    ng.gain.exponentialRampToValueAtTime(0.16, t + 0.25);
     ng.gain.exponentialRampToValueAtTime(0.0001, t + 0.9);
     n.connect(hp); hp.connect(ng); ng.connect(master);
     n.start(t); n.stop(t + 0.95);
+  }
 
-    // 4) confirmation blip near end (a clean sine peak)
-    var blipT = t + 2.55;
+  // Completion sting — plays once the assets are actually ready.
+  function playFinishChime() {
+    var c = ensureCtx();
+    if (!c) return;
+    var t = c.currentTime + 0.01;
     var blip = c.createOscillator();
     blip.type = 'sine';
-    blip.frequency.setValueAtTime(880, blipT);
-    blip.frequency.exponentialRampToValueAtTime(1760, blipT + 0.18);
+    blip.frequency.setValueAtTime(880, t);
+    blip.frequency.exponentialRampToValueAtTime(1760, t + 0.18);
     var bg = c.createGain();
-    bg.gain.setValueAtTime(0.0001, blipT);
-    bg.gain.exponentialRampToValueAtTime(0.25, blipT + 0.01);
-    bg.gain.exponentialRampToValueAtTime(0.0001, blipT + 0.22);
-    blip.connect(bg); bg.connect(master);
-    blip.start(blipT); blip.stop(blipT + 0.28);
+    bg.gain.setValueAtTime(0.0001, t);
+    bg.gain.exponentialRampToValueAtTime(0.25, t + 0.01);
+    bg.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+    blip.connect(bg); bg.connect(c.destination);
+    blip.start(t); blip.stop(t + 0.28);
+  }
 
-    return 3.2; // total length
+  // Continuous download "pulse" — a rhythmic tick whose tempo and pitch
+  // track the live transfer speed (call setSpeed(mbps) as it changes), so
+  // it visibly/audibly speeds up or slows down with the connection.
+  function startLoadingPulse() {
+    var c = ensureCtx();
+    if (!c) return { setSpeed: function () {}, stop: function () {} };
+    var stopped = false, speed = 0, timer = null;
+    function scheduleNext() {
+      if (stopped) return;
+      var interval = Math.max(70, 240 - Math.min(speed, 6) * 28);
+      timer = setTimeout(tick, interval);
+    }
+    function tick() {
+      if (stopped) return;
+      if (c.state === 'suspended') c.resume();
+      var t = c.currentTime + 0.004;
+      var freq = 480 + Math.min(speed, 8) * 55;
+      var osc = c.createOscillator();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(freq, t);
+      var g = c.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.045, t + 0.006);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.045);
+      osc.connect(g); g.connect(c.destination);
+      osc.start(t); osc.stop(t + 0.05);
+      scheduleNext();
+    }
+    scheduleNext();
+    return {
+      setSpeed: function (mbps) { speed = mbps; },
+      stop: function () { stopped = true; if (timer) clearTimeout(timer); }
+    };
   }
 
   // ---- logs stream ----
@@ -215,7 +234,8 @@
     stopCountdown();
     btn.classList.add('is-engaged');
     setTimeout(function () { btn.style.display = 'none'; }, 320);
-    playSciFi(); // no-op if this wasn't a real user gesture (browser autoplay rule)
+    playOpenSweep(); // no-op if this wasn't a real user gesture (browser autoplay rule)
+    var pulse = startLoadingPulse(); // continuous tick, tempo/pitch follow live download speed
 
     // Progress now tracks REAL loading of the hero's big assets (GLB model +
     // video reel) via window.__assetLoad, instead of a fixed fake timer.
@@ -227,6 +247,7 @@
     var bar   = root.querySelector('.loader__bar i');
     var start = performance.now();
     var shown = 0;
+    var lastBytes = AL.bytesLoaded, lastT = start;
 
     // stream logs across the minimum visible window
     var logSpan = Math.max(MIN_MS, 1400);
@@ -237,7 +258,8 @@
     // counter — use setInterval (more reliable across tab throttling
     // than requestAnimationFrame, which can pause to 1Hz in background)
     var pctInt = setInterval(function () {
-      var elapsed = performance.now() - start;
+      var now = performance.now();
+      var elapsed = now - start;
       var target = assetProgress();
       shown += (target - shown) * 0.25;
       var displayCap = target >= 1 ? 1 : 0.99;
@@ -245,10 +267,20 @@
       pctEl.textContent = ('00' + n).slice(-3);
       if (bar) bar.style.width = n + '%';
 
+      // live transfer speed (MB/s) — drives the pulse's tempo/pitch
+      var dt = (now - lastT) / 1000;
+      if (dt > 0) {
+        var mbps = ((AL.bytesLoaded - lastBytes) / (1024 * 1024)) / dt;
+        pulse.setSpeed(mbps);
+      }
+      lastBytes = AL.bytesLoaded; lastT = now;
+
       if ((assetsReady() && elapsed >= MIN_MS) || elapsed >= MAX_MS) {
         clearInterval(pctInt);
+        pulse.stop();
         pctEl.textContent = '100';
         if (bar) bar.style.width = '100%';
+        playFinishChime();
         finish();
       }
     }, 30);

@@ -18,11 +18,48 @@ const SCREEN_TILT = -0.02;
 const POSE_A = { pos: new THREE.Vector3(4.0, 3.5, 11.2), target: new THREE.Vector3(-5.4, 1.95, -0.3), fov: 40 };
 const POSE_B_FOV = 34;
 
-// ---- asset-load bridge: loader.js reads this to know when the hero's
-// big assets (GLB model + video reel) are actually ready, instead of
-// guessing with a fixed timer. ----
-const AL = window.__assetLoad = window.__assetLoad || { c64: 0, video: 0, c64Done: false, videoDone: false };
+// ---- asset-load bridge: loader.js reads this to know how much of the
+// hero's big assets (GLB model + video reel) has actually downloaded,
+// instead of guessing with a fixed timer. Sizes are a fallback denominator
+// only — the real Content-Length is used when the server sends one; it's
+// read from actual bytes streamed off the network either way, so this
+// works even behind a proxy that strips Content-Length. ----
+const KNOWN_SIZES = { c64: 18673600, video: 11949440 };
+const AL = window.__assetLoad = window.__assetLoad || {
+  c64: 0, video: 0, c64Done: false, videoDone: false,
+  bytesLoaded: 0, bytesTotal: KNOWN_SIZES.c64 + KNOWN_SIZES.video
+};
 function reportProgress(){ window.dispatchEvent(new Event('assetload:progress')); }
+
+// Streams `url`, calling onChunk(deltaBytes, total) as real bytes arrive.
+// `total` prefers the server's Content-Length, falling back to fallbackTotal
+// so the bar still moves accurately even without it. Resolves the full
+// ArrayBuffer, same as a normal fetch — just with progress along the way.
+function fetchWithProgress(url, fallbackTotal, onChunk){
+  return fetch(url).then(function (res) {
+    var headerTotal = Number(res.headers.get('content-length'));
+    var total = headerTotal > 0 ? headerTotal : fallbackTotal;
+    if (!res.body || !res.body.getReader) {
+      return res.arrayBuffer().then(function (buf) { onChunk(buf.byteLength, total); return buf; });
+    }
+    var reader = res.body.getReader();
+    var chunks = [], loaded = 0;
+    function pump() {
+      return reader.read().then(function (r) {
+        if (r.done) {
+          var all = new Uint8Array(loaded), off = 0;
+          for (var i = 0; i < chunks.length; i++) { all.set(chunks[i], off); off += chunks[i].length; }
+          return all.buffer;
+        }
+        chunks.push(r.value);
+        loaded += r.value.length;
+        onChunk(r.value.length, total);
+        return pump();
+      });
+    }
+    return pump();
+  });
+}
 
 const canvas = document.getElementById('c64Canvas');
 const stage  = document.getElementById('introStage');
@@ -59,8 +96,8 @@ function boot(){
   );
   glow.position.copy(SCREEN_CENTER).add(new THREE.Vector3(0,0,0.04));
 
-  let model = null, ready = false;
-  new GLTFLoader().load('assets/commodore64.glb', (gltf)=>{
+  let model = null, ready = false, c64Loaded = 0;
+  function onC64Ready(gltf){
     model = gltf.scene;
     model.traverse(o=>{
       if (o.isMesh && o.material){
@@ -78,8 +115,21 @@ function boot(){
     setLoader(1);
     AL.c64 = 1; AL.c64Done = true; reportProgress();
     onScroll();
-  }, (e)=>{ const p = e.total ? e.loaded/e.total : 0; setLoader(p); AL.c64 = p; reportProgress(); },
-     (err)=>{ console.warn('C64 load failed', err); document.documentElement.classList.add('c64-failed'); AL.c64Done = true; reportProgress(); });
+  }
+  function onC64Fail(err){
+    console.warn('C64 load failed', err);
+    document.documentElement.classList.add('c64-failed');
+    AL.c64Done = true; reportProgress();
+  }
+  fetchWithProgress('assets/commodore64.glb', KNOWN_SIZES.c64, (deltaBytes, total) => {
+    c64Loaded += deltaBytes;
+    AL.bytesLoaded += deltaBytes;
+    AL.c64 = total ? Math.min(1, c64Loaded / total) : 0;
+    setLoader(AL.c64);
+    reportProgress();
+  }).then((buf) => {
+    new GLTFLoader().parse(buf, '', onC64Ready, onC64Fail);
+  }).catch(onC64Fail);
 
   function resize(){
     const w = window.innerWidth, h = window.innerHeight;
@@ -187,7 +237,7 @@ function makeTerminal(){
   let media = null, mediaReady = false, isVideo = false, needFrame = true, needSplit = true;
 
   // try the video reel first; fall back to the still portrait
-  let fellBack = false;
+  let fellBack = false, videoLoaded = 0;
   function useStill(){
     if (fellBack) return; fellBack = true; isVideo = false;
     // Fallback (slow link / no video): DON'T load the portrait photo — leave
@@ -199,17 +249,14 @@ function makeTerminal(){
   vid.muted = true; vid.loop = true; vid.playsInline = true; vid.preload = 'auto';
   vid.setAttribute('muted', ''); vid.setAttribute('playsinline', '');
   vid.addEventListener('error', useStill);
-  vid.addEventListener('progress', () => {
-    if (vid.duration && vid.buffered.length){ AL.video = Math.min(1, vid.buffered.end(vid.buffered.length - 1) / vid.duration); reportProgress(); }
-  });
   vid.addEventListener('loadeddata', () => {
     if (vid.videoWidth > 0){ media = vid; isVideo = true; mediaReady = true; needFrame = true; vid.play().catch(()=>{}); }
-    AL.video = 1; AL.videoDone = true; reportProgress();
   });
 
   // Connection-aware reel: skip the ~MB video on saveData / slower links and
-  // use the still portrait straight away. On a fast link, race a short timeout
-  // so a stalled download can't leave the CRT blank for long.
+  // use the still portrait straight away. On a fast link, fetch it ourselves
+  // (real byte progress, works even if a proxy strips Content-Length) and
+  // hand the finished blob to the <video> — a stalled fetch still falls back.
   const _conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
   const _slowish = window.__lite || (_conn && (_conn.saveData ||
       /^(slow-2g|2g|3g)$/.test(_conn.effectiveType || '') ||
@@ -217,8 +264,16 @@ function makeTerminal(){
   if (_slowish) {
     useStill();
   } else {
-    vid.src = 'assets/hero-reel.mp4';
-    setTimeout(() => { if (!mediaReady) useStill(); }, 2000);
+    fetchWithProgress('assets/hero-reel.mp4', KNOWN_SIZES.video, (deltaBytes, total) => {
+      videoLoaded += deltaBytes;
+      AL.bytesLoaded += deltaBytes;
+      AL.video = total ? Math.min(1, videoLoaded / total) : 0;
+      reportProgress();
+    }).then((buf) => {
+      vid.src = URL.createObjectURL(new Blob([buf], { type: 'video/mp4' }));
+      AL.video = 1; AL.videoDone = true; reportProgress();
+    }).catch(useStill);
+    setTimeout(() => { if (!fellBack && !AL.videoDone) useStill(); }, 8000);
   }
 
   // ---- audio: play the reel's own sound once the zoom passes 65%, fade out
