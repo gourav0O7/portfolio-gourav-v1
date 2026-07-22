@@ -1,0 +1,4 @@
+
+# Cloudflare Worker local cache/state (contains account id)
+cf-worker/.wrangler/
+cf-worker/node_modules/
