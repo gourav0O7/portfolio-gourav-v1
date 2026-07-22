@@ -1,0 +1,13 @@
+name = "gs-nda-gate"
+main = "worker.js"
+compatibility_date = "2026-07-01"
+
+routes = [
+  { pattern = "gouravsharma.net/otp-live/*", zone_name = "gouravsharma.net" },
+  { pattern = "gouravsharma.net/demand-live/*", zone_name = "gouravsharma.net" },
+  { pattern = "gouravsharma.net/app-builder-live/*", zone_name = "gouravsharma.net" },
+  { pattern = "gouravsharma.net/prototype/*", zone_name = "gouravsharma.net" },
+  { pattern = "gouravsharma.net/prototype-*", zone_name = "gouravsharma.net" },
+  { pattern = "gouravsharma.net/screens-img/*", zone_name = "gouravsharma.net" },
+  { pattern = "gouravsharma.net/assets/otp-*", zone_name = "gouravsharma.net" },
+]
