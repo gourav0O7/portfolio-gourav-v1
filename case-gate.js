@@ -14,13 +14,39 @@
    localStorage so it stays unlocked across every case page.
 
    ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
-   ░  CHANGE THE PASSPHRASE HERE  (case-insensitive)         ░
+   ░  TO CHANGE THE PASSPHRASE (case-insensitive):            ░
+   ░  it's stored as a SHA-256 hash below, not in plain text.  ░
+   ░  In any browser console, run:                             ░
+   ░    crypto.subtle.digest('SHA-256',                        ░
+   ░      new TextEncoder().encode('your new phrase'.toLowerCase()))  ░
+   ░      .then(b=>console.log([...new Uint8Array(b)]           ░
+   ░      .map(x=>x.toString(16).padStart(2,'0')).join('')))    ░
+   ░  then paste the result into PASSPHRASE_HASH below.         ░
    ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ */
 (function () {
   'use strict';
 
-  var PASSPHRASE = 'Gourav@007';
+  // Not stored in the clear — a SHA-256 hash of the lowercased passphrase,
+  // so it can't just be read straight out of this file. (Note: on a static
+  // site with no server, this is a deterrent against casual "view source"
+  // lookups, not real access control — anyone willing to brute-force this
+  // hash, or dig through devtools, can still get past it. There's no way
+  // to fully close that on client-side-only hosting.)
+  var PASSPHRASE_HASH = '0d441fb195996c906b91d297c3b3e21453bf00b0f39c1ef5e5f3beb13b82f4c9';
   var STORE_KEY  = 'gs-case-access';
+
+  function sha256Hex(str) {
+    var data = new TextEncoder().encode(str);
+    return crypto.subtle.digest('SHA-256', data).then(function (buf) {
+      return Array.prototype.map.call(new Uint8Array(buf), function (b) {
+        return ('0' + b.toString(16)).slice(-2);
+      }).join('');
+    });
+  }
+  function checkPassphrase(val) {
+    if (!(window.crypto && window.crypto.subtle)) return Promise.resolve(false); // requires a secure context
+    return sha256Hex(val).then(function (hex) { return hex === PASSPHRASE_HASH; });
+  }
 
   var gate = document.getElementById('caseGate');
   if (!gate) return;
@@ -70,6 +96,10 @@
     '.cg-hud__field:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft,rgba(255,91,46,.14))}' +
     '.cg-hud__field .pre{font-size:12px;color:var(--accent);opacity:.8}' +
     '.cg-hud__input{flex:1;background:none;border:0;outline:0;color:var(--text);font-family:var(--font-mono);font-size:13px;letter-spacing:.16em;padding:11px 0;min-width:0}' +
+    /* the site-wide input:focus-visible rule (styles.css) outranks the
+       plain-class outline:0 above, so its own ring doubles up with the
+       field's box-shadow ring below — kill it here at matching specificity */
+    '.cg-hud__input:focus-visible{outline:none}' +
     '.cg-hud__input::placeholder{color:var(--text-faint);letter-spacing:.12em}' +
     '.cg-hud__btn{flex:none;background:var(--accent);color:#0a0c11;border:0;font-family:var(--font-mono);font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:0 14px;cursor:pointer;transition:filter .2s var(--ease),transform .15s var(--ease)}' +
     '.cg-hud__btn:hover{filter:brightness(1.08)}.cg-hud__btn:active{transform:translateY(1px)}' +
@@ -135,9 +165,15 @@
   }
 
   var items = [];   // { el(span), real, locked, cur, vis }
+  // Item lookup lives in a WeakMap, not on the element itself — a plain
+  // span.__cg property would let anyone read the real text straight out of
+  // devtools with one line (`el.__cg.real`) without ever touching the
+  // passphrase. This isn't unbreakable (nothing client-side is), but it's
+  // no longer a one-line console trick.
+  var itemOf = new WeakMap();
   // only animate text that's on (or near) screen — keeps long case pages smooth
   var io = ('IntersectionObserver' in window) ? new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) { if (e.target.__cg) e.target.__cg.vis = e.isIntersecting; });
+    entries.forEach(function (e) { var it = itemOf.get(e.target); if (it) it.vis = e.isIntersecting; });
   }, { rootMargin: '140px 0px' }) : null;
 
   function encryptText() {
@@ -148,7 +184,7 @@
       span.textContent = crypt(real);
       tn.parentNode.replaceChild(span, tn);
       var it = { el: span, real: real, locked: true, cur: crypt(real).split(''), vis: true };
-      span.__cg = it;
+      itemOf.set(span, it);
       items.push(it);
       if (io) io.observe(span);
     });
@@ -221,15 +257,17 @@
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       var val = (input.value || '').trim().toLowerCase();
-      if (val === PASSPHRASE.toLowerCase()) {
-        try { localStorage.setItem(STORE_KEY, '1'); } catch (_) {}
-        unlock(hud);
-      } else {
-        err.textContent = '✗ ACCESS DENIED — incorrect passphrase';
-        err.classList.add('show');
-        hud.classList.remove('shake'); void hud.offsetWidth; hud.classList.add('shake');
-        input.value = ''; input.focus();
-      }
+      checkPassphrase(val).then(function (ok) {
+        if (ok) {
+          try { localStorage.setItem(STORE_KEY, '1'); } catch (_) {}
+          unlock(hud);
+        } else {
+          err.textContent = '✗ ACCESS DENIED — incorrect passphrase';
+          err.classList.add('show');
+          hud.classList.remove('shake'); void hud.offsetWidth; hud.classList.add('shake');
+          input.value = ''; input.focus();
+        }
+      });
     });
     return hud;
   }
