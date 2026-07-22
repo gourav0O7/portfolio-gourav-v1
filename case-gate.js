@@ -48,22 +48,6 @@
     return sha256Hex(val).then(function (hex) { return hex === PASSPHRASE_HASH; });
   }
 
-  // The Worker that actually guards the live-prototype embeds/screenshots
-  // (cf-worker/) checks the same passphrase independently and hands back its
-  // own cookie — it has no way to know this in-page unlock just happened, so
-  // we tell it. Any path under one of its protected prefixes works as the
-  // POST target; it only exists to trigger the Worker's own auth check.
-  function syncWorkerGate(val) {
-    try {
-      fetch('/otp-live/_case_gate_sync', {
-        method: 'POST',
-        credentials: 'same-origin',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: 'pass=' + encodeURIComponent(val)
-      }).catch(function () {});
-    } catch (_) {}
-  }
-
   var gate = document.getElementById('caseGate');
   if (!gate) return;
 
@@ -276,7 +260,6 @@
       checkPassphrase(val).then(function (ok) {
         if (ok) {
           try { localStorage.setItem(STORE_KEY, '1'); } catch (_) {}
-          syncWorkerGate(val); // same passphrase also unlocks the server-side gate (Cloudflare Worker) that protects the live prototype embeds/screenshots — fire-and-forget so it never blocks this UI
           unlock(hud);
         } else {
           err.textContent = '✗ ACCESS DENIED — incorrect passphrase';
@@ -342,32 +325,19 @@
     });
   }
 
-  /* ---- entrance flourish only — real security lives in the Worker ----
-     The Cloudflare Worker (cf-worker/) now gates these pages server-side:
-     this page only ever loads for a visitor who already entered the
-     passphrase at the edge. So there is NO in-page passphrase panel any
-     more (that would be a redundant second prompt) — the encrypt→decrypt
-     sweep runs purely as a one-time-per-session entrance animation, then
-     the content stays in the clear for the rest of the session. */
-  var INTRO_KEY = 'gs-case-intro';
-  var introDone = false;
-  try { introDone = sessionStorage.getItem(INTRO_KEY) === '1'; } catch (_) {}
+  /* ---- already unlocked? show in the clear ---- */
+  var unlocked = false;
+  try { unlocked = localStorage.getItem(STORE_KEY) === '1'; } catch (_) {}
 
   function arm() {
-    // already played this session, or reduced-motion — just reveal in clear
-    if (introDone || reduce) { gate.classList.remove('is-arming'); return; }
+    if (unlocked) { gate.classList.remove('is-arming'); return; }
     try {
+      buildHud();
       encryptText();
       sealVisuals();
       startFlicker();
-      gate.classList.remove('is-arming');
-      try { sessionStorage.setItem(INTRO_KEY, '1'); } catch (_) {}
-      // auto-run the decrypt sweep after a short beat (no passphrase gate)
-      setTimeout(function () { unlock(null); }, 850);
-    } catch (e) {
-      // fail open rather than trap the page
-      gate.classList.remove('is-arming');
-    }
+    } catch (e) { /* fail open rather than trap the page */ }
+    gate.classList.remove('is-arming');
   }
 
   // run after layout settles so vault covers size correctly

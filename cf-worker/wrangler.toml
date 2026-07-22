@@ -2,14 +2,9 @@ name = "gs-nda-gate"
 main = "worker.js"
 compatibility_date = "2026-07-01"
 
-routes = [
-  { pattern = "gouravsharma.net/otp-live/*", zone_name = "gouravsharma.net" },
-  { pattern = "gouravsharma.net/demand-live/*", zone_name = "gouravsharma.net" },
-  { pattern = "gouravsharma.net/app-builder-live/*", zone_name = "gouravsharma.net" },
-  { pattern = "gouravsharma.net/prototype/*", zone_name = "gouravsharma.net" },
-  { pattern = "gouravsharma.net/prototype-*", zone_name = "gouravsharma.net" },
-  { pattern = "gouravsharma.net/screens-img/*", zone_name = "gouravsharma.net" },
-  { pattern = "gouravsharma.net/assets/otp-*", zone_name = "gouravsharma.net" },
-  { pattern = "gouravsharma.net/project-*", zone_name = "gouravsharma.net" },
-  { pattern = "gouravsharma.net/projects-data.js*", zone_name = "gouravsharma.net" },
-]
+# Routes intentionally EMPTY — the NDA case studies are back to their
+# original client-side experience (case-gate.js: scramble + decode-on-
+# passphrase), so nothing is gated at the edge any more. The Worker code
+# is kept here in case server-side gating is ever wanted again; re-add the
+# route patterns and `wrangler deploy` to re-enable.
+routes = []
