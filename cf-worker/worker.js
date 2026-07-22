@@ -26,13 +26,25 @@ const PROTECTED_PREFIXES = [
   '/prototype-',
   '/screens-img/',
   '/assets/otp-',
+  '/project-screens-',   // per-project screen replica DATA (the NDA copy)
+];
+
+// Exact files that carry NDA content but don't fit a prefix.
+const PROTECTED_EXACT = [
+  '/projects-data.js',   // all case-study copy lives here
 ];
 
 const COOKIE_NAME = 'gs_nda_ok';
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
 
 function isProtected(pathname) {
-  return PROTECTED_PREFIXES.some((p) => pathname.startsWith(p));
+  if (PROTECTED_EXACT.includes(pathname)) return true;
+  if (PROTECTED_PREFIXES.some((p) => pathname.startsWith(p))) return true;
+  // Case-study pages themselves: /project-<name>.html (but NOT the shared
+  // rendering machinery like /project.js, /project.css, /project-art.js —
+  // those carry no NDA copy and stay public so nothing else breaks).
+  if (/^\/project-[^/]+\.html$/.test(pathname)) return true;
+  return false;
 }
 
 async function sha256Hex(str) {

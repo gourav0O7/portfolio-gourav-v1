@@ -10,4 +10,6 @@ routes = [
   { pattern = "gouravsharma.net/prototype-*", zone_name = "gouravsharma.net" },
   { pattern = "gouravsharma.net/screens-img/*", zone_name = "gouravsharma.net" },
   { pattern = "gouravsharma.net/assets/otp-*", zone_name = "gouravsharma.net" },
+  { pattern = "gouravsharma.net/project-*", zone_name = "gouravsharma.net" },
+  { pattern = "gouravsharma.net/projects-data.js*", zone_name = "gouravsharma.net" },
 ]

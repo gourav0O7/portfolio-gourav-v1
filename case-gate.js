@@ -342,19 +342,32 @@
     });
   }
 
-  /* ---- already unlocked? show in the clear ---- */
-  var unlocked = false;
-  try { unlocked = localStorage.getItem(STORE_KEY) === '1'; } catch (_) {}
+  /* ---- entrance flourish only — real security lives in the Worker ----
+     The Cloudflare Worker (cf-worker/) now gates these pages server-side:
+     this page only ever loads for a visitor who already entered the
+     passphrase at the edge. So there is NO in-page passphrase panel any
+     more (that would be a redundant second prompt) — the encrypt→decrypt
+     sweep runs purely as a one-time-per-session entrance animation, then
+     the content stays in the clear for the rest of the session. */
+  var INTRO_KEY = 'gs-case-intro';
+  var introDone = false;
+  try { introDone = sessionStorage.getItem(INTRO_KEY) === '1'; } catch (_) {}
 
   function arm() {
-    if (unlocked) { gate.classList.remove('is-arming'); return; }
+    // already played this session, or reduced-motion — just reveal in clear
+    if (introDone || reduce) { gate.classList.remove('is-arming'); return; }
     try {
-      buildHud();
       encryptText();
       sealVisuals();
       startFlicker();
-    } catch (e) { /* fail open rather than trap the page */ }
-    gate.classList.remove('is-arming');
+      gate.classList.remove('is-arming');
+      try { sessionStorage.setItem(INTRO_KEY, '1'); } catch (_) {}
+      // auto-run the decrypt sweep after a short beat (no passphrase gate)
+      setTimeout(function () { unlock(null); }, 850);
+    } catch (e) {
+      // fail open rather than trap the page
+      gate.classList.remove('is-arming');
+    }
   }
 
   // run after layout settles so vault covers size correctly
