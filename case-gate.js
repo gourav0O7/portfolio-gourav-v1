@@ -48,6 +48,22 @@
     return sha256Hex(val).then(function (hex) { return hex === PASSPHRASE_HASH; });
   }
 
+  // The Worker that actually guards the live-prototype embeds/screenshots
+  // (cf-worker/) checks the same passphrase independently and hands back its
+  // own cookie — it has no way to know this in-page unlock just happened, so
+  // we tell it. Any path under one of its protected prefixes works as the
+  // POST target; it only exists to trigger the Worker's own auth check.
+  function syncWorkerGate(val) {
+    try {
+      fetch('/otp-live/_case_gate_sync', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'pass=' + encodeURIComponent(val)
+      }).catch(function () {});
+    } catch (_) {}
+  }
+
   var gate = document.getElementById('caseGate');
   if (!gate) return;
 
@@ -260,6 +276,7 @@
       checkPassphrase(val).then(function (ok) {
         if (ok) {
           try { localStorage.setItem(STORE_KEY, '1'); } catch (_) {}
+          syncWorkerGate(val); // same passphrase also unlocks the server-side gate (Cloudflare Worker) that protects the live prototype embeds/screenshots — fire-and-forget so it never blocks this UI
           unlock(hud);
         } else {
           err.textContent = '✗ ACCESS DENIED — incorrect passphrase';
