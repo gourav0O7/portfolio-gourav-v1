@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Résumé — Gourav Sharma</title>
+<meta name="description" content="Gourav Sharma — Product & UI/UX Designer. View or download résumé." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<script src="net-quality.js"></script>
+<script src="sound-manager.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@300;400;500;600&display=swap" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+/* ============================================================
+   RÉSUMÉ — a readable "dossier" page: real content, not scrambled,
+   with a plain, ATS-friendly reading order. Same dark/mono/accent
+   system as the rest of the site, but calmer — this page has one
+   job (let someone read or grab the résumé), so it stays out of
+   its own way. Print styles make Cmd/Ctrl+P produce a clean page
+   too, independent of the pre-built PDF download.
+   ============================================================ */
+.rsm { padding-top: var(--nav-h); min-height: 100vh; }
+.rsm__head { padding: clamp(40px, 7vh, 74px) var(--gutter) clamp(24px, 4vh, 40px); border-bottom: 1px solid var(--line); }
+.rsm__head .wrap { max-width: 760px; margin: 0 auto; }
+.rsm__eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.rsm__eyebrow i { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent-glow, rgba(255,91,46,.6)); animation: rsmblink 1.6s steps(1) infinite; }
+@keyframes rsmblink { 50% { opacity: .3; } }
+.rsm__name { font-family: var(--font-display); font-weight: 700; font-size: clamp(34px, 5.6vw, 56px); letter-spacing: -0.02em; color: var(--text); margin: 0; }
+.rsm__title { font-size: clamp(15px, 1.8vw, 18px); color: var(--text-dim); margin: 8px 0 0; }
+.rsm__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+.rsm__btn { display: inline-flex; align-items: center; gap: 9px; font-family: var(--font-mono); font-size: 12.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 12px 18px; border: 1px solid var(--line-2); color: var(--text); text-decoration: none; transition: border-color .2s var(--ease), background .2s var(--ease), transform .15s var(--ease); }
+.rsm__btn:hover { border-color: var(--accent); transform: translateY(-1px); }
+.rsm__btn--primary { background: var(--accent); border-color: var(--accent); color: #0a0c11; }
+.rsm__btn--primary:hover { filter: brightness(1.08); }
+.rsm__btn svg { width: 15px; height: 15px; flex: none; }
+.rsm__contact { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 20px; font-family: var(--font-mono); font-size: 12.5px; color: var(--text-dim); }
+.rsm__contact a { color: var(--text-dim); text-decoration: none; border-bottom: 1px solid var(--line-2); transition: color .2s var(--ease), border-color .2s var(--ease); }
+.rsm__contact a:hover { color: var(--accent); border-color: var(--accent); }
+
+.rsm__body { padding: clamp(36px, 6vh, 60px) var(--gutter) clamp(70px, 10vh, 110px); }
+.rsm__body .wrap { max-width: 760px; margin: 0 auto; }
+.rsm__sec { margin-bottom: clamp(30px, 4.5vh, 44px); }
+.rsm__sec h2 { font-family: var(--font-mono); font-size: 11.5px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); padding-bottom: 10px; margin: 0 0 18px; border-bottom: 1px solid var(--line); }
+.rsm__summary { font-size: 15px; line-height: 1.75; color: var(--text-dim); max-width: 66ch; }
+
+.rsm__entry { margin-bottom: 22px; }
+.rsm__entry:last-child { margin-bottom: 0; }
+.rsm__row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; }
+.rsm__org { font-size: 16px; font-weight: 600; color: var(--text); }
+.rsm__org a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--line-2); }
+.rsm__org a:hover { color: var(--accent); border-color: var(--accent); }
+.rsm__loc { font-family: var(--font-mono); font-size: 12px; color: var(--accent); white-space: nowrap; }
+.rsm__role { font-size: 13.5px; font-style: italic; color: var(--text-dim); margin-top: 2px; }
+.rsm__dates { font-family: var(--font-mono); font-size: 12px; color: var(--text-faint); white-space: nowrap; }
+.rsm__list { margin: 10px 0 0; padding: 0; list-style: none; }
+.rsm__list li { position: relative; padding-left: 18px; font-size: 14px; line-height: 1.65; color: var(--text-dim); margin-bottom: 6px; }
+.rsm__list li::before { content: "—"; position: absolute; left: 0; color: var(--text-faint); }
+
+.rsm__early li { font-size: 14px; line-height: 1.6; color: var(--text-dim); margin-bottom: 10px; }
+.rsm__early b { color: var(--text); font-weight: 600; }
+
+.rsm__skills { font-size: 14px; line-height: 1.8; color: var(--text-dim); }
+.rsm__skills b { color: var(--text); font-weight: 600; display: block; margin-bottom: 4px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint); }
+
+.rsm__certs { display: flex; flex-wrap: wrap; gap: 8px 10px; }
+.rsm__cert { font-size: 12.5px; color: var(--text-dim); border: 1px solid var(--line-2); padding: 7px 12px; }
+.rsm__cert a { color: var(--text); text-decoration: none; }
+.rsm__cert a:hover { color: var(--accent); }
+.rsm__cert span { color: var(--text-faint); }
+
+@media (max-width: 640px) {
+  .rsm__row { flex-direction: column; align-items: flex-start; gap: 2px; }
+  .rsm__loc, .rsm__dates { white-space: normal; }
+}
+
+/* print: strip chrome, just the résumé, in the light/ATS-friendly order it already is.
+   body::before/::after (the site-wide grid texture + CRT vignette) are
+   position:fixed full-viewport layers — Chrome's print renderer repeats
+   and rasterizes them on EVERY page unless explicitly killed here, which
+   is what was bloating the PDF to several MB across extra blank pages. */
+@media print {
+  .nav, .drawer, #soundToggle, .bigfoot, .rsm__actions, .theme-toggle, .loader,
+  #pt-overlay, .gold-cursor, .gc-trail { display: none !important; }
+  body::before, body::after { content: none !important; display: none !important; }
+  body, .rsm { background: #fff !important; }
+  .rsm { padding-top: 0; }
+  .rsm__name, .rsm__org, .rsm__sec h2 { color: #111 !important; }
+  .rsm__title, .rsm__summary, .rsm__list li, .rsm__role, .rsm__skills, .rsm__early li, .rsm__cert { color: #333 !important; }
+  .rsm__early b, .rsm__cert a { color: #111 !important; }
+  .rsm__head, .rsm__sec h2 { border-color: #ddd !important; }
+  .rsm__eyebrow, .rsm__loc, .rsm__dates { color: #b5502f !important; }
+
+  /* compact: this layout is tuned for web reading (generous line-height,
+     big section gaps) — tighten it in print so it reads as a normal
+     1-2 page résumé instead of spreading across 3+ pages */
+  .rsm__head { padding: 0 0 16px; }
+  .rsm__name { font-size: 30px; }
+  .rsm__title { font-size: 13px; margin-top: 4px; }
+  .rsm__contact { margin-top: 12px; font-size: 11px; }
+  .rsm__body { padding: 18px 0 0; }
+  .rsm__sec { margin-bottom: 16px; }
+  .rsm__sec h2 { font-size: 10px; padding-bottom: 5px; margin-bottom: 10px; }
+  .rsm__summary { font-size: 11.5px; line-height: 1.5; }
+  .rsm__entry { margin-bottom: 12px; }
+  .rsm__org { font-size: 13px; }
+  .rsm__role { font-size: 11.5px; margin-top: 1px; }
+  .rsm__loc, .rsm__dates { font-size: 10.5px; }
+  .rsm__list { margin-top: 6px; }
+  .rsm__list li { font-size: 11.5px; line-height: 1.45; margin-bottom: 3px; padding-left: 14px; }
+  .rsm__early li { font-size: 11.5px; line-height: 1.45; margin-bottom: 6px; }
+  .rsm__skills { font-size: 11.5px; line-height: 1.5; }
+  .rsm__skills b { font-size: 9.5px; margin-bottom: 2px; }
+  .rsm__cert { font-size: 10.5px; padding: 4px 8px; }
+}
+</style>
+<script src="theme-toggle.js"></script>
+<script src="page-transition.js"></script>
+<script src="gold-cursor.js"></script>
+</head>
+<body>
+<script src="loader.js"></script>
+
+<!-- ===== Nav ===== -->
+<nav class="nav">
+  <div class="nav__inner">
+    <a class="brand" href="index.html"><span class="brand__mark" aria-hidden="true"><svg class="brand__logo" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect x="0.5" y="0.5" width="31" height="31" rx="6" fill="#0a0c11" stroke="#ff5b2e" stroke-width="1"/><line x1="7" y1="25" x2="25" y2="7" stroke="#ff5b2e" stroke-width="1" stroke-opacity="0.55"/><text x="6" y="13" font-family="Space Grotesk, system-ui, sans-serif" font-size="10" font-weight="600" fill="#ffffff">G</text><text x="20" y="27" font-family="Space Grotesk, system-ui, sans-serif" font-size="10" font-weight="600" fill="#ffffff">S</text></svg><img class="brand__face" src="assets/portrait.png" alt="" /></span><b>GOURAV</b><span>/SHARMA</span></a>
+    <div class="nav__links">
+      <a href="index.html"><span class="idx">01</span>Index</a>
+      <a href="index.html#work"><span class="idx">02</span>Work</a>
+      <a href="about.html"><span class="idx">03</span>About</a>
+      <a href="blog.html"><span class="idx">04</span>Blogs</a>
+    </div>
+    <a class="btn btn--ghost nav__cta" href="resume.html">Resume ↓</a>
+    <button class="nav__burger" aria-label="Menu"><span></span></button>
+  </div>
+</nav>
+<div class="drawer">
+  <a href="index.html"><span class="idx">01</span>Index</a>
+  <a href="index.html#work"><span class="idx">02</span>Work</a>
+  <a href="about.html"><span class="idx">03</span>About</a>
+  <a href="blog.html"><span class="idx">04</span>Blogs</a>
+  <a href="resume.html"><span class="idx">→</span>Download Resume</a>
+</div>
+
+<main class="rsm" data-screen-label="Résumé">
+  <div class="rsm__head">
+    <div class="wrap">
+      <div class="rsm__eyebrow"><i></i>Résumé · Updated 2026</div>
+      <h1 class="rsm__name">Gourav Sharma</h1>
+      <p class="rsm__title">Product &amp; UI/UX Designer</p>
+
+      <div class="rsm__actions">
+        <a class="rsm__btn rsm__btn--primary" href="uploads/cv.pdf" download>
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v13M7 11l5 5 5-5M5 21h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Download PDF
+        </a>
+        <a class="rsm__btn" href="uploads/Gourav_Sharma_Resume.docx" download>
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v13M7 11l5 5 5-5M5 21h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Download .docx
+        </a>
+        <button class="rsm__btn" type="button" onclick="window.print()">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M6 9V4h12v5M6 18H4a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-2M6 14h12v7H6z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+          Print
+        </button>
+      </div>
+
+      <div class="rsm__contact">
+        <a href="mailto:gouravsharma.ux@gmail.com">gouravsharma.ux@gmail.com</a>
+        <span>·</span>
+        <a href="tel:+916200204324">+91 6200204324</a>
+        <span>·</span>
+        <a href="https://www.linkedin.com/in/gourav-sharmaux/" target="_blank" rel="noopener">LinkedIn</a>
+        <span>·</span>
+        <a href="index.html">Portfolio</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="rsm__body">
+    <div class="wrap">
+
+      <section class="rsm__sec">
+        <h2>Summary</h2>
+        <p class="rsm__summary">Product Designer with 3.5+ years of experience crafting intuitive and scalable digital experiences across SaaS platforms, mobile apps, and web interfaces. Skilled in user research, prototyping, interaction design, and design systems. Led end-to-end design for high-impact features across complex products. Bachelor of Design, National Institute of Fashion Technology, Kolkata.</p>
+      </section>
+
+      <section class="rsm__sec">
+        <h2>Education</h2>
+        <div class="rsm__entry">
+          <div class="rsm__row">
+            <span class="rsm__org"><a href="https://www.nift.ac.in/kolkata/" target="_blank" rel="noopener">National Institute of Fashion Technology</a></span>
+            <span class="rsm__loc">Kolkata, India</span>
+          </div>
+          <div class="rsm__row">
+            <span class="rsm__role">Bachelor of Design — CGPA: 8.2 / 10</span>
+            <span class="rsm__dates">2018 – 2022</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="rsm__sec">
+        <h2>Work Experience</h2>
+
+        <div class="rsm__entry">
+          <div class="rsm__row">
+            <span class="rsm__org">Omniful</span>
+            <span class="rsm__loc">Gurgaon, Haryana</span>
+          </div>
+          <div class="rsm__row">
+            <span class="rsm__role">Product Designer 2</span>
+            <span class="rsm__dates">June 2024 – Present</span>
+          </div>
+          <ul class="rsm__list">
+            <li>Lead UX for TMS and delivery app modules — vehicle management, trip flows, proof-of-delivery, and payment collection — streamlining multi-step driver workflows into single, guided actions.</li>
+            <li>Designed end-to-end Stock on Wheel module across admin and driver apps, enabling mobile inventory dispatch with real-time visibility into vehicle-held stock.</li>
+            <li>Built demand forecasting and redesigned order creation in WMS/OMS, replacing manual planning with a guided, data-backed flow.</li>
+            <li>Revamped company website and landing pages, aligning visual language across every growth surface into one cohesive brand system.</li>
+            <li>Maintain and scale a shared UI library spanning TMS, OMS, WMS, and web, leading a unified design system adopted across all product lines.</li>
+          </ul>
+        </div>
+
+        <div class="rsm__entry">
+          <div class="rsm__row">
+            <span class="rsm__org">Edgistify</span>
+            <span class="rsm__loc">Thane, Maharashtra</span>
+          </div>
+          <div class="rsm__row">
+            <span class="rsm__role">Product Designer 1</span>
+            <span class="rsm__dates">Sep 2023 – June 2024</span>
+          </div>
+          <ul class="rsm__list">
+            <li>Managed the product lifecycle end-to-end, aligning cross-functional teams with client requirements for successful implementation.</li>
+            <li>Designed a B2B model for EdgeOS and built a Route Optimization web app for Bisleri, turning a manual dispatch process into a guided planning flow.</li>
+            <li>Designed a Web-Based Picker App to optimize warehouse processes and reduce pick-path errors.</li>
+          </ul>
+          <div class="rsm__row" style="margin-top:14px;">
+            <span class="rsm__role">Executive UI/UX Designer</span>
+            <span class="rsm__dates">July 2022 – Sep 2023</span>
+          </div>
+          <ul class="rsm__list">
+            <li>Redesigned the company website to showcase its vision, business, and services, improving user experience and engagement.</li>
+            <li>Conducted user research to inform the redesign strategy; developed wireframes, prototypes, and mockups aligned to business objectives.</li>
+            <li>Enhanced B2C features in EdgeOS, applying user-centric design principles to improve usability.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="rsm__sec">
+        <h2>Skills &amp; Tools</h2>
+        <div class="rsm__skills">
+          <b>Practice</b>
+          User Research, Usability Testing, Design Systems, SaaS Platform Design, Prototyping, Wireframing, Visual Design, Mobile App &amp; Website Design, Information Architecture
+          <b style="margin-top:12px;">Tools</b>
+          Figma, Adobe XD, Illustrator, Photoshop, Framer, Excel
+        </div>
+      </section>
+
+      <section class="rsm__sec">
+        <h2>Early Experience</h2>
+        <ul class="rsm__list rsm__early">
+          <li><b>Edgistify</b> — Visual &amp; UI/UX Designer, Feb 2021 – July 2022: Redesigned website UI, created marketing graphics, designed pitch deck, contributed to EdgeOS UI.</li>
+          <li><b>Firstcry</b> — Fashion &amp; Graphic Designer (Graduation Project), Jan – April 2022: Developed graphic prints for AW22/23 and baby products.</li>
+          <li><b>Reliance Retail</b> — Fashion &amp; Graphic Designer (Summer Internship), July – Aug 2021: Designed and launched a men's formal wear collection, including tags, labels, and prints.</li>
+          <li><b>Humourbaba</b> — Graphic Designer, Feb – April 2021: Designed graphics for campus ambassador and social media campaigns.</li>
+          <li><b>LogiBee</b> — Graphic &amp; UI Designer, Feb – May 2021: Designed website UI, visuals, and logos for company and parent brand.</li>
+        </ul>
+      </section>
+
+      <section class="rsm__sec">
+        <h2>Certifications</h2>
+        <div class="rsm__certs">
+          <span class="rsm__cert"><a href="https://www.coursera.org/account/accomplishments/certificate/L8XE5AVNVR59" target="_blank" rel="noopener">Foundations of UX Design</a> <span>— Google</span></span>
+          <span class="rsm__cert"><a href="https://www.coursera.org/account/accomplishments/specialization/certificate/9E4Q6CG6MEV4" target="_blank" rel="noopener">UI/UX Design Specialization</a> <span>— CalArts</span></span>
+          <span class="rsm__cert"><a href="https://www.coursera.org/account/accomplishments/certificate/TV3JTBVUVESS" target="_blank" rel="noopener">Intro to UX Design</a> <span>— Georgia Tech</span></span>
+          <span class="rsm__cert"><a href="https://www.coursera.org/account/accomplishments/verify/EGT4TI563RU4" target="_blank" rel="noopener">Financial Markets</a> <span>— Yale</span></span>
+          <span class="rsm__cert">Private Equity &amp; Venture Capital <span>— Università Bocconi (In Progress)</span></span>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<script src="bigfoot.js"></script>
+<script src="easter-egg.js"></script>
+<script src="click-sfx.js"></script>
+<script src="nav-scramble.js"></script>
+<script src="main.js"></script>
+<script src="rise.js"></script>
+</body>
+</html>

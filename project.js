@@ -98,7 +98,7 @@
         '<a href="about.html"><span class="idx">03</span>About</a>' +
         '<a href="index.html#contact"><span class="idx">04</span>Contact</a>' +
       '</div>' +
-      '<a class="btn btn--ghost nav__cta" href="uploads/cv.pdf" download>Resume ↓</a>' +
+      '<a class="btn btn--ghost nav__cta" href="resume.html">Resume ↓</a>' +
       '<button class="nav__burger" aria-label="Menu"><span></span></button>' +
     '</div></nav>' +
     '<div class="drawer">' +
@@ -106,7 +106,7 @@
       '<a href="index.html#work" class="active"><span class="idx">02</span>Work</a>' +
       '<a href="about.html"><span class="idx">03</span>About</a>' +
       '<a href="index.html#contact"><span class="idx">04</span>Contact</a>' +
-      '<a href="uploads/cv.pdf" download><span class="idx">→</span>Download Resume</a>' +
+      '<a href="resume.html"><span class="idx">→</span>Download Resume</a>' +
     '</div>';
 
   var metaTop =
@@ -300,7 +300,7 @@
       '<div><div class="footer__big">Gourav Sharma<span class="accent">.</span></div>' +
       '<p class="dim" style="margin-top:14px;max-width:36ch;">Product &amp; UI/UX Designer. Designing scalable systems for logistics, SaaS &amp; mobile.</p></div>' +
       '<div class="footer__col"><h4>Navigate</h4>' +
-        '<a href="index.html">Index</a><a href="index.html#work">Work</a><a href="about.html">About</a><a href="blog.html">Blogs</a><a href="glossary.html">Glossary</a><a href="uploads/cv.pdf" download>Resume ↓</a></div>' +
+        '<a href="index.html">Index</a><a href="index.html#work">Work</a><a href="about.html">About</a><a href="blog.html">Blogs</a><a href="glossary.html">Glossary</a><a href="resume.html">Resume ↓</a></div>' +
       '<div class="footer__col"><h4>Connect</h4>' +
         '<a href="mailto:gouravsharma.ux@gmail.com">Email</a>' +
         '<a href="https://www.linkedin.com/in/gourav-sharmaux/" target="_blank" rel="noopener">LinkedIn</a>' +

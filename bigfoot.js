@@ -66,7 +66,7 @@
             '<div class="bigfoot__lbl">Join</div>' +
             '<h3 class="bigfoot__h">Currently designing at Omniful.</h3>' +
             '<p class="bigfoot__desc">Open to senior product / UX roles where systems thinking and craft can compound.</p>' +
-            '<a class="pill" href="uploads/cv.pdf" download>Download r\u00e9sum\u00e9 ' + arrowUR + '</a>' +
+            '<a class="pill" href="resume.html">Download r\u00e9sum\u00e9 ' + arrowUR + '</a>' +
           '</div>' +
 
           '<div>' +
