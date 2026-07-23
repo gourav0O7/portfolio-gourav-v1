@@ -3448,6 +3448,10 @@ html.gold .theme-toggle { background: rgba(242, 168, 30, 0.92); border-color: va
 /* glyph-particle "COMING SOON" canvas (replaces the ghost wordmark) */
 .casecard__soon.has-canvas i { display: none; }
 .casecard__sooncanvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+/* with the binary wordmark filling the card, pin the badge to the bottom
+   so it doesn't sit on top of the letters */
+.casecard__soon.has-canvas b { position: absolute; bottom: 16px; left: 50%; z-index: 4; transform: translateX(-50%); }
+.casecard--soon:hover .casecard__soon.has-canvas b { transform: translateX(-50%); }
 .casecard--soon .casecard__soon { transition: box-shadow .3s ease; }
 .casecard--soon:hover .casecard__soon { box-shadow: inset 0 0 130px color-mix(in srgb, var(--accent) 20%, transparent); }
 
