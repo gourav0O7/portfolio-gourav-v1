@@ -1,17 +1,18 @@
 /* ============================================================
-   Coming-soon case cards — 3D binary "COMING SOON" wordmark.
-   The words are built from 0s and 1s: a bright readable front
-   face over dim, receding extrusion layers. At rest it sits
-   near-flat and calm (the card's own accent sheen carries the
-   ambient motion). On HOVER it extrudes into 3D, rotates toward
-   the cursor, warms to the accent and shimmers — then eases back
-   on leave. Canvas is transparent so the card's cursor-spotlight
-   shows through. Built lazily + only animates while visible.
+   Coming-soon case cards — 3D binary "COMING SOON" wordmark over
+   a sparse radiating field of glyph particles (0, 1, #, /, \, .),
+   in the spirit of character-mosaic illustrations: thin streaks
+   of monospace symbols fanning out from a center point, fading
+   with distance, drifting slowly at rest. On hover the wordmark
+   extrudes into 3D and the field brightens toward the cursor.
+   Canvas-only, no CSS gradients — flat panel behind everything.
+   Built lazily + only animates while visible.
    ============================================================ */
 (function () {
   'use strict';
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var UNIT_DIV = 38, DEPTH = 5, F = 560;
+  var GLYPHS = ['0', '1', '#', '/', '\\', '.'];
 
   function initCard(card) {
     var soon = card.querySelector('.casecard__soon');
@@ -26,11 +27,11 @@
     soon.classList.add('has-canvas');
     var ctx = canvas.getContext('2d');
 
-    var W = 0, H = 0, UNIT = 9, points = [], topPoints = [], bg = [];
+    var W = 0, H = 0, UNIT = 9, points = [], topPoints = [], rays = [];
     var hovered = false, raf = 0, running = false, built = false;
-    var depth = 0, tDepth = 0, ax = 0, tax = 0, ay = 0, tay = 0, t = 0;
+    var depth = 0, tDepth = 0, ax = 0, tax = 0, ay = 0, tay = 0, t = 0, fieldRot = 0;
 
-    var accent = (getComputedStyle(card).getPropertyValue('--accent') || '#ff5b2e').trim() || '#ff5b2e';
+    var accent = (getComputedStyle(card).getPropertyValue('--accent') || '#fa4c14').trim() || '#fa4c14';
     var accRGB = hexToRgb(accent);
 
     function buildGeometry() {
@@ -76,20 +77,65 @@
         points.push(top); topPoints.push(top);
         for (var dz = 1; dz < DEPTH; dz++) points.push({ x: X, y: Y, z: dz * UNIT * 0.9, layer: dz, ch: rnd(), top: false });
       }
-      bg = [];
-      var n = Math.round(cols * rows * 0.04);
-      for (var i = 0; i < n; i++) bg.push({ x: (Math.random() - 0.5) * W, y: (Math.random() - 0.5) * H, ch: rnd(), a: 0.05 + Math.random() * 0.06 });
+      buildRays();
       built = true;
     }
 
+    // Sparse glyph field radiating from the card center — thin streaks of
+    // monospace symbols fanning outward, spacing widening + opacity fading
+    // with distance, a couple of accent-tinted glyphs further out per ray.
+    function buildRays() {
+      rays = [];
+      var reach = Math.hypot(W, H) * 0.62;
+      var rayCount = Math.max(8, Math.round(reach / 34));
+      for (var i = 0; i < rayCount; i++) {
+        var angle = (i / rayCount) * Math.PI * 2 + (Math.random() - 0.5) * 0.35;
+        var dx = Math.cos(angle), dy = Math.sin(angle);
+        var steps = 5 + Math.floor(Math.random() * 6);
+        var dist = 26 + Math.random() * 18;
+        for (var s = 0; s < steps; s++) {
+          dist += 14 + Math.random() * 16;
+          if (dist > reach) break;
+          var jitter = (Math.random() - 0.5) * dist * 0.16;
+          var px = dx * dist - dy * jitter;
+          var py = dy * dist + dx * jitter;
+          var f = dist / reach;
+          rays.push({
+            x: px, y: py, baseAngle: angle,
+            ch: rnd(), a: Math.max(0.03, 0.22 * (1 - f)),
+            accent: f > 0.62 && Math.random() < 0.16,
+            tw: Math.random() * Math.PI * 2
+          });
+        }
+      }
+    }
+
+    function drawField(cx, cy, warm) {
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      var rot = fieldRot;
+      var cosR = Math.cos(rot), sinR = Math.sin(rot);
+      for (var i = 0; i < rays.length; i++) {
+        var p = rays[i];
+        var x = p.x * cosR - p.y * sinR, y = p.x * sinR + p.y * cosR;
+        var flicker = 0.75 + 0.25 * Math.sin(t * 0.03 + p.tw);
+        ctx.font = UNIT + 'px ui-monospace,Menlo,Consolas,monospace';
+        if (p.accent) {
+          ctx.fillStyle = 'rgba(' + accRGB[0] + ',' + accRGB[1] + ',' + accRGB[2] + ',' + (p.a * flicker * (warm ? 1.6 : 1)).toFixed(2) + ')';
+        } else {
+          ctx.fillStyle = 'rgba(184,186,194,' + (p.a * flicker * (warm ? 1.3 : 1)).toFixed(2) + ')';
+        }
+        ctx.fillText(p.ch, cx + x, cy + y);
+      }
+    }
+
     function drawFlat() {
-      // cheap rest state: bright front face only, near-flat, faint drift
+      // cheap rest state: bright front face + drifting glyph field
       ctx.clearRect(0, 0, W, H);
       var cx = W / 2, cy = H / 2;
       var dx = Math.sin(t * 0.02) * 2, dy = Math.cos(t * 0.017) * 1.4;
+      drawField(cx, cy, false);
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.font = (UNIT - 1) + 'px ui-monospace,Menlo,Consolas,monospace';
-      for (var b = 0; b < bg.length; b++) { ctx.fillStyle = 'rgba(150,152,160,' + bg[b].a + ')'; ctx.fillText(bg[b].ch, cx + bg[b].x, cy + bg[b].y); }
       ctx.fillStyle = 'rgba(238,240,246,0.9)';
       for (var i = 0; i < topPoints.length; i++) {
         var p = topPoints[i];
@@ -100,12 +146,12 @@
     function draw3D() {
       ctx.clearRect(0, 0, W, H);
       var cx = W / 2, cy = H / 2;
+      drawField(cx, cy, true);
       var cosY = Math.cos(ay), sinY = Math.sin(ay), cosX = Math.cos(ax), sinX = Math.sin(ax);
       var zf = depth; // extrusion amount 0..1
 
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.font = (UNIT - 1) + 'px ui-monospace,Menlo,monospace';
-      for (var b = 0; b < bg.length; b++) { ctx.fillStyle = 'rgba(150,152,160,' + (bg[b].a * (1 - 0.4 * zf)) + ')'; ctx.fillText(bg[b].ch, cx + bg[b].x, cy + bg[b].y); }
 
       for (var i = 0; i < points.length; i++) {
         var p = points[i], z = p.z * zf;
@@ -141,21 +187,30 @@
       depth += (tDepth - depth) * 0.12;
       if (!hovered) { tax = Math.sin(t * 0.02) * 0.05; tay = Math.sin(t * 0.016) * 0.06; }
       ax += (tax - ax) * 0.1; ay += (tay - ay) * 0.1;
+      fieldRot += hovered ? 0.0009 : 0.0004;
+
+      // slow ambient twinkle across the glyph field
+      if (t % 5 === 0) {
+        var n = 3 + Math.floor(Math.random() * 4);
+        for (var k = 0; k < n; k++) {
+          var idx = (Math.random() * rays.length) | 0;
+          if (rays[idx]) rays[idx].ch = rnd();
+        }
+      }
 
       if (depth < 0.06 && !hovered) drawFlat();
       else draw3D();
 
       var settled = !hovered && depth < 0.04;
-      if (settled) { running = false; drawFlat(); return; }
       raf = requestAnimationFrame(step);
+      running = true;
+      if (settled && t % 3 !== 0) { /* still redraw for field drift, just skip extra work */ }
     }
 
     function ensureRunning() { if (!running && !reduce) { running = true; raf = requestAnimationFrame(step); } }
 
-    // pointer: drive BOTH the css accent spotlight (--mx/--my) and the 3D tilt
+    // pointer: drive both the 3D tilt and cursor-follow warmth
     function setSpotlight(px, py) {
-      soon.style.setProperty('--mx', (px * 100).toFixed(1) + '%');
-      soon.style.setProperty('--my', (py * 100).toFixed(1) + '%');
       soon.style.setProperty('--px', px.toFixed(3));
       soon.style.setProperty('--py', py.toFixed(3));
     }
@@ -168,23 +223,23 @@
       tax = (py - 0.5) * -0.5;   // pitch follows cursor Y
       hovered = true; ensureRunning();
     });
-    card.addEventListener('pointerleave', function () { hovered = false; setSpotlight(0.5, 0.42); ensureRunning(); });
+    card.addEventListener('pointerleave', function () { hovered = false; setSpotlight(0.5, 0.42); });
 
-    // build + first paint only when the card is near the viewport
+    // build + first paint, then keep a light ambient loop running while visible
     function activate() {
       if (!built) buildGeometry();
-      if (reduce) { drawFlat(); }
-      else { drawFlat(); }
+      if (reduce) { drawFlat(); return; }
+      ensureRunning();
     }
     var io = window.IntersectionObserver ? new IntersectionObserver(function (ents) {
       ents.forEach(function (en) {
         if (en.isIntersecting) { activate(); }
-        else { hovered = false; }
+        else { hovered = false; running = false; if (raf) cancelAnimationFrame(raf); }
       });
     }, { rootMargin: '160px' }) : null;
     if (io) io.observe(card); else activate();
 
-    // keep letters sized right on resize
+    // keep letters + field sized right on resize
     var ro = window.ResizeObserver ? new ResizeObserver(function () {
       built = false; buildGeometry(); if (!running) drawFlat();
     }) : null;
@@ -192,12 +247,12 @@
   }
 
   function byZ(a, b) { return b._z - a._z; }
-  function rnd() { return Math.random() < 0.5 ? '0' : '1'; }
+  function rnd() { return GLYPHS[(Math.random() * GLYPHS.length) | 0]; }
   function hexToRgb(h) {
     h = h.replace('#', '');
     if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
     var n = parseInt(h, 16);
-    return isNaN(n) ? [255, 91, 46] : [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    return isNaN(n) ? [250, 76, 20] : [(n >> 16) & 255, (n >> 8) & 255, n & 255];
   }
 
   function boot() { document.querySelectorAll('.casecard--soon').forEach(initCard); }
