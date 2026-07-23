@@ -14,7 +14,10 @@
     document.body.appendChild(sweep);
   }
 
-  /* ---- Nav: scrolled state + active link + drawer ---- */
+  /* ---- Nav: scrolled state + the floating pill's MENU trigger ----
+     The pill's markup (status dots + "MENU" label) is built here rather
+     than duplicated across every page's HTML / the project.js template —
+     one shared enhancement, applied wherever `.nav__inner` shows up. */
   var nav = document.querySelector('.nav');
   function onScroll() {
     if (nav) nav.classList.toggle('scrolled', window.scrollY > 24);
@@ -22,14 +25,41 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
+  var navInner = document.querySelector('.nav__inner');
   var burger = document.querySelector('.nav__burger');
-  if (burger) {
-    burger.addEventListener('click', function () {
-      document.body.classList.toggle('menu-open');
-    });
+  if (navInner && burger && !navInner.querySelector('.nav__status')) {
+    var status = document.createElement('span');
+    status.className = 'nav__status';
+    status.setAttribute('aria-hidden', 'true');
+    status.innerHTML = '<i></i><i></i><i></i><i></i><i></i>';
+    navInner.insertBefore(status, burger);
   }
+  if (burger && !burger.querySelector('.nav__burger-lbl')) {
+    var icoSpan = burger.querySelector('span');
+    var ico = document.createElement('span');
+    ico.className = 'nav__burger-ico';
+    if (icoSpan) { icoSpan.parentNode.insertBefore(ico, icoSpan); ico.appendChild(icoSpan); }
+    var lbl = document.createElement('span');
+    lbl.className = 'nav__burger-lbl';
+    lbl.textContent = 'Menu';
+    burger.appendChild(lbl);
+    burger.setAttribute('aria-expanded', 'false');
+  }
+
+  function closeMenu() {
+    document.body.classList.remove('menu-open');
+    if (burger) { burger.setAttribute('aria-expanded', 'false'); var l = burger.querySelector('.nav__burger-lbl'); if (l) l.textContent = 'Menu'; }
+  }
+  function toggleMenu() {
+    var open = document.body.classList.toggle('menu-open');
+    if (burger) { burger.setAttribute('aria-expanded', String(open)); var l = burger.querySelector('.nav__burger-lbl'); if (l) l.textContent = open ? 'Close' : 'Menu'; }
+  }
+  if (burger) burger.addEventListener('click', toggleMenu);
   document.querySelectorAll('.drawer a').forEach(function (a) {
-    a.addEventListener('click', function () { document.body.classList.remove('menu-open'); });
+    a.addEventListener('click', closeMenu);
+  });
+  window.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && document.body.classList.contains('menu-open')) closeMenu();
   });
 
   /* ---- Scroll reveal ---- */
