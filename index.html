@@ -59,7 +59,7 @@ html.c64-booted .zoomstage { visibility: hidden; }
 .c64-scanlines { position: absolute; inset: 0; pointer-events: none; opacity: 0.30; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.25) 0 1px, transparent 1px 3px); mix-blend-mode: multiply; }
 .hero__scrim { position: absolute; inset: 0; pointer-events: none; opacity: calc(1 - var(--c64-p, 0) * 2.4); background: linear-gradient(95deg, var(--bg) 4%, color-mix(in srgb, var(--bg) 72%, transparent) 30%, transparent 52%); }
 .introstage { height: 150vh; }
-.zoomstage .hero { position: absolute; inset: var(--nav-h) 0 0 0; display: flex; align-items: center; padding: 0; overflow: visible; pointer-events: none; }
+.zoomstage .hero { position: absolute; inset: 0; display: flex; align-items: center; padding: 0; padding-top: var(--nav-h); overflow: visible; pointer-events: none; }
 .zoomstage .hero .wrap { width: 100%; }
 .hero__text { max-width: min(54%, 640px); transform: translateY(calc(var(--c64-p, 0) * -48px)); opacity: calc(1 - var(--c64-p, 0) * 2.6); transition: opacity 0.1s linear; will-change: transform, opacity; pointer-events: auto; }
 .zoomstage .hero__name { font-size: clamp(46px, 7.6vw, 116px); margin-top: var(--sp-6); }
