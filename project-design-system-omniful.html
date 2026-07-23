@@ -191,7 +191,7 @@
         // keep ONLY the overview section, then continue straight into the system
         var secs = gate.querySelectorAll(':scope > section');
         for (var i = 1; i < secs.length; i++) secs[i].remove();
-        if (embed && gate.parentNode) gate.parentNode.insertBefore(embed, gate.nextSibling);
+        if (embed) gate.appendChild(embed);
         clearInterval(pt);
       } else if (++tries > 60) { clearInterval(pt); }
     }, 80);
