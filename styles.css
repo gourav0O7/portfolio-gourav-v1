@@ -222,11 +222,14 @@ main { position: relative; z-index: 2; }
 .cta-band__row { display: inline-flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
 
 /* ---------- Nav ---------- */
-/* ---------- Nav: a floating pill, not a full-width bar ----------
-   The link list + résumé CTA that used to sit in the bar now live
-   ONLY inside the full-screen menu (.drawer, below) — the pill stays
-   this compact at every viewport, so "MENU" is the single entry
-   point everywhere, not a mobile-only fallback. */
+/* ---------- Nav: a compact 3-column pill (dragonfly.xyz's structure/
+   timing, our palette/type/hover-scramble) ----------
+   [logo] [toggle icon] [MENU label] in three equal columns, sharp
+   corners, a barely-there translucent wash. The link list lives in a
+   small anchored dropdown under the pill on desktop, and expands to
+   full width only on narrow viewports (.drawer, below) — never a
+   full-screen takeover. */
+:root { --nav-pill-w: clamp(216px, 26vw, 272px); --nav-ease: cubic-bezier(0.445, 0.05, 0.55, 0.95); }
 .nav {
   position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h);
   z-index: 900;
@@ -235,35 +238,25 @@ main { position: relative; z-index: 2; }
 }
 .nav__inner {
   pointer-events: auto;
-  margin-top: 10px;
-  padding: 7px 8px 7px 16px;
-  display: flex; align-items: center; gap: 14px;
-  border: 1px solid var(--line-2);
-  border-radius: 999px;
-  background: rgba(11,12,16,0.72);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  box-shadow: 0 18px 44px -26px rgba(0,0,0,0.7);
-  transition: background 0.3s var(--ease), border-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  margin-top: 12px;
+  width: var(--nav-pill-w);
+  padding: 11px 14px;
+  display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: center;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.045);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: background 0.3s var(--ease), border-color 0.3s var(--ease);
 }
-.nav.scrolled .nav__inner { background: rgba(11,12,16,0.9); border-color: var(--line-accent, rgba(255,91,46,0.28)); }
+.nav.scrolled .nav__inner { background: rgba(255,255,255,0.07); border-color: var(--line-2); }
+body.menu-open .nav__inner { border-color: var(--line-accent, rgba(255,91,46,0.3)); }
 
-/* status pulse — five ticks that flicker independently, an idle "signal" read */
-.nav__status { display: flex; align-items: center; gap: 3px; padding: 0 2px; }
-.nav__status i {
-  width: 3px; height: 3px; border-radius: 1px; background: var(--accent);
-  opacity: 0.35; animation: navstatus 2.6s ease-in-out infinite;
-}
-.nav__status i:nth-child(1) { animation-delay: 0s; }
-.nav__status i:nth-child(2) { animation-delay: 0.18s; }
-.nav__status i:nth-child(3) { animation-delay: 0.36s; }
-.nav__status i:nth-child(4) { animation-delay: 0.54s; }
-.nav__status i:nth-child(5) { animation-delay: 0.72s; }
-@keyframes navstatus { 0%, 60%, 100% { opacity: 0.3; } 30% { opacity: 1; box-shadow: 0 0 6px var(--accent-glow); } }
-@media (prefers-reduced-motion: reduce) { .nav__status i { animation: none; opacity: 0.6; } }
-.brand {
-  font-family: var(--font-mono); font-weight: 600; font-size: 15px;
-  letter-spacing: 0.04em; display: inline-flex; align-items: center; gap: 10px;
+/* col 1: logo only — no wordmark in the pill. Visually hidden rather
+   than removed, so the name/link is still announced to screen readers. */
+.brand { display: inline-flex; align-items: center; justify-self: start; }
+.nav__inner .brand b, .nav__inner .brand > span:not(.brand__mark) {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap;
 }
 .brand .dot {
   width: 8px; height: 8px; background: var(--accent); border-radius: 50%;
@@ -381,87 +374,96 @@ main { position: relative; z-index: 2; }
 /* on filled buttons/pills the bg is the accent colour, so the glyphs must
    follow the button's own text colour instead of vanishing into it */
 .btn .nav-dud, .pill .nav-dud, .nav__cta .nav-dud { color: currentColor; opacity: 0.55; }
-/* MENU trigger — the pill's one interactive control at every size */
+/* MENU trigger — spans the pill's remaining two grid columns; icon
+   sits where col-2 would center, label where col-3 would right-align,
+   so it reads as three columns even though it's one semantic button. */
 .nav__burger {
-  display: flex; align-items: center; gap: 9px;
-  height: 34px; padding: 0 8px 0 14px;
-  border-radius: 999px; border: 1px solid var(--line-2);
-  background: transparent;
-  transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+  grid-column: 2 / 4;
+  display: flex; align-items: center; justify-content: space-between;
+  background: none; border: 0; padding: 0; height: 100%;
 }
-.nav__burger:hover { border-color: var(--accent); }
-.nav__burger .nav__burger-lbl {
-  font-family: var(--font-mono); font-size: 10.5px; font-weight: 600;
-  letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-dim);
+.nav__burger-ico { position: relative; width: 16px; height: 16px; flex: none; justify-self: center; margin-inline: auto; }
+.nav__burger-dots, .nav__burger-x {
+  position: absolute; top: 50%; left: 50%; width: 3px; height: 3px;
+  transition: opacity 0.3s var(--nav-ease), transform 0.3s var(--nav-ease);
+}
+/* five-dot "hamburger", drawn with one element + box-shadow copies —
+   same reading as dragonfly's icon, in our accent instead of off-white */
+.nav__burger-dots {
+  background: var(--accent);
+  transform: translate(-50%, -50%);
+  box-shadow: -12px 0 var(--accent), -6px 0 var(--accent), 6px 0 var(--accent), 12px 0 var(--accent);
+}
+/* five-dot "×", same technique, corners instead of a row */
+.nav__burger-x {
+  background: var(--text);
+  transform: translate(-50%, -50%) scale(0.5);
+  opacity: 0;
+  box-shadow: -6px -6px var(--text), 6px -6px var(--text), -6px 6px var(--text), 6px 6px var(--text);
+}
+body.menu-open .nav__burger-dots { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+body.menu-open .nav__burger-x { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.nav__burger-lbl {
+  font-family: var(--font-mono); font-size: 10.5px; font-weight: 500;
+  letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-dim);
   transition: color 0.2s var(--ease);
 }
 .nav__burger:hover .nav__burger-lbl { color: var(--text); }
-.nav__burger .nav__burger-ico { position: relative; width: 16px; height: 16px; flex: none; }
-/* scoped to .nav__burger-ico specifically — ".nav__burger span" would also
-   match .nav__burger-lbl (the "Menu" text is a <span> too) and mangle it */
-.nav__burger-ico span {
-  position: absolute; left: 0; top: 50%; width: 16px; height: 1.5px;
-  background: var(--text); transform: translateY(-50%);
-  transition: transform 0.25s var(--ease), opacity 0.25s var(--ease);
+body.menu-open .nav__burger-lbl { color: var(--accent); }
+@media (prefers-reduced-motion: reduce) {
+  .nav__burger-dots, .nav__burger-x { transition: opacity 0.15s linear; }
 }
-.nav__burger-ico span::before, .nav__burger-ico span::after {
-  content: ""; position: absolute; left: 0; width: 16px; height: 1.5px;
-  background: var(--text); transition: transform 0.25s var(--ease), top 0.25s var(--ease);
-}
-.nav__burger-ico span::before { top: -5px; }
-.nav__burger-ico span::after { top: 5px; }
-body.menu-open .nav__burger { border-color: var(--accent); background: var(--accent-soft, rgba(255,91,46,0.1)); }
-body.menu-open .nav__burger-ico span { background: transparent; }
-body.menu-open .nav__burger-ico span::before { top: 0; transform: rotate(45deg); }
-body.menu-open .nav__burger-ico span::after { top: 0; transform: rotate(-45deg); }
 
-/* mobile drawer */
-/* full-screen menu — the ONLY nav surface now, opened from the pill's MENU
-   trigger at every viewport. Each destination is its own bordered row,
-   large and thumb-friendly, with a hover fill sliding in from the left. */
+/* menu dropdown — anchored directly under the pill, same width, NOT a
+   full-screen takeover (dragonfly.xyz's structure); only widens to fill
+   the viewport under the mobile breakpoint below. */
 .drawer {
-  position: fixed; inset: 0; z-index: 850;
-  background: rgba(7,8,11,0.98); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-  display: flex; flex-direction: column; justify-content: center;
-  padding: calc(var(--nav-h) + 18px) var(--gutter) 32px;
-  opacity: 0; pointer-events: none; transition: opacity 0.32s var(--ease);
+  position: fixed; top: calc(var(--nav-h) + 4px); left: 50%;
+  width: var(--nav-pill-w); max-height: calc(100vh - var(--nav-h) - 24px);
+  overflow-y: auto; z-index: 850;
+  background: rgba(7,8,11,0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--line);
+  padding: 2px;
+  opacity: 0; transform: translate(-50%, -6px); pointer-events: none;
+  transition: opacity 0.28s var(--nav-ease), transform 0.28s var(--nav-ease);
 }
-.drawer::before {
-  /* faint wireframe grid, same vocabulary as the rest of the site */
-  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0.5;
-  background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
-  background-size: 64px 64px;
-  -webkit-mask-image: radial-gradient(ellipse 120% 70% at 50% 50%, #000 40%, transparent 90%);
-          mask-image: radial-gradient(ellipse 120% 70% at 50% 50%, #000 40%, transparent 90%);
-}
-body.menu-open .drawer { opacity: 1; pointer-events: auto; }
+body.menu-open .drawer { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
 .drawer a {
-  position: relative; overflow: hidden; z-index: 1;
-  max-width: 720px; width: 100%; margin: 0 auto -1px;
-  font-family: var(--font-display); font-size: clamp(22px, 4.4vw, 34px); font-weight: 600; letter-spacing: -0.01em;
-  padding: 20px clamp(16px, 3vw, 28px);
-  border: 1px solid var(--line); color: var(--text-dim);
-  display: flex; gap: 18px; align-items: baseline;
-  transition: color 0.25s var(--ease), border-color 0.25s var(--ease);
-  opacity: 0; transform: translateY(10px);
+  position: relative; overflow: hidden;
+  font-family: var(--font-display); font-size: 15px; font-weight: 600; letter-spacing: -0.005em;
+  text-transform: uppercase; padding: 13px 14px;
+  border-top: 1px solid var(--line); color: var(--text-dim);
+  display: flex; gap: 10px; align-items: center;
+  background: rgba(255,255,255,0.02);
+  transition: color 0.2s var(--nav-ease), background 0.2s var(--nav-ease);
+  opacity: 0; transform: translateY(6px);
 }
-body.menu-open .drawer a { opacity: 1; transform: translateY(0); transition: opacity 0.4s var(--ease), transform 0.4s var(--ease), color 0.25s var(--ease), border-color 0.25s var(--ease); }
-.drawer a:nth-child(1) { transition-delay: 0.04s; } .drawer a:nth-child(2) { transition-delay: 0.08s; }
-.drawer a:nth-child(3) { transition-delay: 0.12s; } .drawer a:nth-child(4) { transition-delay: 0.16s; }
-.drawer a:nth-child(5) { transition-delay: 0.2s; }
-.drawer a::before {
-  content: ""; position: absolute; inset: 0; background: var(--accent-soft, rgba(255,91,46,0.1));
-  transform: translateX(-100%); transition: transform 0.35s var(--ease); z-index: -1;
+.drawer a:first-child { border-top: 0; }
+body.menu-open .drawer a {
+  opacity: 1; transform: translateY(0);
+  transition: opacity 0.3s var(--nav-ease), transform 0.3s var(--nav-ease), color 0.2s var(--nav-ease), background 0.2s var(--nav-ease);
 }
-.drawer a .idx { font-family: var(--font-mono); font-size: 13px; color: var(--accent); flex: none; }
-.drawer a:hover, .drawer a.active, .drawer a:focus-visible { color: var(--text); border-color: var(--accent); }
-.drawer a:hover::before, .drawer a.active::before { transform: translateX(0); }
+.drawer a:nth-child(1) { transition-delay: 0.03s; } .drawer a:nth-child(2) { transition-delay: 0.06s; }
+.drawer a:nth-child(3) { transition-delay: 0.09s; } .drawer a:nth-child(4) { transition-delay: 0.12s; }
+.drawer a:nth-child(5) { transition-delay: 0.15s; }
+.drawer a .idx { font-family: var(--font-mono); font-size: 10px; font-weight: 500; color: var(--text-faint); flex: none; }
+.drawer a::after {
+  content: "→"; margin-left: auto; flex: none; font-family: var(--font-mono); font-size: 13px;
+  color: var(--text-faint); opacity: 0; transform: translateX(-4px);
+  transition: opacity 0.2s var(--nav-ease), transform 0.2s var(--nav-ease);
+}
+.drawer a:hover, .drawer a.active, .drawer a:focus-visible {
+  color: var(--text); background: var(--accent-soft, rgba(255,91,46,0.1));
+}
+.drawer a:hover::after, .drawer a.active::after, .drawer a:focus-visible::after { opacity: 1; transform: translateX(0); color: var(--accent); }
+/* the résumé link doubles as the panel's closing CTA row */
+.drawer a[href="resume.html"] { color: var(--accent); font-weight: 700; }
 @media (prefers-reduced-motion: reduce) {
   .drawer, .drawer a { transition: opacity 0.15s linear !important; transform: none !important; }
 }
 @media (max-width: 560px) {
-  .drawer { justify-content: flex-start; padding-top: calc(var(--nav-h) + 26px); }
-  .drawer a { font-size: 21px; padding: 16px 16px; }
+  .drawer { width: calc(100vw - 2 * var(--gutter)); }
+  .drawer a { font-size: 16px; padding: 15px 16px; }
 }
 
 /* ---------- Buttons ---------- */

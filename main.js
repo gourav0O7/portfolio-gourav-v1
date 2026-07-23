@@ -14,10 +14,13 @@
     document.body.appendChild(sweep);
   }
 
-  /* ---- Nav: scrolled state + the floating pill's MENU trigger ----
-     The pill's markup (status dots + "MENU" label) is built here rather
-     than duplicated across every page's HTML / the project.js template —
-     one shared enhancement, applied wherever `.nav__inner` shows up. */
+  /* ---- Nav: scrolled state + the pill's MENU trigger ----
+     The trigger's icon (dots -> × on open, both drawn via CSS box-shadow,
+     no extra markup needed) and label are built here rather than
+     duplicated across every page's HTML / the project.js template — one
+     shared enhancement, applied wherever `.nav__inner` shows up. Label
+     stays "Menu" in both states (matches the reference this was modeled
+     on) — only the icon and the pill's border communicate open/closed. */
   var nav = document.querySelector('.nav');
   function onScroll() {
     if (nav) nav.classList.toggle('scrolled', window.scrollY > 24);
@@ -25,20 +28,15 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
-  var navInner = document.querySelector('.nav__inner');
   var burger = document.querySelector('.nav__burger');
-  if (navInner && burger && !navInner.querySelector('.nav__status')) {
-    var status = document.createElement('span');
-    status.className = 'nav__status';
-    status.setAttribute('aria-hidden', 'true');
-    status.innerHTML = '<i></i><i></i><i></i><i></i><i></i>';
-    navInner.insertBefore(status, burger);
-  }
-  if (burger && !burger.querySelector('.nav__burger-lbl')) {
-    var icoSpan = burger.querySelector('span');
+  if (burger && !burger.querySelector('.nav__burger-ico')) {
+    var oldSpan = burger.querySelector('span');
+    if (oldSpan) oldSpan.remove(); // drop the old 3-line hamburger markup
     var ico = document.createElement('span');
     ico.className = 'nav__burger-ico';
-    if (icoSpan) { icoSpan.parentNode.insertBefore(ico, icoSpan); ico.appendChild(icoSpan); }
+    ico.setAttribute('aria-hidden', 'true');
+    ico.innerHTML = '<i class="nav__burger-dots"></i><i class="nav__burger-x"></i>';
+    burger.insertBefore(ico, burger.firstChild);
     var lbl = document.createElement('span');
     lbl.className = 'nav__burger-lbl';
     lbl.textContent = 'Menu';
@@ -46,13 +44,19 @@
     burger.setAttribute('aria-expanded', 'false');
   }
 
+  // Résumé link, wherever it lives in the menu, reads as plain "Resume"
+  document.querySelectorAll('.drawer a[href="resume.html"]').forEach(function (a) {
+    var idx = a.querySelector('.idx'); if (idx) idx.remove();
+    a.textContent = 'Resume';
+  });
+
   function closeMenu() {
     document.body.classList.remove('menu-open');
-    if (burger) { burger.setAttribute('aria-expanded', 'false'); var l = burger.querySelector('.nav__burger-lbl'); if (l) l.textContent = 'Menu'; }
+    if (burger) burger.setAttribute('aria-expanded', 'false');
   }
   function toggleMenu() {
     var open = document.body.classList.toggle('menu-open');
-    if (burger) { burger.setAttribute('aria-expanded', String(open)); var l = burger.querySelector('.nav__burger-lbl'); if (l) l.textContent = open ? 'Close' : 'Menu'; }
+    if (burger) burger.setAttribute('aria-expanded', String(open));
   }
   if (burger) burger.addEventListener('click', toggleMenu);
   document.querySelectorAll('.drawer a').forEach(function (a) {
