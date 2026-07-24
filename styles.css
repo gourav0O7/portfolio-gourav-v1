@@ -1,3 +1,14 @@
+/* ---------- Heading font trial (Retro Pixel) ----------
+   Kept as an additive @font-face + separate --font-heading var so
+   Space Grotesk stays fully intact and untouched below — reverting
+   is just changing --font-heading back to var(--font-display). */
+@font-face {
+  font-family: 'Retro Pixel';
+  src: url('assets/fonts/RetroPixel.otf') format('opentype');
+  font-weight: 400;
+  font-display: swap;
+}
+
 /* Blogs hidden for now (reversible — delete this rule to restore) */
 a[href="blog.html"]{display:none!important;}
 /* ============================================================
@@ -39,6 +50,9 @@ a[href="blog.html"]{display:none!important;}
 
   --font-display: 'Space Grotesk', system-ui, sans-serif;
   --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+  /* headings only — Space Grotesk above is untouched; revert by pointing
+     this back at var(--font-display) */
+  --font-heading: 'Retro Pixel', var(--font-display);
 
   --maxw: 1280px;
   --gutter: clamp(20px, 5vw, 64px);
@@ -82,6 +96,11 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
+/* headings only — everything else (body copy, mono UI) is untouched */
+h1, h2, h3, h4, h5, h6,
+.hero__name, .section-title, .casecard__title, .cta-band h2,
+.allwork__title, .footer__big, .p-title, .remember .line,
+.pcard__title, .cvr__title, .disc__t { font-family: var(--font-heading); }
 img { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; cursor: pointer; background: none; border: none; }
