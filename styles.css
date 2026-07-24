@@ -2268,8 +2268,13 @@ body::after {
 /* 07 — Hero ambient.
    A very soft warm halo behind the hero name. Adds depth, anchors the
    page to a single light source — instantly more cinematic. */
+/* MUST stay transparent. On the homepage .hero is a full-screen absolutely
+   positioned layer INSIDE #zoomStage, stacked directly over the 3D canvas —
+   giving it any opaque background (e.g. var(--bg)) hides the whole Commodore
+   scene behind solid black. The ambient glow gradients were removed on
+   purpose; the correct "no glow" value is transparent, not a solid fill. */
 .hero {
-  background: var(--bg);
+  background: transparent;
 }
 
 /* 08 — Stat panels: hairline top sheen + softened depth.
