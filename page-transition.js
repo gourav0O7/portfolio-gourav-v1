@@ -1,8 +1,12 @@
 /* ============================================================
-   PAGE TRANSITION — curtain wipe.
-   A flat panel slides up from the bottom to fully cover the page
-   (EXIT), then continues sliding up and off the top to reveal the
-   new page underneath (ENTER) — a real curtain, not just a fade.
+   PAGE TRANSITION — masked text reveal (matches gustaffurusten.se).
+   No full-screen curtain. Headings/eyebrows slide within their own
+   clipped box, staggered line by line: EXIT slides each up and out
+   (translateY 0 -> -150%), ENTER slides each up into place
+   (translateY 150% -> 0). The rest of the page does a quick plain
+   fade alongside it. No new DOM — overflow is toggled on each
+   heading's own parent and the transform lives on the heading
+   itself, so nothing else needs restructuring.
    ============================================================ */
 (function () {
   'use strict';
@@ -10,51 +14,87 @@
   var reduce = window.matchMedia &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  var EXIT_MS = 480;
-  var ENTER_MS = 480;
-  var EASE = 'cubic-bezier(.65,0,.35,1)';
+  var STAGGER_MS = 45;
+  var LINE_MS = 620;
+  var EXTRA_FADE_MS = 260;   // rest-of-page fade, layered under the line reveal
+
+  var HEADING_SEL = 'h1, h2, .eyebrow, .hero__readout';
 
   var style = document.createElement('style');
   style.textContent =
-    '#pt-curtain{position:fixed;inset:0;z-index:99999;background:var(--bg,#000);' +
-      'pointer-events:none;transform:translateY(100%)}' +
-    '#pt-curtain.pt-cover{transition:transform ' + (EXIT_MS / 1000) + 's ' + EASE + ';transform:translateY(0)}' +
-    '#pt-curtain.pt-reveal{transition:transform ' + (ENTER_MS / 1000) + 's ' + EASE + ';transform:translateY(-100%)}' +
-    '#pt-curtain.pt-hide{display:none}';
+    '.pt-mask{overflow:hidden!important}' +
+    '.pt-line{display:inline-block;will-change:transform}' +
+    'html.pt-fading body{opacity:0}' +
+    'body{transition:opacity ' + (EXTRA_FADE_MS / 1000) + 's ease}';
   (document.head || document.documentElement).appendChild(style);
 
-  var cv = document.createElement('div');
-  cv.id = 'pt-curtain';
-  cv.className = 'pt-hide';
-  document.documentElement.appendChild(cv);
+  function headings() {
+    return Array.prototype.slice.call(document.querySelectorAll(HEADING_SEL))
+      .filter(function (el) { return el.offsetParent !== null; });
+  }
 
-  /* ---- ENTER: curtain starts covering the new page, slides up off it ---- */
+  function maskEls(els) {
+    var out = [];
+    for (var i = 0; i < els.length; i++) {
+      var el = els[i];
+      var parent = el.parentElement;
+      if (parent) parent.classList.add('pt-mask');
+      el.classList.add('pt-line');
+      out.push({ el: el, parent: parent });
+    }
+    return out;
+  }
+
+  /* ---- ENTER: lines start pushed down inside their clipped box, ease up ---- */
   var noEnter = document.documentElement.hasAttribute('data-pt-no-enter');
   function playEnter() {
-    if (reduce || noEnter) { cv.className = 'pt-hide'; return; }
-    cv.className = 'pt-cover'; // instantly covering (no transition on first paint)
-    void cv.offsetWidth;
+    if (reduce || noEnter) return;
+    var lines = maskEls(headings());
+    if (!lines.length) return;
+    lines.forEach(function (l) {
+      l.el.style.transition = 'none';
+      l.el.style.transform = 'translateY(150%)';
+    });
+    void document.body.offsetWidth;
     requestAnimationFrame(function () {
-      cv.className = 'pt-reveal';
-      setTimeout(function () { cv.className = 'pt-hide'; }, ENTER_MS + 30);
+      requestAnimationFrame(function () {
+        lines.forEach(function (l, i) {
+          l.el.style.transition = 'transform ' + (LINE_MS / 1000) + 's cubic-bezier(.16,1,.3,1) ' + (i * STAGGER_MS / 1000) + 's';
+          l.el.style.transform = 'translateY(0)';
+        });
+        var maxDelay = lines.length * STAGGER_MS + LINE_MS;
+        setTimeout(function () {
+          lines.forEach(function (l) {
+            l.el.style.transition = ''; l.el.style.transform = '';
+            l.el.classList.remove('pt-line');
+            if (l.parent) l.parent.classList.remove('pt-mask');
+          });
+        }, maxDelay + 60);
+      });
     });
   }
   if (document.readyState !== 'loading') playEnter();
   else window.addEventListener('DOMContentLoaded', playEnter);
-  window.addEventListener('pageshow', function (e) {
-    if (e.persisted) playEnter();
-  });
+  window.addEventListener('pageshow', function (e) { if (e.persisted) playEnter(); });
 
-  /* ---- EXIT: curtain slides up from the bottom to cover, then navigate ---- */
+  /* ---- EXIT: lines slide up and out, rest of page fades, then navigate ---- */
   var leaving = false;
   function playExit(href) {
     if (leaving) return;
     leaving = true;
     if (reduce) { window.location.href = href; return; }
-    cv.className = ''; // reset to translateY(100%), below the fold
-    void cv.offsetWidth;
-    cv.className = 'pt-cover';
-    setTimeout(function () { window.location.href = href; }, EXIT_MS);
+
+    var lines = maskEls(headings());
+    lines.forEach(function (l, i) {
+      l.el.style.transition = 'transform ' + (LINE_MS / 1000) + 's cubic-bezier(.4,0,.2,1) ' + (i * STAGGER_MS / 1000) + 's';
+      requestAnimationFrame(function () { l.el.style.transform = 'translateY(-150%)'; });
+    });
+    requestAnimationFrame(function () {
+      document.documentElement.classList.add('pt-fading');
+    });
+
+    var total = Math.max(EXTRA_FADE_MS, lines.length * STAGGER_MS + LINE_MS * 0.55);
+    setTimeout(function () { window.location.href = href; }, total);
   }
 
   function isInternal(a) {
