@@ -44,9 +44,9 @@
     var ctx = canvas.getContext('2d');
 
     var W = 0, H = 0, scale = 60, GS = 6, F = 560;
-    var shell = [], grains = [], rays = [];
+    var shell = [], grains = [], rays = [], pile = [];
     var hovered = false, raf = 0, running = false, built = false;
-    var warm = 0, tWarm = 0, t = 0, fieldRot = 0;
+    var fillLevel = 0, tFill = 0, t = 0, fieldRot = 0;
     var ay = 0, tay = 0, ax = -0.32, tax = -0.32;
 
     var accent = (getComputedStyle(card).getPropertyValue('--accent') || '#fa4c14').trim() || '#fa4c14';
@@ -99,12 +99,30 @@
       };
     }
     function stepGrains() {
-      var mul = hovered ? 2.0 : 1.0;
+      var mul = hovered ? 4.2 : 1.0;                        // hover: sand rushes down fast
       for (var i = 0; i < grains.length; i++) {
         var g = grains[i];
         g.y += g.speed * mul;
         if (g.y > HALF * 0.92) { grains[i] = newGrain(false); continue; }
         if (Math.random() < 0.05) g.ch = rnd();
+      }
+    }
+
+    // static pile points filling the bottom bulb's interior — revealed from
+    // the bottom up as fillLevel rises, so hovering visibly fills the glass
+    function buildPile() {
+      pile = [];
+      var yStep = Math.max(0.035, GS * 0.7 / scale);
+      for (var y = NECK_Y; y <= HALF * 0.92; y += yStep) {
+        var maxR = radiusAt(y) * 0.82;
+        var rings = Math.max(1, Math.round(maxR * scale / (GS * 0.85)));
+        for (var ir = 0; ir <= rings; ir++) {
+          var rr = maxR * (ir / (rings + 1));
+          var nn = Math.max(3, Math.round(2 * Math.PI * rr * scale / (GS * 0.8)));
+          for (var j = 0; j < nn; j++) {
+            pile.push({ r: rr, a: (j / nn) * Math.PI * 2 + y * 2.6, y: y, ch: rnd(), tw: Math.random() * 6.28 });
+          }
+        }
       }
     }
 
@@ -145,6 +163,7 @@
 
       buildShell();
       buildGrains();
+      buildPile();
       buildRays();
       built = true;
     }
@@ -171,7 +190,7 @@
         var p = rays[i];
         var rx = p.x * fc - p.y * fs, ry = p.x * fs + p.y * fc;
         var fl = 0.75 + 0.25 * Math.sin(t * 0.03 + p.tw);
-        ctx.fillStyle = 'rgba(180,182,190,' + (p.a * fl * (1 + warm * 0.5)).toFixed(2) + ')';
+        ctx.fillStyle = 'rgba(180,182,190,' + (p.a * fl).toFixed(2) + ')';
         ctx.fillText(p.ch, cx + rx, cy + ry);
       }
 
@@ -198,6 +217,19 @@
         var pg = project(gx, gy, gz, cosY, sinY, cosX, sinX);
         pts.push({ sx: pg.sx, sy: pg.sy, s: pg.s, z: pg.z, ch: g.ch, kind: 'g' });
       }
+      // settled sand pile — fills upward from the bottom as fillLevel rises
+      if (fillLevel > 0.01) {
+        var pileTop = HALF * 0.92 - fillLevel * (HALF * 0.92 - NECK_Y);
+        for (var pI = 0; pI < pile.length; pI++) {
+          var sgp = pile[pI];
+          if (sgp.y < pileTop) continue;
+          var px = sgp.r * Math.cos(sgp.a) * scale;
+          var pz = sgp.r * Math.sin(sgp.a) * scale;
+          var py = sgp.y * scale;
+          var pp = project(px, py, pz, cosY, sinY, cosX, sinX);
+          pts.push({ sx: pp.sx, sy: pp.sy, s: pp.s, z: pp.z, ch: sgp.ch, tw: sgp.tw, kind: 'p' });
+        }
+      }
 
       pts.sort(function (a, b) { return b.z - a.z; });      // far → near
 
@@ -207,7 +239,10 @@
         var fs2 = Math.max(4, GS * pt.s);
         ctx.font = fs2.toFixed(1) + 'px ui-monospace,Menlo,Consolas,monospace';
         if (pt.kind === 'g') {
-          ctx.fillStyle = 'rgba(' + accRGB[0] + ',' + accRGB[1] + ',' + accRGB[2] + ',' + (0.62 + warm * 0.32).toFixed(2) + ')';
+          ctx.fillStyle = 'rgba(' + accRGB[0] + ',' + accRGB[1] + ',' + accRGB[2] + ',0.7)';
+        } else if (pt.kind === 'p') {
+          var pshim = 0.85 + 0.15 * Math.sin(t * 0.04 + pt.tw);
+          ctx.fillStyle = 'rgba(' + accRGB[0] + ',' + accRGB[1] + ',' + accRGB[2] + ',' + (0.78 * pshim).toFixed(2) + ')';
         } else {
           // depth shade: front bright, back dim → reads as a solid volume
           var dn = (pt.z - zNear) / (zFar - zNear);          // 0 near → 1 far
@@ -215,10 +250,7 @@
           if (pt.cap) base *= 1.05;
           var shim = 0.9 + 0.1 * Math.sin(t * 0.03 + pt.tw);
           var a = Math.max(0.12, base * shim);
-          var wr = Math.round(214 + (accRGB[0] - 214) * warm);
-          var wg = Math.round(216 + (accRGB[1] - 216) * warm);
-          var wb = Math.round(222 + (accRGB[2] - 222) * warm);
-          ctx.fillStyle = 'rgba(' + wr + ',' + wg + ',' + wb + ',' + a.toFixed(2) + ')';
+          ctx.fillStyle = 'rgba(214,216,222,' + a.toFixed(2) + ')';
         }
         ctx.fillText(pt.ch, cx + pt.sx, cy + pt.sy);
       }
@@ -226,8 +258,8 @@
 
     function step() {
       t++;
-      tWarm = hovered ? 1 : 0;
-      warm += (tWarm - warm) * 0.1;
+      tFill = hovered ? 1 : 0;
+      fillLevel += (tFill - fillLevel) * (hovered ? 0.045 : 0.03); // fills fast, drains a bit slower
       fieldRot += hovered ? 0.0008 : 0.0004;
 
       // continuous idle spin around Y; hover spins faster + tilts toward cursor
