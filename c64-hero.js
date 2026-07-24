@@ -96,8 +96,10 @@ function boot(){
   );
   glow.position.copy(SCREEN_CENTER).add(new THREE.Vector3(0,0,0.04));
 
-  let model = null, ready = false, c64Loaded = 0;
+  let model = null, ready = false, c64Loaded = 0, c64Settled = false;
   function onC64Ready(gltf){
+    if (c64Settled) return; // already timed out and fell back — don't add a model on top of that
+    c64Settled = true;
     model = gltf.scene;
     model.traverse(o=>{
       if (o.isMesh && o.material){
@@ -117,10 +119,20 @@ function boot(){
     onScroll();
   }
   function onC64Fail(err){
+    if (c64Settled) return;
+    c64Settled = true;
     console.warn('C64 load failed', err);
     document.documentElement.classList.add('c64-failed');
     AL.c64Done = true; reportProgress();
   }
+  // Safety net: on a slow connection the ~18MB model can still be mid-download
+  // when the loader's own MAX_MS cap gives up and reveals the page — without
+  // this, the visitor is left staring at empty space where the computer
+  // should be, indefinitely (nothing ever retries). Same pattern as the video
+  // reel's existing fallback: if it hasn't resolved in a reasonable window,
+  // fall back to the static c64-failed state instead of hanging forever.
+  setTimeout(function () { if (!c64Settled) onC64Fail(new Error('c64 model load timed out')); }, 14000);
+
   fetchWithProgress('assets/commodore64.glb', KNOWN_SIZES.c64, (deltaBytes, total) => {
     c64Loaded += deltaBytes;
     AL.bytesLoaded += deltaBytes;
@@ -128,6 +140,7 @@ function boot(){
     setLoader(AL.c64);
     reportProgress();
   }).then((buf) => {
+    if (c64Settled) return; // already timed out and fell back — don't parse+add a model on top of it
     new GLTFLoader().parse(buf, '', onC64Ready, onC64Fail);
   }).catch(onC64Fail);
 

@@ -1,18 +1,21 @@
+/* ---------- Fonts ----------
+   Matched to gustaffurusten.se's type system with openly-licensed
+   equivalents (their numeral face, Orbit Mono, is a private Framer
+   upload with no public license, so it's swapped for DSEG7 Classic —
+   same digital-counter cut-corner look, SIL-OFL licensed).
+   @import MUST be the first rule(s) in the file — anything above
+   these lines (even a single selector) makes browsers drop every
+   @import below it silently, with no console warning. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Doto:wght@400..900&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap');
+@import url('https://cdn.jsdelivr.net/npm/dseg@0.46.0/css/dseg.css');
+
 /* Blogs hidden for now (reversible — delete this rule to restore) */
 a[href="blog.html"]{display:none!important;}
 /* ============================================================
    AMBER TERMINAL — shared design system
    Gourav Sharma · Product & UI/UX Designer portfolio
    ============================================================ */
-
-/* ---------- Fonts ----------
-   Matched to gustaffurusten.se's type system with openly-licensed
-   equivalents (their numeral face, Orbit Mono, is a private Framer
-   upload with no public license, so it's swapped for DSEG7 Classic —
-   same digital-counter cut-corner look, SIL-OFL licensed). */
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Doto:wght@400..900&display=swap');
-@import url('https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap');
-@import url('https://cdn.jsdelivr.net/npm/dseg@0.46.0/css/dseg.css');
 
 /* ---------- Tokens ---------- */
 :root {
