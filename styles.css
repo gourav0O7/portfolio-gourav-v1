@@ -253,7 +253,12 @@ main { position: relative; z-index: 2; }
   z-index: 900;
   display: flex; align-items: center; justify-content: center;
   pointer-events: none; /* only the pill itself is interactive */
+  transform: translateY(0);
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
 }
+/* hidden while scrolling down; snaps back instantly on scroll up */
+.nav.nav--hidden { transform: translateY(-130%); }
+body.menu-open .nav.nav--hidden { transform: translateY(0); } /* never hide while the menu is open */
 .nav__inner {
   pointer-events: auto;
   margin-top: 12px;

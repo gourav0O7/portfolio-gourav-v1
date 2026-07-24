@@ -22,8 +22,16 @@
      stays "Menu" in both states (matches the reference this was modeled
      on) — only the icon and the pill's border communicate open/closed. */
   var nav = document.querySelector('.nav');
+  var lastY = window.scrollY;
   function onScroll() {
-    if (nav) nav.classList.toggle('scrolled', window.scrollY > 24);
+    if (!nav) return;
+    var y = window.scrollY;
+    nav.classList.toggle('scrolled', y > 24);
+    // hide on scroll down, snap back instantly on scroll up — only past the
+    // pill's own height so it doesn't flicker right at the top of the page
+    if (y > lastY && y > 120) nav.classList.add('nav--hidden');
+    else if (y < lastY) nav.classList.remove('nav--hidden');
+    lastY = y;
   }
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
