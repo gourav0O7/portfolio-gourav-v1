@@ -1,9 +1,8 @@
 /* ============================================================
-   PAGE TRANSITION — simple fade + slide curtain, Framer-style.
-   Replaces the old canvas "voiceprint wave" overlay with a plain,
-   fast fade: EXIT covers the page with a flat bg fade-in, then
-   navigates; ENTER fades the cover away while the incoming content
-   eases up 14px -> 0. No canvas, no per-frame drawing.
+   PAGE TRANSITION — curtain wipe.
+   A flat panel slides up from the bottom to fully cover the page
+   (EXIT), then continues sliding up and off the top to reveal the
+   new page underneath (ENTER) — a real curtain, not just a fade.
    ============================================================ */
 (function () {
   'use strict';
@@ -11,45 +10,50 @@
   var reduce = window.matchMedia &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  var EXIT_MS = 320;
-  var ENTER_MS = 420;
+  var EXIT_MS = 480;
+  var ENTER_MS = 480;
+  var EASE = 'cubic-bezier(.65,0,.35,1)';
 
   var style = document.createElement('style');
   style.textContent =
-    '#pt-overlay{position:fixed;inset:0;z-index:99999;background:var(--bg,#000);' +
-      'pointer-events:none;opacity:0;transition:opacity ' + (EXIT_MS / 1000) + 's cubic-bezier(.4,0,.2,1)}' +
-    '#pt-overlay.pt-show{opacity:1}' +
-    '#pt-overlay.pt-hide{display:none}' +
-    'html.pt-entering body{opacity:0;transform:translateY(14px)}' +
-    'body{transition:opacity ' + (ENTER_MS / 1000) + 's cubic-bezier(.16,1,.3,1),' +
-      'transform ' + (ENTER_MS / 1000) + 's cubic-bezier(.16,1,.3,1)}';
+    '#pt-curtain{position:fixed;inset:0;z-index:99999;background:var(--bg,#000);' +
+      'pointer-events:none;transform:translateY(100%)}' +
+    '#pt-curtain.pt-cover{transition:transform ' + (EXIT_MS / 1000) + 's ' + EASE + ';transform:translateY(0)}' +
+    '#pt-curtain.pt-reveal{transition:transform ' + (ENTER_MS / 1000) + 's ' + EASE + ';transform:translateY(-100%)}' +
+    '#pt-curtain.pt-hide{display:none}';
   (document.head || document.documentElement).appendChild(style);
 
-  var ov = document.createElement('div');
-  ov.id = 'pt-overlay';
-  ov.className = 'pt-hide';
-  document.documentElement.appendChild(ov);
+  var cv = document.createElement('div');
+  cv.id = 'pt-curtain';
+  cv.className = 'pt-hide';
+  document.documentElement.appendChild(cv);
 
-  /* ---- ENTER: page starts nudged down + transparent, eases into place ---- */
+  /* ---- ENTER: curtain starts covering the new page, slides up off it ---- */
   var noEnter = document.documentElement.hasAttribute('data-pt-no-enter');
-  if (!reduce && !noEnter) {
-    document.documentElement.classList.add('pt-entering');
+  function playEnter() {
+    if (reduce || noEnter) { cv.className = 'pt-hide'; return; }
+    cv.className = 'pt-cover'; // instantly covering (no transition on first paint)
+    void cv.offsetWidth;
     requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
-        document.documentElement.classList.remove('pt-entering');
-      });
+      cv.className = 'pt-reveal';
+      setTimeout(function () { cv.className = 'pt-hide'; }, ENTER_MS + 30);
     });
   }
+  if (document.readyState !== 'loading') playEnter();
+  else window.addEventListener('DOMContentLoaded', playEnter);
+  window.addEventListener('pageshow', function (e) {
+    if (e.persisted) playEnter();
+  });
 
-  /* ---- EXIT: fade a flat cover over the page, then navigate ---- */
+  /* ---- EXIT: curtain slides up from the bottom to cover, then navigate ---- */
   var leaving = false;
   function playExit(href) {
     if (leaving) return;
     leaving = true;
     if (reduce) { window.location.href = href; return; }
-    ov.classList.remove('pt-hide');
-    void ov.offsetWidth;
-    ov.classList.add('pt-show');
+    cv.className = ''; // reset to translateY(100%), below the fold
+    void cv.offsetWidth;
+    cv.className = 'pt-cover';
     setTimeout(function () { window.location.href = href; }, EXIT_MS);
   }
 
