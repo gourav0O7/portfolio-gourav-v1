@@ -5,8 +5,14 @@ a[href="blog.html"]{display:none!important;}
    Gourav Sharma · Product & UI/UX Designer portfolio
    ============================================================ */
 
-/* ---------- Fonts ---------- */
-/* Fonts load via parallel <link> in each page <head> (preconnect already set) — avoids render-blocking @import chain. */
+/* ---------- Fonts ----------
+   Matched to gustaffurusten.se's type system with openly-licensed
+   equivalents (their numeral face, Orbit Mono, is a private Framer
+   upload with no public license, so it's swapped for DSEG7 Classic —
+   same digital-counter cut-corner look, SIL-OFL licensed). */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Doto:wght@400..900&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap');
+@import url('https://cdn.jsdelivr.net/npm/dseg@0.46.0/css/dseg.css');
 
 /* ---------- Tokens ---------- */
 :root {
@@ -40,8 +46,10 @@ a[href="blog.html"]{display:none!important;}
   --chrome: linear-gradient(180deg, #f3f4f6 0%, #d6d8db 28%, #8d9097 52%, #c9ccd1 78%, #5b5e66 100%);
   --chrome-glow: rgba(26, 18, 6, 0.35);
 
-  --font-display: 'Space Grotesk', system-ui, sans-serif;
-  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+  --font-display: 'Inter', system-ui, sans-serif;
+  --font-mono:    'Doto', ui-monospace, monospace;
+  --font-body:    'Switzer', system-ui, sans-serif;
+  --font-digit:   'DSEG7 Classic', 'Doto', ui-monospace, monospace;
 
   --maxw: 1280px;
   --gutter: clamp(20px, 5vw, 64px);
@@ -78,13 +86,20 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; scroll-padding-t
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 400;
   line-height: 1.55;
   letter-spacing: 0.01em;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
+/* Headings keep the display face; body text (paragraphs, descriptions)
+   inherits Switzer from body above — mirrors gustaffurusten.se's split
+   between its heading face and Switzer body copy. */
+h1, h2, h3, h4, h5, h6,
+.hero__name, .section-title, .casecard__title, .cta-band h2,
+.allwork__title, .footer__big, .p-title, .remember .line,
+.pcard__title, .cvr__title, .disc__t { font-family: var(--font-display); }
 img { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; cursor: pointer; background: none; border: none; }
@@ -3376,8 +3391,8 @@ html.gold .theme-toggle { background: rgba(242, 168, 30, 0.92); border-color: va
 
 .casecard__no {
   position: absolute; top: 12px; right: 14px; z-index: 3;
-  font-family: var(--font-mono); font-size: 11px; font-weight: 600;
-  letter-spacing: 0.18em; color: var(--accent);
+  font-family: var(--font-digit); font-size: 12px; font-weight: 400;
+  letter-spacing: 0.1em; color: var(--accent);
   text-shadow: 0 0 14px var(--accent-glow);
   font-variant-numeric: tabular-nums;
 }
