@@ -149,7 +149,9 @@
     c.resume();
     pulse = startLoadingPulse();
   }
-  ['pointerdown', 'pointermove', 'keydown', 'wheel', 'touchstart', 'click'].forEach(function (ev) {
+  // Only real intent-to-interact gestures unlock audio — NOT pointermove,
+  // otherwise merely moving the cursor over the page starts the loader sound.
+  ['pointerdown', 'keydown', 'wheel', 'touchstart', 'click'].forEach(function (ev) {
     window.addEventListener(ev, unlockAudio, { passive: true });
   });
 
