@@ -481,8 +481,115 @@ html.c64-failed .introstage { display: none; }
   </aside>
 </div>
 
-<!-- ===== Testimonials ===== -->
-<section class="section tag-pin" id="words" data-screen-label="Home / Testimonials" data-tagpin>
+<!-- ===== Testimonials — DISK ARCHIVE / CRT READER =====
+     Retro-computer reissue of the references section: pick a labelled 3.5"
+     floppy on the left, it "loads" that recommendation onto a phosphor CRT
+     on the right. Pure-CSS radio toggling — no JS dependency. Matches the
+     site's Commodore-era theme (the old luggage-tag version is kept below,
+     hidden, per request). -->
+<section class="section" id="words" data-screen-label="Home / Testimonials">
+  <div class="wrap">
+    <div class="head-row reveal">
+      <div>
+        <div class="eyebrow">// References</div>
+        <h2 class="section-title">What the people<br />I worked with say.</h2>
+      </div>
+      <div class="head-row__count">[ 04 RECOMMENDATIONS // 2024 ]</div>
+    </div>
+
+    <div class="diskarc reveal">
+      <!-- selection state: one radio per recommendation -->
+      <input type="radio" name="rec" id="rec01" class="diskarc__radio" checked />
+      <input type="radio" name="rec" id="rec02" class="diskarc__radio" />
+      <input type="radio" name="rec" id="rec03" class="diskarc__radio" />
+      <input type="radio" name="rec" id="rec04" class="diskarc__radio" />
+
+      <!-- floppy rack -->
+      <div class="diskarc__rack" role="tablist" aria-label="Recommendations">
+        <label for="rec01" class="disk">
+          <span class="disk__shutter" aria-hidden="true"><i></i></span>
+          <span class="disk__face">
+            <span class="disk__no">REC//001</span>
+            <span class="disk__name">Kamal Kishore Kumawat</span>
+            <span class="disk__role">Co-Founder · Edgistify</span>
+          </span>
+        </label>
+        <label for="rec02" class="disk">
+          <span class="disk__shutter" aria-hidden="true"><i></i></span>
+          <span class="disk__face">
+            <span class="disk__no">REC//002</span>
+            <span class="disk__name">Nikhil Shrikhande</span>
+            <span class="disk__role">Brand Partnerships · Mancunianz</span>
+          </span>
+        </label>
+        <label for="rec03" class="disk">
+          <span class="disk__shutter" aria-hidden="true"><i></i></span>
+          <span class="disk__face">
+            <span class="disk__no">REC//003</span>
+            <span class="disk__name">Rohit Patil</span>
+            <span class="disk__role">Supply-Chain Entrepreneur</span>
+          </span>
+        </label>
+        <label for="rec04" class="disk">
+          <span class="disk__shutter" aria-hidden="true"><i></i></span>
+          <span class="disk__face">
+            <span class="disk__no">REC//004</span>
+            <span class="disk__name">Pankaj Malviya</span>
+            <span class="disk__role">Edgistify · Ex-TCS</span>
+          </span>
+        </label>
+      </div>
+
+      <!-- CRT reader -->
+      <div class="diskarc__crt">
+        <div class="crt">
+          <div class="crt__screen">
+            <span class="crt__scan" aria-hidden="true"></span>
+            <span class="crt__glare" aria-hidden="true"></span>
+            <div class="crt__head">
+              <span class="crt__drive" aria-hidden="true"></span>
+              <span class="crt__path">REC.LOG — DRIVE A:</span>
+              <span class="crt__cur" aria-hidden="true">_</span>
+            </div>
+
+            <article class="rec" data-for="rec01">
+              <div class="rec__who">KAMAL KISHORE KUMAWAT</div>
+              <div class="rec__meta">Co-Founder, Edgistify · EE @ IIT Bombay</div>
+              <p class="rec__quote">&ldquo;Gourav's impact has been <b>profound</b> — a dynamic blend of talent across product design, UI/UX innovation and product management. He consistently surpasses expectations, crafting intuitive interfaces that <b>deeply resonate with our users</b>.&rdquo;</p>
+              <div class="rec__rel">&gt; RELATION: MANAGED DIRECTLY</div>
+            </article>
+            <article class="rec" data-for="rec02">
+              <div class="rec__who">NIKHIL SHRIKHANDE</div>
+              <div class="rec__meta">Head — Brand Partnerships · Mancunianz</div>
+              <p class="rec__quote">&ldquo;Gourav was my main point of contact in design and tech. He has an exceptional ability to <b>grasp intricate concepts and translate them into visually compelling materials</b> — his pitch decks conveyed our message with meticulous attention to detail.&rdquo;</p>
+              <div class="rec__rel">&gt; RELATION: CROSS-TEAM</div>
+            </article>
+            <article class="rec" data-for="rec03">
+              <div class="rec__who">ROHIT PATIL</div>
+              <div class="rec__meta">Supply Chain Entrepreneur · 12y D2C Fulfillment</div>
+              <p class="rec__quote">&ldquo;I've worked with Gourav for <b>over 2 years</b>. His holistic approach and sense of design is noteworthy. A good team player — always open to suggestions and <b>ready to help</b>.&rdquo;</p>
+              <div class="rec__rel">&gt; RELATION: SENIOR</div>
+            </article>
+            <article class="rec" data-for="rec04">
+              <div class="rec__who">PANKAJ MALVIYA</div>
+              <div class="rec__meta">Edgistify · Ex-TCS · NIT Rourkela</div>
+              <p class="rec__quote">&ldquo;<b>An exceptional UI/UX designer</b> whose creativity elevated our projects. Gourav combines aesthetic appeal with seamless user experience — designs that are visually pleasing and genuinely <b>enhance usability</b>.&rdquo;</p>
+              <div class="rec__rel">&gt; RELATION: SAME TEAM</div>
+            </article>
+          </div>
+          <div class="crt__foot">
+            <span class="crt__model">PORT-1541 · PHOSPHOR CRT</span>
+            <span class="crt__hint">◂ insert a disk</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Testimonials (legacy luggage-tag version) — kept per request, hidden.
+     data-tagpin removed so tag-rail.js does not run layout on a hidden node. -->
+<section class="section tag-pin" id="words-legacy" data-screen-label="Home / Testimonials" hidden aria-hidden="true">
   <div class="wrap tag-pin__head">
     <div class="head-row reveal">
       <div>

@@ -3133,6 +3133,214 @@ html.gold .theme-toggle { background: rgba(242, 168, 30, 0.92); border-color: va
 }
 
 /* ============================================================
+   TESTIMONIALS — DISK ARCHIVE / CRT READER
+   Pick a labelled 3.5" floppy on the left; it loads that
+   recommendation onto a phosphor CRT on the right. All state
+   is driven by four sibling radios (.diskarc__radio) via the
+   general-sibling (~) combinator — no JS.
+   ============================================================ */
+.diskarc {
+  margin-top: clamp(28px, 5vh, 56px);
+  display: grid;
+  grid-template-columns: minmax(240px, 340px) 1fr;
+  gap: clamp(20px, 3vw, 40px);
+  align-items: start;
+}
+/* radios are visually hidden but stay in the a11y/focus order */
+.diskarc__radio {
+  position: absolute; width: 1px; height: 1px;
+  opacity: 0; pointer-events: none; margin: 0;
+}
+
+/* --- floppy rack --- */
+.diskarc__rack { display: flex; flex-direction: column; gap: 12px; }
+
+.disk {
+  position: relative;
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  align-items: stretch;
+  gap: 12px;
+  padding: 12px 14px 12px 12px;
+  border: 1px solid var(--line-2);
+  border-radius: 4px 4px 10px 4px;   /* clipped top-right = write-notch corner */
+  background:
+    linear-gradient(180deg, var(--bg-3) 0%, var(--bg-2) 100%);
+  cursor: pointer;
+  transition: transform .28s var(--ease), border-color .28s var(--ease),
+              background .28s var(--ease), box-shadow .28s var(--ease);
+}
+.disk::after {                        /* clipped top-right corner */
+  content: ""; position: absolute; top: -1px; right: -1px;
+  border-width: 0 14px 14px 0;
+  border-style: solid;
+  border-color: var(--bg) var(--bg) transparent transparent;
+  border-right-color: transparent;
+}
+.disk:hover { transform: translateX(4px); border-color: var(--line-accent); }
+
+/* the metal shutter block on the left of a 3.5" disk */
+.disk__shutter {
+  position: relative;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #6b6f78 0%, #3a3d44 55%, #23262c 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.15);
+}
+.disk__shutter i {
+  position: absolute; inset: 6px 8px auto 8px; height: 42%;
+  border-radius: 1px;
+  background: linear-gradient(180deg, #2a2c31, #17181c);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.6);
+}
+.disk__face { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.disk__no {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em;
+  color: var(--text-faint);
+}
+.disk__name {
+  font-family: var(--font-display); font-weight: 600; font-size: 14.5px;
+  color: var(--text); line-height: 1.15;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.disk__role {
+  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .02em;
+  color: var(--text-dim);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* selected disk: pushed in ("inserted"), accent label + drive glow */
+#rec01:checked ~ .diskarc__rack .disk[for="rec01"],
+#rec02:checked ~ .diskarc__rack .disk[for="rec02"],
+#rec03:checked ~ .diskarc__rack .disk[for="rec03"],
+#rec04:checked ~ .diskarc__rack .disk[for="rec04"] {
+  transform: translateX(10px);
+  border-color: var(--accent);
+  background: linear-gradient(180deg, var(--accent-soft), var(--bg-2));
+  box-shadow: -3px 0 0 0 var(--accent), 0 8px 24px rgba(0,0,0,.4);
+}
+#rec01:checked ~ .diskarc__rack .disk[for="rec01"] .disk__no,
+#rec02:checked ~ .diskarc__rack .disk[for="rec02"] .disk__no,
+#rec03:checked ~ .diskarc__rack .disk[for="rec03"] .disk__no,
+#rec04:checked ~ .diskarc__rack .disk[for="rec04"] .disk__no { color: var(--accent-2); }
+
+/* keyboard focus ring on the disk whose radio is focused */
+.diskarc__radio:focus-visible ~ .diskarc__rack .disk { outline: none; }
+#rec01:focus-visible ~ .diskarc__rack .disk[for="rec01"],
+#rec02:focus-visible ~ .diskarc__rack .disk[for="rec02"],
+#rec03:focus-visible ~ .diskarc__rack .disk[for="rec03"],
+#rec04:focus-visible ~ .diskarc__rack .disk[for="rec04"] {
+  outline: 2px solid var(--accent); outline-offset: 3px;
+}
+
+/* --- CRT reader --- */
+.diskarc__crt { position: relative; }
+.crt {
+  border: 1px solid var(--line-2);
+  border-radius: 14px;
+  padding: 14px;
+  background: linear-gradient(180deg, #16171b, #0c0d10);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.05), 0 22px 50px rgba(0,0,0,.5);
+}
+.crt__screen {
+  position: relative; overflow: hidden;
+  border-radius: 10px;
+  min-height: 300px;
+  padding: 20px clamp(20px, 3vw, 34px) 22px;
+  background:
+    radial-gradient(120% 130% at 50% 0%, rgba(250,76,20,.10), transparent 60%),
+    #050403;
+  box-shadow: inset 0 0 60px rgba(0,0,0,.9), inset 0 0 0 1px rgba(250,76,20,.14);
+}
+/* scanlines */
+.crt__scan {
+  position: absolute; inset: 0; pointer-events: none; z-index: 3;
+  background: repeating-linear-gradient(
+    180deg, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.28) 2px 3px);
+  mix-blend-mode: multiply;
+}
+/* soft corner glare */
+.crt__glare {
+  position: absolute; inset: 0; pointer-events: none; z-index: 4;
+  background: radial-gradient(80% 55% at 78% 8%, rgba(255,255,255,.06), transparent 60%);
+}
+.crt__head {
+  position: relative; z-index: 2;
+  display: flex; align-items: center; gap: 9px;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em;
+  color: var(--accent-2);
+  padding-bottom: 12px; margin-bottom: 14px;
+  border-bottom: 1px solid rgba(250,76,20,.20);
+  text-shadow: 0 0 8px rgba(250,76,20,.45);
+}
+.crt__drive {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent); box-shadow: 0 0 10px var(--accent-glow);
+  animation: crt-drive 1.6s steps(1) infinite;
+}
+@keyframes crt-drive { 0%,60%{opacity:1;} 61%,100%{opacity:.25;} }
+.crt__path { flex: 1; }
+.crt__cur { animation: crt-blink 1s steps(1) infinite; }
+@keyframes crt-blink { 0%,50%{opacity:1;} 51%,100%{opacity:0;} }
+
+/* recommendation panels — hidden by default, shown when its radio is checked */
+.rec {
+  position: relative; z-index: 2;
+  display: none;
+}
+#rec01:checked ~ .diskarc__crt .rec[data-for="rec01"],
+#rec02:checked ~ .diskarc__crt .rec[data-for="rec02"],
+#rec03:checked ~ .diskarc__crt .rec[data-for="rec03"],
+#rec04:checked ~ .diskarc__crt .rec[data-for="rec04"] {
+  display: block;
+  animation: crt-load .5s var(--ease) both;
+}
+@keyframes crt-load {
+  0%   { opacity: 0; filter: brightness(2.2); transform: translateY(4px); }
+  40%  { opacity: 1; }
+  100% { opacity: 1; filter: brightness(1); transform: none; }
+}
+.rec__who {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: .14em;
+  color: var(--accent-2); margin-bottom: 4px;
+  text-shadow: 0 0 8px rgba(250,76,20,.4);
+}
+.rec__meta {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: .02em;
+  color: #c98a5f; margin-bottom: 16px;
+}
+.rec__quote {
+  font-family: var(--font-display); font-weight: 400;
+  font-size: clamp(16px, 1.5vw, 20px); line-height: 1.6;
+  color: #ffb98f;
+  text-shadow: 0 0 10px rgba(250,76,20,.28);
+}
+.rec__quote b { color: #ffd9c4; font-weight: 600; }
+.rec__rel {
+  margin-top: 18px;
+  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .1em;
+  color: var(--accent); opacity: .85;
+}
+.crt__foot {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 4px 2px;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em;
+  color: var(--text-faint);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crt__drive, .crt__cur { animation: none; }
+  #rec01:checked ~ .diskarc__crt .rec[data-for="rec01"],
+  #rec02:checked ~ .diskarc__crt .rec[data-for="rec02"],
+  #rec03:checked ~ .diskarc__crt .rec[data-for="rec03"],
+  #rec04:checked ~ .diskarc__crt .rec[data-for="rec04"] { animation: none; }
+}
+
+@media (max-width: 760px) {
+  .diskarc { grid-template-columns: 1fr; }
+  .crt__hint { display: none; }
+}
+
+/* ============================================================
    CASE SCROLL — horizontal side-scroll / drag work gallery.
    A row of tall instrument-panel cards holding the project
    art; scroll the wheel, drag, or swipe to move through them.
