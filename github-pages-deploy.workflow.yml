@@ -1,0 +1,54 @@
+name: Deploy minified site to Pages
+
+# ⚠️ TO ENABLE (two manual steps — this file is parked at the repo root because
+#    the CLI credential can't push into .github/workflows/):
+#   1. Move this file to  .github/workflows/deploy.yml  and commit it with a
+#      token/login that has the `workflow` scope (e.g. push from your machine,
+#      or add it via the GitHub web UI → Add file).
+#   2. Repo → Settings → Pages → Build and deployment → Source → "GitHub Actions".
+#
+# Builds the minified copy (build.mjs → dist/) and publishes it to GitHub Pages.
+# Until step 2 is done, the existing "Deploy from branch" build keeps serving the
+# (un-minified) sources — which already include every fix — so the live site is
+# never affected by parking this here.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never run two Pages deploys at once; let an in-flight one finish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

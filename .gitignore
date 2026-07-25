@@ -2,3 +2,7 @@
 # Cloudflare Worker local cache/state (contains account id)
 cf-worker/.wrangler/
 cf-worker/node_modules/
+
+# Build tooling for the minified production deploy (see build.mjs)
+node_modules/
+dist/
