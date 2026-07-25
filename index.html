@@ -128,6 +128,14 @@ html.c64-failed .introstage { display: none; }
 @media (max-width: 720px) {
   .hero__text { max-width: 100%; }
   .zoomstage .hero__name { font-size: clamp(52px, 15vw, 96px) !important; }
+  /* On portrait the 3D computer sits behind the lower half of the intro copy.
+     Anchor the text to the top so the paragraph clears the computer instead of
+     overlapping it, and switch the scrim to a vertical top-dark wash so any
+     remaining overlap stays readable. Keeps the full 3D hero (no downgrade). */
+  .zoomstage .hero { align-items: flex-start; }
+  .zoomstage .hero .wrap { padding-top: clamp(10px, 4vh, 36px); }
+  .hero__scrim { background: linear-gradient(180deg, var(--bg) 0%, color-mix(in srgb, var(--bg) 80%, transparent) 36%, transparent 64%) !important; }
+  .zoomstage .hero__intro { text-shadow: 0 2px 16px var(--bg), 0 0 4px var(--bg); }
 }
 /* Stats grid: 4 cols crams + clips on phones — step down to 2, then keep the
    NIFT chip readable. */
@@ -289,7 +297,7 @@ html.c64-failed .introstage { display: none; }
         <div class="casescroll__track" data-track>
         <a class="casecard" data-frame="matte" href="project-demand-forecasting.html">
           <div class="casecard__media">
-            <div class="casecard__mock"><figure class="mbook mbook--card"><div class="mbook__lid"><div class="mbook__bezel"><span class="mbook__notch"></span><div class="mbook__screen"><div style="position:relative;overflow:hidden;background:#f7f7f7;aspect-ratio:1512/920;"><iframe loading="lazy" scrolling="no" tabindex="-1" title="Demand Forecasting dashboard" src="demand-live/10-forecasts.html" style="position:absolute;top:0;left:0;width:1512px;height:920px;border:0;transform-origin:0 0;pointer-events:none;background:#f7f7f7;" onload="var v=this.parentElement;var f=this;function fit(){if(v.clientWidth)f.style.transform='scale('+(v.clientWidth/1512)+')';}fit();window.addEventListener('resize',fit);"></iframe></div></div></div></div><div class="mbook__base"><span class="mbook__dip"></span></div></figure></div>
+            <div class="casecard__mock"><figure class="mbook mbook--card"><div class="mbook__lid"><div class="mbook__bezel"><span class="mbook__notch"></span><div class="mbook__screen"><div style="position:relative;overflow:hidden;background:#f7f7f7;aspect-ratio:1512/920;"><iframe loading="lazy" scrolling="no" tabindex="-1" title="Demand Forecasting dashboard" data-src="demand-live/10-forecasts.html" data-poster="assets/proto-demand.png" style="position:absolute;top:0;left:0;width:1512px;height:920px;border:0;transform-origin:0 0;pointer-events:none;background:#f7f7f7;" onload="var v=this.parentElement;var f=this;function fit(){if(v.clientWidth)f.style.transform='scale('+(v.clientWidth/1512)+')';}fit();window.addEventListener('resize',fit);"></iframe></div></div></div></div><div class="mbook__base"><span class="mbook__dip"></span></div></figure></div>
             <style>
             .mbook--card{position:relative;z-index:4;width:100%;max-width:none;margin:0 auto;filter:drop-shadow(0 30px 40px rgba(0,0,0,.4));}
             .casecard[href="project-demand-forecasting.html"] .casecard__mock{display:flex;align-items:center;justify-content:center;width:100%;height:100%;padding:10px;box-sizing:border-box;z-index:4;}
@@ -317,7 +325,7 @@ html.c64-failed .introstage { display: none; }
           <div class="casecard__media casecard__media--device">
             <div class="casecard__device">
               <div class="ccphone"><span class="ccphone__island"></span><div class="ccphone__screen">
-                <iframe loading="lazy" scrolling="no" tabindex="-1" title="Collect Payment — live screen" src="prototype-collect-payment.html?seed=filled&static=1&bare=1"></iframe>
+                <iframe loading="lazy" scrolling="no" tabindex="-1" title="Collect Payment — live screen" data-src="prototype-collect-payment.html?seed=filled&static=1&bare=1" data-poster="assets/proto-payment.png"></iframe>
               </div></div>
             </div>
             <span class="casecard__scan" aria-hidden="true"></span>
@@ -335,7 +343,7 @@ html.c64-failed .introstage { display: none; }
           <div class="casecard__media casecard__media--device">
             <div class="casecard__device">
               <div class="ccphone ccphone--otp"><span class="ccphone__island"></span><div class="ccphone__screen">
-                <iframe loading="lazy" scrolling="no" tabindex="-1" title="Bulk OTP verification" src="prototype-bulk-otp.html?seed=select&static=1&bare=1"></iframe>
+                <iframe loading="lazy" scrolling="no" tabindex="-1" title="Bulk OTP verification" data-src="prototype-bulk-otp.html?seed=select&static=1&bare=1" data-poster="assets/proto-otp.png"></iframe>
               </div></div>
             </div>
             <span class="casecard__scan" aria-hidden="true"></span>
@@ -353,7 +361,7 @@ html.c64-failed .introstage { display: none; }
           <div class="casecard__media casecard__media--device">
             <div class="casecard__device">
               <div class="ccphone"><span class="ccphone__island"></span><div class="ccphone__screen">
-                <iframe loading="lazy" scrolling="no" tabindex="-1" title="Bisleri driver app — live screen" src="prototype-driver-bisleri.html?seed=start&static=1&bare=1"></iframe>
+                <iframe loading="lazy" scrolling="no" tabindex="-1" title="Bisleri driver app — live screen" data-src="prototype-driver-bisleri.html?seed=start&static=1&bare=1" data-poster="assets/proto-bisleri.png"></iframe>
               </div></div>
             </div>
             <span class="casecard__scan" aria-hidden="true"></span>
@@ -693,6 +701,25 @@ html.c64-failed .introstage { display: none; }
     if (window.PROJECT_ART && window.PROJECT_ART[k]) el.innerHTML = window.PROJECT_ART[k];
   });
   if (typeof window.initMockups === 'function') window.initMockups(document);
+</script>
+<script>
+  /* Prototype embeds: load the LIVE iframe only on a real desktop pointer.
+     On phones/tablets, swap in a pre-rendered poster instead so the embedded
+     mini-apps never download on mobile. The markup uses data-src (not src)
+     so nothing loads until this decides. */
+  (function () {
+    var live = window.matchMedia('(min-width: 861px) and (hover: hover) and (pointer: fine)').matches;
+    document.querySelectorAll('iframe[data-src]').forEach(function (f) {
+      var poster = f.getAttribute('data-poster');
+      if (live || !poster) { f.src = f.getAttribute('data-src'); return; }
+      var img = document.createElement('img');
+      img.src = poster;
+      img.alt = f.getAttribute('title') || '';
+      img.loading = 'lazy'; img.decoding = 'async';
+      img.className = 'proto-poster';
+      f.parentNode.replaceChild(img, f);
+    });
+  })();
 </script>
 <script src="case-covers.js"></script>
 <script src="case-scroll.js"></script>
