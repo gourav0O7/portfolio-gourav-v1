@@ -22,7 +22,17 @@
     if (cap && c.tagName === 'A' && c.getAttribute('href') && !cap.querySelector('.casecard__cta')) {
       var cta = document.createElement('span');
       cta.className = 'casecard__cta';
-      cta.innerHTML = '<span class="casecard__cta-t">View case study</span><span class="casecard__cta-arw" aria-hidden="true">\u2192</span>';
+      // Label as a DIRECT text node (not wrapped in its own span) \u2014 that's
+      // what nav-scramble.js's directLabel() reads to decide if an element
+      // is scramble-eligible. Wrapping it broke that silently: nav-scramble
+      // was already explicitly wired to this class, but always found an
+      // empty label and bailed, so this CTA never got the hover-scramble
+      // every other CTA on the site has. Only the trailing arrow is a
+      // nested span (directLabel() ignores non-text children by design).
+      cta.appendChild(document.createTextNode('View case study'));
+      var arw = document.createElement('span');
+      arw.className = 'casecard__cta-arw'; arw.setAttribute('aria-hidden', 'true'); arw.textContent = '\u2192';
+      cta.appendChild(arw);
       cap.appendChild(cta);
     }
   });

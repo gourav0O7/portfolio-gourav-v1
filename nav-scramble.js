@@ -113,10 +113,22 @@
       wire(el, { force: true, trigger: el.closest('.feature') || el });
     });
     document.querySelectorAll('.casecard__cta').forEach(function (el) {
-      wire(el, { force: true });
+      wire(el, { force: true, trigger: el.closest('.casecard') || el });
     });
     document.querySelectorAll('.workmore__txt').forEach(function (el) {
       wire(el, { force: true, trigger: el.closest('.workmore__cta') || el });
+    });
+    // Case-card "View case" CTA: same treatment as .stackcard__cta above —
+    // it's a <span> inside the whole-card <a>, not its own link, so it needs
+    // an explicit wire + a trigger on the ancestor card.
+    document.querySelectorAll('.casecard__go').forEach(function (el) {
+      wire(el, { force: true, trigger: el.closest('.casecard') || el });
+    });
+    // "All work" overlay rows: the whole row is one <a> with everything in
+    // nested spans, so the default a/button pass above finds no direct text
+    // to scramble and skips it silently. Wire the title explicitly instead.
+    document.querySelectorAll('.awrow__main b').forEach(function (el) {
+      wire(el, { force: true, trigger: el.closest('.awrow') || el });
     });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

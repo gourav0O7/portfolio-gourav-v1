@@ -490,6 +490,14 @@ body.menu-open .drawer a {
 .btn--primary::before { background: #fff; }
 .btn--primary:hover { color: #0a0c11; }
 .btn--ghost { border-color: var(--line); }
+/* Compact modifier — SAME component, same states (fill-wipe, arrow-shift,
+   scramble-eligible since it's still real text), just sized for tight
+   corners (case-card meta rows, overlay rows) instead of full sections.
+   This is the ONE shared CTA now: .btn / .btn--ghost / .btn--primary /
+   .btn--sm are all the same base + modifiers, nothing else should hand-roll
+   its own button look. */
+.btn--sm { padding: 7px 12px; min-height: 30px; font-size: 10.5px; gap: 6px; }
+.btn--sm .arrow, .btn--sm svg { width: 12px; height: 12px; }
 
 /* ---------- Footer ---------- */
 .footer { position: relative; z-index: 2; border-top: 1px solid var(--line); padding-block: 56px 40px; }
@@ -3425,18 +3433,15 @@ html.gold .theme-toggle { background: rgba(242, 168, 30, 0.92); border-color: va
   font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.14em;
   text-transform: uppercase; color: var(--text-faint);
 }
-.casecard__go {
-  width: 34px; height: 34px; flex-shrink: 0;
-  display: grid; place-items: center;
-  border: 1px solid var(--line-2); border-radius: 50%;
-  color: var(--text-dim);
-  transition: color 0.35s var(--ease), border-color 0.35s var(--ease), background 0.35s var(--ease), transform 0.35s var(--ease);
-}
-.casecard__go svg { transition: transform 0.3s var(--ease); }
-.casecard:hover .casecard__go {
-  color: var(--accent); border-color: var(--accent); background: var(--accent-soft);
-}
-.casecard:hover .casecard__go svg { transform: translate(2px, -2px); }
+/* .casecard__go now carries .btn .btn--ghost .btn--sm in markup — the SAME
+   shared CTA component used in Contact/workmore, not a bespoke icon circle.
+   This block only adds the card-specific bits: no border by default (reads
+   quieter until the whole card is hovered) and triggering off the card
+   instead of its own :hover, since the entire card is the link. */
+.casecard__go { flex-shrink: 0; border-color: transparent; }
+.casecard:hover .casecard__go { border-color: var(--accent); color: #0a0c11; }
+.casecard:hover .casecard__go::before { transform: translateY(0); }
+.casecard:hover .casecard__go .arrow { transform: translateX(4px); }
 
 /* ---- "Coming soon" card (non-link placeholder in the work rail) ---- */
 .casecard--soon { cursor: default; }
@@ -3866,7 +3871,7 @@ html.gold .theme-toggle { background: rgba(242, 168, 30, 0.92); border-color: va
   content: ""; position: absolute; inset: 0; background: #fff; opacity: 0;
   transition: opacity 0.3s var(--ease);
 }
-.casestack .casecard__cta-t, .casestack .casecard__cta-arw { position: relative; z-index: 1; }
+.casestack .casecard__cta-arw { position: relative; z-index: 1; }
 .casestack .casecard__cta-arw { transition: transform 0.3s var(--ease); }
 .casestack .casecard:hover .casecard__cta { transform: translateY(-2px); box-shadow: 0 12px 30px -10px var(--accent-glow); }
 .casestack .casecard:hover .casecard__cta::before { opacity: 0.14; }
