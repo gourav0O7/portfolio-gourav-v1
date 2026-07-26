@@ -61,6 +61,19 @@ function fetchWithProgress(url, fallbackTotal, onChunk){
   });
 }
 
+// Back/forward-cache guard: when this page is restored from bfcache (e.g.
+// the visitor hits Back after opening another page from here), the browser
+// commonly frees the GPU context of a hidden/cached tab to save memory —
+// the WebGL canvas comes back blank (computer + video just "disappear")
+// because this script's setup already ran once and never re-executes on a
+// bfcache restore. Rebuilding a live Three.js scene + GLTF model + video
+// texture in place is fragile; a full reload is what actually happens on a
+// fresh visit anyway, so it's the simplest reliable fix — and it's cheap
+// here since the model/video are already warm in the HTTP cache.
+window.addEventListener('pageshow', function (e) {
+  if (e.persisted) location.reload();
+});
+
 const canvas = document.getElementById('c64Canvas');
 const stage  = document.getElementById('introStage');
 if (canvas && stage) boot();
@@ -70,6 +83,18 @@ function easeInOut(t){ return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2; }
 function lerp(a,b,t){ return a + (b-a)*t; }
 
 function boot(){
+  // Same "computer disappears" symptom can happen without a bfcache restore
+  // at all — mobile Safari in particular reclaims a page's WebGL context as
+  // soon as it's backgrounded (switch app / lock screen / just tab away),
+  // and hands back a dead context with no visible signal other than a blank
+  // canvas. Reload is the same simple, reliable recovery as the bfcache
+  // guard above, for the same reason (rebuilding this whole scene in place
+  // isn't worth the fragility, and the assets are already warm in cache).
+  canvas.addEventListener('webglcontextlost', function (e) {
+    e.preventDefault();
+    location.reload();
+  });
+
   const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true, preserveDrawingBuffer:true });
   renderer.setClearColor(0x000000, 0);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
