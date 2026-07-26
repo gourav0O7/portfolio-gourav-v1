@@ -528,8 +528,22 @@
     var knob = el.querySelector('.slide__knob'), fill = el.querySelector('.slide__fill');
     var max = el.clientWidth - knob.offsetWidth - 10;
     var startX = null, x = 0, active = false;
+    // The whole device is CSS-scaled (--scale, see fit() below) to fit the
+    // viewport — always <1 inside the case-study "live prototype" modal,
+    // which embeds this at a fixed device size in a smaller box. Pointer
+    // coordinates arrive in real (scaled) screen pixels, but max/transform/
+    // fill width are all in the device's own unscaled layout pixels. Without
+    // correcting for that, a real finger/mouse movement of e.g. 200px only
+    // "counts" as 200px even though the knob's own track is fewer physical
+    // pixels wide, so the drag distance no longer matches the visual track
+    // (it takes way more or way less travel than the bar's length to reach
+    // the end) — that mismatch is what read as "the slider doesn't work".
+    function scale(){
+      var v = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--scale'));
+      return v > 0 ? v : 1;
+    }
     function move(cx){
-      x = Math.max(0, Math.min(max, cx - startX));
+      x = Math.max(0, Math.min(max, (cx - startX) / scale()));
       knob.style.transform = 'translateX(' + x + 'px)';
       fill.style.width = (x + 54) + 'px';
     }
