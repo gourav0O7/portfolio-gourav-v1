@@ -83,16 +83,40 @@ function easeInOut(t){ return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2; }
 function lerp(a,b,t){ return a + (b-a)*t; }
 
 function boot(){
-  // Same "computer disappears" symptom can happen without a bfcache restore
-  // at all — mobile Safari in particular reclaims a page's WebGL context as
-  // soon as it's backgrounded (switch app / lock screen / just tab away),
-  // and hands back a dead context with no visible signal other than a blank
-  // canvas. Reload is the same simple, reliable recovery as the bfcache
-  // guard above, for the same reason (rebuilding this whole scene in place
-  // isn't worth the fragility, and the assets are already warm in cache).
+  // ---- self-healing against WebGL context loss (the "computer + video just
+  // disappear" bug) ----
+  // The scene renders once at boot; if the GPU context is later dropped, the
+  // canvas silently goes blank and nothing rebuilds it. Two things drop it:
+  //   • mobile Safari reclaims a backgrounded page's context (switch app,
+  //     lock screen, even just tab away) and frequently DOESN'T fire
+  //     'webglcontextlost' when you return — you just get a blank canvas.
+  //   • the browser can drop any context under GPU memory pressure.
+  // Rebuilding a live Three.js scene + GLTF model + video texture in place is
+  // fragile; a clean reload is exactly what a fresh visit does, and the model
+  // /video are already warm in the HTTP cache, so it's cheap. recoverReload()
+  // reloads at most once per "dead" episode — a session flag blocks any
+  // reload loop on a genuinely unsupported device, and it's cleared again the
+  // moment a frame renders successfully (see frame()), so each real loss can
+  // recover on its own.
+  function recoverReload() {
+    try {
+      if (sessionStorage.getItem('c64Reloaded') === '1') return; // already tried — don't loop
+      sessionStorage.setItem('c64Reloaded', '1');
+    } catch (e) {}
+    location.reload();
+  }
   canvas.addEventListener('webglcontextlost', function (e) {
     e.preventDefault();
-    location.reload();
+    recoverReload();
+  });
+  // Catch the silent case (context reclaimed while hidden, no event on return):
+  // on every return-to-visible, if the context is actually dead, recover.
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState !== 'visible') return;
+    try {
+      var gl = renderer.getContext();
+      if (gl && gl.isContextLost && gl.isContextLost()) recoverReload();
+    } catch (e) {}
   });
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true, preserveDrawingBuffer:true });
@@ -200,6 +224,7 @@ function boot(){
   const _tA = POSE_A.target.clone();
   const tmpTarget = new THREE.Vector3();
   let t = 0;
+  let guardCleared = false;   // clear the reload guard once, after the first good frame
   function frame(){
     requestAnimationFrame(frame);
     t += 0.016;
@@ -223,6 +248,11 @@ function boot(){
       glow.material.opacity = 0.15 + 0.55 * e;
       under.intensity = 4 + 8*e;
       renderer.render(scene, camera);
+      // A frame rendered → the context is healthy. Clear the recovery guard so
+      // that if the context is lost AGAIN later, recoverReload() may reload
+      // once more (the guard only exists to stop a reload loop on a device
+      // that can never render at all).
+      if (!guardCleared) { guardCleared = true; try { sessionStorage.removeItem('c64Reloaded'); } catch (e) {} }
     }
 
     document.documentElement.style.setProperty('--c64-p', progress.toFixed(4));
