@@ -107,4 +107,36 @@
 
 <script>(function(){var c=document.querySelector('.subnav-collapse');if(c)c.addEventListener('click',function(){var sh=c.closest('.shell');if(sh){sh.classList.toggle('navcollapsed');window.dispatchEvent(new Event('resize'));}});})();</script>
 <script>(function(){function m(){var de=document.documentElement,b=document.body;var a=de.style.minHeight,c=b.style.minHeight;de.style.minHeight='0';b.style.minHeight='0';var h=Math.max(b.scrollHeight,de.scrollHeight,b.offsetHeight);de.style.minHeight=a;b.style.minHeight=c;return h;}var last=0;function s(){var h=m();if(h&&Math.abs(h-last)>2){last=h;try{parent.postMessage({__omScreenH:h},'*');}catch(e){}}}window.addEventListener('load',function(){s();setTimeout(s,300);setTimeout(s,900);});window.addEventListener('resize',s);if(window.ResizeObserver){var t;try{new ResizeObserver(function(){clearTimeout(t);t=setTimeout(s,150);}).observe(document.body);}catch(e){}}})();</script>
+<script src="interactive.js"></script>
+<script>(function(){
+  var stacks = document.querySelectorAll('.colcard .stack');
+  var pending = stacks[0], completed = stacks[1];
+  var sto = document.querySelector('.sto');
+  if (sto) sto.addEventListener('click', function(){ if (window.__omToast) window.__omToast('Stock Transfer recommendations use the same Pending / Completed layout as Purchase Orders.'); });
+
+  function wireViewBtn(btn) {
+    if (!btn || btn.__ixWired) return; btn.__ixWired = true;
+    btn.addEventListener('click', function () { if (window.__omToast) window.__omToast('Opening PO — read-only in this prototype'); });
+  }
+  function wireReviewBtn(btn) {
+    if (!btn || btn.__ixWired) return; btn.__ixWired = true;
+    btn.addEventListener('click', function () { if (window.__omToast) window.__omToast('Reviewing PO — SKU list and fulfilment route above'); });
+  }
+  function wireCreateBtn(card, btn) {
+    if (!btn || btn.__ixWired) return; btn.__ixWired = true;
+    btn.addEventListener('click', function () {
+      var foot = card.querySelector('.foot');
+      foot.innerHTML = '<span class="donetag"><svg viewBox="0 0 14 14" fill="none" style="width:13px;height:13px"><path d="M3 7.5 6 10l5-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>PO Created</span><button class="b-sec">View PO</button>';
+      completed.insertBefore(card, completed.firstChild);
+      wireViewBtn(foot.querySelector('.b-sec'));
+      if (window.__omToast) window.__omToast('Purchase order created — moved to Completed Actions');
+    });
+  }
+  [].slice.call(document.querySelectorAll('.colcard .act')).forEach(function (card) {
+    var foot = card.querySelector('.foot');
+    wireCreateBtn(card, foot.querySelector('.b-pri'));
+    wireReviewBtn(foot.querySelector('.b-pri') ? foot.querySelector('.b-sec') : null); // pending cards: b-sec = "Review PO"
+    if (!foot.querySelector('.b-pri')) wireViewBtn(foot.querySelector('.b-sec')); // completed cards: b-sec = "View PO"
+  });
+})();</script>
 </body></html>

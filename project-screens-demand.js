@@ -257,20 +257,33 @@
   function wireScreenNav(fr) {
     var doc; try { doc = fr.contentDocument; } catch (e) { return; } if (!doc) return;
     var cur = currentFile(); var idx = FLOW_FILES.indexOf(cur);
-    var btns = doc.querySelectorAll('button, .btn-next, .btn-ghost, .btn-primary, .btn-cta, [data-cta]');
+    var btns = doc.querySelectorAll('button, .btn-next, .btn-ghost, .btn-primary, .btn-cta, .back, [data-cta], [data-goto]');
     btns.forEach(function (b) {
       if (b.__omWired) return; b.__omWired = true;
+      // explicit navigation target wins over any text-based guess (used by the
+      // Categories <-> Create Category sheet, and the Purchase Order "View" CTA)
+      if (b.hasAttribute('data-goto')) {
+        b.addEventListener('click', function (e) { e.preventDefault(); goStage(b.getAttribute('data-goto')); });
+        return;
+      }
       var t = (b.textContent || '').trim().toLowerCase();
       if (t === 'next' || t === 'continue' || t === 'save & continue' || t === 'save and continue') {
         b.addEventListener('click', function (e) { e.preventDefault(); if (idx >= 0 && idx < FLOW_FILES.length - 1) goStage(FLOW_FILES[idx + 1]); });
-      } else if (t === 'previous' || t === 'back' || t === 'go back') {
+      } else if (t === 'previous' || t === 'back' || t === 'go back' || b.classList.contains('back')) {
+        // icon-only back arrows (.crumb .back / .dhead .back) carry no text at
+        // all, so they never matched here before — treat the class the same
+        // as the text match.
         b.addEventListener('click', function (e) { e.preventDefault(); if (idx > 0) goStage(FLOW_FILES[idx - 1]); });
       } else if (t.indexOf('generate') === 0) {
         b.addEventListener('click', function (e) { e.preventDefault(); goStage('60-forecast-loader.html'); setTimeout(function () { if (currentFile() === '60-forecast-loader.html') goStage('70-forecast-detail.html'); }, 2600); });
       } else if (t.indexOf('create forecast') === 0 || t === 'new forecast' || t.indexOf('create new') === 0) {
         b.addEventListener('click', function (e) { e.preventDefault(); goStage('30-basic-details.html'); });
+      } else if (t === 'create category') {
+        b.addEventListener('click', function (e) { e.preventDefault(); goStage('85-create-category.html'); });
       } else if (t.indexOf('retry') === 0) {
         b.addEventListener('click', function (e) { e.preventDefault(); goStage('60-forecast-loader.html'); setTimeout(function () { if (currentFile() === '60-forecast-loader.html') goStage('70-forecast-detail.html'); }, 2600); });
+      } else if (t === 'edit forecast') {
+        b.addEventListener('click', function (e) { e.preventDefault(); goStage('30-basic-details.html'); });
       }
     });
   }
