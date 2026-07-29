@@ -38,7 +38,16 @@
   });
 
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-  var wide = window.matchMedia('(min-width: 861px)');
+  // Pin/scroll-jack only for a real mouse + wide viewport — matching the
+  // same gate case-scroll.js already uses for its horizontal drag-scroll.
+  // Width alone used to be the only check, so any touch tablet >=861px
+  // (iPad landscape, Android tablets) got the pinned scroll-jacked stack,
+  // driven by raw `scroll` events keyed to getBoundingClientRect().top.
+  // Touch/momentum scrolling fires those events in irregular bursts, so the
+  // pinned cards jumped and stuttered instead of sliding smoothly — the
+  // static vertical-column CSS fallback (already built for <=860px) is the
+  // right experience for touch regardless of how wide the tablet is.
+  var wide = window.matchMedia('(min-width: 861px) and (hover: hover) and (pointer: fine)');
   var PER = 92; // vh of scroll travel per card
 
   function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }

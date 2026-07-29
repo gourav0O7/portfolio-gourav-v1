@@ -3204,8 +3204,16 @@ html.gold .theme-toggle { background: rgba(242, 168, 30, 0.92); border-color: va
 .casestack .ccphone { --pw: min(270px, 30vh); }
 .casestack .casecard__media .mbook--card { max-height: 100%; }
 
-/* fallback: no-JS / reduced-motion / mobile → simple vertical column */
-@media (max-width: 860px) {
+/* fallback: no-JS / reduced-motion / mobile / touch → simple vertical column.
+   Also fires on (hover:none)/(pointer:coarse) regardless of width — case-stack.js's
+   pin only activates for min-width:861px AND hover:hover AND pointer:fine (a real
+   mouse), matching case-scroll.js's own gate. Without this, a touch tablet wider
+   than 860px (iPad landscape, Android tablets) would fail that JS check, so the
+   script would clear every card's inline transform/z-index and leave them at the
+   unconditional base CSS value of translate3d(118%,0,0) — stuck off-screen with
+   only the first card ever visible. This keeps the CSS fallback in lockstep with
+   the JS gate for every case where the pin doesn't run. */
+@media (max-width: 860px), (hover: none), (pointer: coarse) {
   .casestack .casescroll__track { position: static; height: auto; overflow: visible; }
   .casestack .casecard {
     position: relative; inset: auto; transform: none !important; height: auto;
