@@ -3229,6 +3229,15 @@ html.gold .theme-toggle { background: rgba(242, 168, 30, 0.92); border-color: va
   .worksec:not(.is-pinned) .casestack .casecard__media {
     min-height: 0; order: 2; padding: clamp(16px, 5vw, 28px);
   }
+  /* "Coming soon" cards have no mockup to size to — the .casecard__soon canvas
+     is position:absolute and contributes zero intrinsic height, so the
+     min-height:0 above (correct for real screenshots) collapsed this to
+     ~39px and rendered the hourglass icon almost invisibly small. Give it
+     back real room, same order as a normal mockup. */
+  .casestack .casecard--soon .casecard__media,
+  .worksec:not(.is-pinned) .casestack .casecard--soon .casecard__media {
+    min-height: min(360px, 62vw); padding: 0;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .casestack .casescroll__track { position: static; height: auto; overflow: visible; }
