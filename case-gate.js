@@ -146,17 +146,24 @@
     else { this.el.textContent = this.toReal; if (this.done) this.done(); }
   };
 
-  /* ---- collect & encrypt every meaningful text node ---- */
-  function collect() {
+  /* ---- collect & encrypt every meaningful text node ----
+     Takes an optional root (defaults to the whole gate) so late-inserted
+     subtrees can be swept individually — see the MutationObserver in arm().
+     Also rejects anything already inside a .cg-enc span: without that guard,
+     the observer would see encryptText()'s own span insertion as new
+     content and try to re-encrypt the already-scrambled placeholder text,
+     looping forever. */
+  function collect(root) {
     var out = [];
-    var w = document.createTreeWalker(gate, NodeFilter.SHOW_TEXT, {
+    var w = document.createTreeWalker(root || gate, NodeFilter.SHOW_TEXT, {
       acceptNode: function (n) {
         if (!n.nodeValue || !n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
         var p = n.parentNode; if (!p || !p.closest) return NodeFilter.FILTER_REJECT;
         var tag = p.tagName ? p.tagName.toUpperCase() : '';
         if (tag === 'SCRIPT' || tag === 'STYLE') return NodeFilter.FILTER_REJECT;
         if (p.closest('svg') || p.closest('image-slot') ||
-            p.closest('.case-gate-panel') || p.closest('.case-vault__cover')) return NodeFilter.FILTER_REJECT;
+            p.closest('.case-gate-panel') || p.closest('.case-vault__cover') ||
+            p.closest('.cg-enc') || p.closest('.cg-hud')) return NodeFilter.FILTER_REJECT;
         return NodeFilter.FILTER_ACCEPT;
       }
     });
@@ -176,8 +183,8 @@
     entries.forEach(function (e) { var it = itemOf.get(e.target); if (it) it.vis = e.isIntersecting; });
   }, { rootMargin: '140px 0px' }) : null;
 
-  function encryptText() {
-    collect().forEach(function (tn) {
+  function encryptText(root) {
+    collect(root).forEach(function (tn) {
       var real = tn.nodeValue;
       var span = document.createElement('span');
       span.className = 'cg-enc';
@@ -192,10 +199,14 @@
 
   /* ---- seal every image / product behind an ACCESS REQUIRED tag ---- */
   var vaults = [];
-  function sealVisuals() {
+  function sealVisuals(root) {
+    var scope = root || gate;
     var nodes = [];
-    gate.querySelectorAll('image-slot').forEach(function (n) { nodes.push(n); });
-    gate.querySelectorAll('.p-screens__group').forEach(function (n) { nodes.push(n); });
+    scope.querySelectorAll('image-slot').forEach(function (n) { nodes.push(n); });
+    scope.querySelectorAll('.p-screens__group').forEach(function (n) { nodes.push(n); });
+    // the root itself can BE one of these (not just contain them) when a
+    // whole subtree gets inserted after the initial sweep
+    if (scope.matches && (scope.matches('image-slot') || scope.matches('.p-screens__group'))) nodes.push(scope);
     nodes.forEach(function (node) {
       if (node.closest('.case-vault')) return;          // already inside one
       var w = document.createElement('div');
@@ -303,6 +314,7 @@
 
   /* ---- decryption sweep ---- */
   function unlock(hud) {
+    sessionUnlocked = true;
     clearInterval(flickerTimer);
     if (hud) {
       hud.classList.remove('is-open');
@@ -328,6 +340,7 @@
   /* ---- already unlocked? show in the clear ---- */
   var unlocked = false;
   try { unlocked = localStorage.getItem(STORE_KEY) === '1'; } catch (_) {}
+  var sessionUnlocked = unlocked;   // flips true the moment unlock() runs, same session
 
   function arm() {
     if (unlocked) { gate.classList.remove('is-arming'); return; }
@@ -336,6 +349,26 @@
       encryptText();
       sealVisuals();
       startFlicker();
+      // The initial sweep above only sees what's in the gate at this exact
+      // moment. Content can still be inserted afterward — e.g. the omniful-ds
+      // page moves its entire live component library into the gate via a
+      // script that runs later. Without watching for that, anything added
+      // after this point renders in the clear, bypassing the lock entirely.
+      // collect()'s .cg-enc rejection keeps this from re-encrypting its own
+      // output and looping.
+      var mo = new MutationObserver(function (records) {
+        if (sessionUnlocked) { mo.disconnect(); return; }
+        records.forEach(function (rec) {
+          rec.addedNodes.forEach(function (node) {
+            if (node.nodeType !== 1) return; // elements only
+            if (node.classList && (node.classList.contains('cg-hud') ||
+                node.classList.contains('cg-enc') || node.classList.contains('case-vault'))) return;
+            encryptText(node);
+            sealVisuals(node);
+          });
+        });
+      });
+      mo.observe(gate, { childList: true, subtree: true });
     } catch (e) { /* fail open rather than trap the page */ }
     gate.classList.remove('is-arming');
   }
