@@ -576,7 +576,12 @@ body[data-project] .p-goals__col--metrics { background: var(--bg-1); }
 .p-subcard__tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
 .p-subcard__tags span { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; }
 .p-subcard__go { width: 44px; height: 44px; border: 1px solid var(--line-2); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--text-dim); transition: 0.3s var(--ease); flex-shrink: 0; }
-.p-subcard:hover .p-subcard__go { background: var(--accent); border-color: var(--accent); color: #0a0c11; transform: translate(2px, -2px); }
+/* text/icon color must contrast against var(--accent) itself, not stay a
+   fixed near-black — in the gold theme --accent IS near-black ink, so a
+   hardcoded dark color here made the arrow invisible on hover (dark on
+   dark). var(--bg) is the correct opposite in both themes: black text on
+   default's bright-orange accent, gold-colored icon on gold's ink accent. */
+.p-subcard:hover .p-subcard__go { background: var(--accent); border-color: var(--accent); color: var(--bg); transform: translate(2px, -2px); }
 @media (max-width: 760px) {
   .p-subgrid { grid-template-columns: 1fr; }
   .p-subcard { grid-template-columns: 40px 1fr auto; gap: 14px; }
@@ -590,7 +595,7 @@ body[data-project] .p-goals__col--metrics { background: var(--bg-1); }
   padding: clamp(20px, 7%, 38px); color: #fff; font-family: 'Space Grotesk', system-ui, sans-serif; isolation: isolate;
   background:
     radial-gradient(125% 120% at 86% -12%, color-mix(in srgb, var(--cvr) 58%, transparent) 0%, transparent 56%),
-    linear-gradient(158deg, color-mix(in srgb, var(--cvr) 24%, #0a0c11) 0%, #0a0c11 80%); }
+    linear-gradient(158deg, color-mix(in srgb, var(--cvr) 24%, var(--cover-dark)) 0%, var(--cover-dark) 80%); }
 .cvr__glyph { position: absolute; right: -7%; bottom: -13%; width: 60%; color: var(--cvr); opacity: 0.16; z-index: -1; }
 .cvr__glyph svg { width: 100%; height: 100%; }
 .cvr__top { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em; color: rgba(255,255,255,0.55); }

@@ -29,6 +29,12 @@ a[href="blog.html"]{display:none!important;}
   --accent-glow:  rgba(250, 76, 20, 0.45);
   --amber:        #ffb24d;
 
+  /* Always-dark surface for editorial/photographic treatments (case covers,
+     browser-chrome bezels) that are meant to read as a dark card regardless
+     of site theme — distinct from --text, which flips light/dark with the
+     theme itself and would be the wrong thing to use here. */
+  --cover-dark: #0a0c11;
+
   /* Silver / chrome — metallic secondary accent.
      Use as: background: var(--chrome); + background-clip: text; for text. */
   --silver:       #d6d8db;
@@ -2378,6 +2384,12 @@ html.gold {
   --accent-soft:  rgba(26, 18, 6, 0.10);
   --accent-glow:  rgba(26, 18, 6, 0.30);
   --amber:        #3a2c0c;
+
+  /* "dark card in a gold theme" tone — same ink-brown already used for
+     .casecard__mock, reused here so every dark-surface treatment (case
+     covers, browser bezels) reads as one consistent family instead of
+     leaving isolated pure-black cards floating on the gold page. */
+  --cover-dark: #241a08;
 
   /* metallic chrome → flat ink, to keep the duotone clean */
   --chrome: #1a1206;
