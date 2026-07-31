@@ -2414,6 +2414,29 @@ html.gold .loader__begin:hover,
 html.gold .loader__begin.is-engaged { color: var(--bg); }
 html.gold ::selection { background: var(--accent); color: var(--bg); }
 
+/* Boot loader — always a dark glass console, on purpose, regardless of
+   theme (it's the "system boot" moment, not page content). Its own CSS
+   nearly entirely reads shared vars (--white, --text-dim, --accent...)
+   assuming they sit on the theme's page background — but the panel
+   itself never changes color, it's the hardcoded rgba(7,8,11,0.7) glass
+   below. In gold mode those vars flip to near-black ink, so almost every
+   piece of loader text (the big percentage, the log lines, the head row)
+   became ink-on-near-black-glass — nearly unreadable for the entire boot
+   sequence. Re-pin the panel's own custom properties back to the
+   dark-theme values; they cascade to every child automatically since
+   these are the same var() names the loader's base rules already use.
+   The OUTER .loader background (var(--bg), full gold) is untouched. */
+html.gold .loader__panel {
+  --white:        #f2f2f2;
+  --text-dim:     #9a9a9a;
+  --text-faint:   #7d7d7d;
+  --accent:       #fa4c14;
+  --accent-2:     #ff6a33;
+  --accent-glow:  rgba(250, 76, 20, 0.45);
+  --line:         rgba(242, 242, 242, 0.06);
+  --line-2:       rgba(242, 242, 242, 0.12);
+}
+
 /* chrome / silver text → solid ink */
 html.gold .chrome-text,
 html.gold .hero__name em,
@@ -3484,7 +3507,12 @@ html.gold .theme-toggle { background: rgba(242, 168, 30, 0.92); border-color: va
    quieter until the whole card is hovered) and triggering off the card
    instead of its own :hover, since the entire card is the link. */
 .casecard__go { flex-shrink: 0; border-color: transparent; }
-.casecard:hover .casecard__go { border-color: var(--accent); color: #0a0c11; }
+/* text must contrast against var(--accent) itself (the fill-wipe hover
+   background), not stay a fixed near-black — in gold theme --accent IS
+   near-black ink, so a hardcoded dark color here made "View case" invisible
+   on hover (dark text on the dark ink fill). var(--bg) is the correct
+   opposite in both themes, same fix already applied to .p-subcard__go. */
+.casecard:hover .casecard__go { border-color: var(--accent); color: var(--bg); }
 .casecard:hover .casecard__go::before { transform: translateY(0); }
 .casecard:hover .casecard__go .arrow { transform: translateX(4px); }
 
@@ -3492,7 +3520,7 @@ html.gold .theme-toggle { background: rgba(242, 168, 30, 0.92); border-color: va
 .casecard--soon { cursor: default; }
 .casecard--soon:hover { transform: none; border-color: var(--line); box-shadow: none; }
 .casecard__media--soon {
-  background: #05060a;
+  background: var(--cover-dark);
 }
 .casecard__soonart {
   position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center;
@@ -3511,13 +3539,13 @@ html.gold .theme-toggle { background: rgba(242, 168, 30, 0.92); border-color: va
 .casecard--soon .casecard__mock,
 .casecard--soon .casecard__device { display: none; }
 .casecard--soon .casecard__media {
-  background: #05060a;
+  background: var(--cover-dark);
 }
 .casecard__soon {
   --mx: 50%; --my: 38%; --px: 0.5; --py: 0.5;
   position: absolute; inset: 0; z-index: 6; overflow: hidden;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
-  background: #05060a;
+  background: var(--cover-dark);
 }
 /* no-JS / reduced-motion fallback text — hidden once the canvas icon mounts */
 .casecard__soon i {
