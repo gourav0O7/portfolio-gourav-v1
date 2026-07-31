@@ -15,7 +15,8 @@
     'demand-forecasting':{ no: '003', accent: '#7A5AF8', title: 'Demand forecasting',          tag: 'From a chart you trust to an order, in one step.', client: 'Omniful', glyph: 'trend' },
     'route-optimization-bisleri': { no: '004', accent: '#2A8FE0', title: 'Route optimization', tag: 'Vehicle-aware routes, past the ten-stop ceiling.', client: 'Edgistify × Bisleri', glyph: 'pin' },
     'picker-app':       { no: '005', accent: '#0E9F6E', title: 'Warehouse picker',            tag: 'Two things on screen, max — built for the floor.', client: 'Edgistify', glyph: 'pick' },
-    'edgeos':           { no: '006', accent: '#5468FA', title: 'EdgeOS platform',             tag: 'One platform across B2B and B2C.', client: 'Edgistify', glyph: 'layers' }
+    'edgeos':           { no: '006', accent: '#5468FA', title: 'EdgeOS platform',             tag: 'One platform across B2B and B2C.', client: 'Edgistify', glyph: 'layers' },
+    'portfolio':        { no: '013', accent: '#fa4c14', title: 'This portfolio',              tag: 'When the work is under NDA, the lock becomes the concept.', client: 'Self-initiated', glyph: 'terminal' }
   };
 
   var G = {
@@ -24,7 +25,8 @@
     trend:  '<path d="M3 17l6-6 4 4 7-7"/><path d="M17 8h4v4"/>',
     pin:    '<path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/>',
     pick:   '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9z"/><path d="M9 13l2 2 4-4"/>',
-    layers: '<path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/>'
+    layers: '<path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/>',
+    terminal: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 10l3 2.5-3 2.5M13 15h4"/>'
   };
 
   function svg(name) {

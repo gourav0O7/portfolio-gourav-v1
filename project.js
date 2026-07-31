@@ -342,11 +342,21 @@
       '</div></section>';
   }
 
+  // A case can declare itself public (P.open) — self-initiated work with no
+  // client confidentiality. Public cases still get the white-sheet wrapper
+  // (.case-gatewrap carries the light token scope the whole narrative reads
+  // from) but NOT the #caseGate id, so case-gate.js finds no gate and returns
+  // without encrypting anything. Everything else stays NDA-locked by default.
+  var isOpen = P.open === true;
+  var gateOpen = isOpen
+    ? '<div class="case-gatewrap" data-screen-label="Project / Case">'
+    : '<div class="case-gatewrap is-arming" id="caseGate" data-screen-label="Project / Protected">';
+
   root.innerHTML = navHTML +
     '<main>' +
       hero +
       subSec +
-      '<div class="case-gatewrap is-arming" id="caseGate" data-screen-label="Project / Protected">' +
+      gateOpen +
         overviewSec +
         challengeSec +
         approachSec +

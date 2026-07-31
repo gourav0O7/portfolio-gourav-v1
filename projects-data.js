@@ -1125,6 +1125,146 @@ window.PROJECTS = {
         { h: "If I had more time", b: "Dark mode tokens and a proper Figma-variable pipeline so token changes propagate to code without a handoff step." }
       ]
     },
+    next: "portfolio"
+  },
+
+  "portfolio": {
+    // self-initiated, no client NDA — renders unlocked (see P.open in project.js)
+    open: true,
+    index: "013",
+    title: "This portfolio",
+    client: "Self-initiated · Design + build",
+    year: "2026",
+    one: "A portfolio for a designer whose best work is under NDA and looks like a spreadsheet — so it argues instead of decorating, and turns the confidentiality problem into the concept.",
+    meta: { role: "Product Designer + Front-end", timeline: "2026 · ongoing", platform: "Responsive web", team: "Solo" },
+    tags: ["Portfolio", "Design System", "Front-end", "Self-initiated"],
+
+    challenge: "I design logistics software — warehouse consoles, driver apps, 50-column tables. Two things make that almost impossible to show: most of it is under NDA, and the parts I can show are dense operational screens that look boring as thumbnails. A standard portfolio template fails me twice over: it wants a grid of pretty pictures, and I have confidential spreadsheets.",
+
+    goals: {
+      business: [
+        "Get past the 60-second skim into a real conversation",
+        "Prove senior-level thinking when the artefacts can't be shown",
+        "Read as a systems designer, not a page decorator"
+      ],
+      user: [
+        "Hiring managers: know what I do and how I think, fast",
+        "Recruiters: role, years, domain and contact without scrolling",
+        "Interviewers: enough process depth to build questions from"
+      ],
+      metrics: [
+        "Time-to-signal on the first screen",
+        "Weight and speed on a phone, on mobile data",
+        "How much of the work is visible without breaking an NDA"
+      ]
+    },
+
+    research: {
+      methods: ["Reviewed ~30 product-design portfolios", "Informal feedback from hiring managers and design leads", "Notes from my own interview loops", "Self-audit of what I could legally publish"],
+      findings: [
+        "Portfolios are template-uniform — after five, none are distinguishable, and being unmemorable is the actual failure mode.",
+        "Reviewers skim first and read second. They decide whether to read at all from the first screen alone.",
+        "Enterprise work photographs badly. A dense table thumbnail reads as 'boring', not as 'hard problem solved'.",
+        "Everyone with NDA work just omits it — which makes a senior person's portfolio look suspiciously thin."
+      ]
+    },
+
+    evidence: {
+      sample: "~30 portfolios reviewed · feedback from 6 design leads and hiring managers",
+      quote: { text: "I open it, I skim for thirty seconds, and I'm looking for one thing — is there a brain behind this, or did they just make it pretty?", who: "Design lead, feedback session" }
+    },
+
+    insights: {
+      lead: "The reframe: a portfolio isn't a gallery, it's an argument. Screens are evidence for the argument, not the point of it. Once I stopped trying to display work and started trying to prove thinking, the NDA stopped being a hole in the story — it became part of it.",
+      pains: [
+        { h: "The NDA gap", b: "Half my strongest work can't be published. Omitting it silently makes the portfolio look thin; explaining it in a sentence looks like an excuse." },
+        { h: "Density reads as dull", b: "The screens I'm proudest of are operational tables. In a thumbnail grid they signal 'boring admin panel' instead of 'this person handles complexity'." },
+        { h: "Nothing is memorable", b: "Every portfolio uses the same layout, so the work has to do all the differentiating — and mine can't, because it's confidential." }
+      ]
+    },
+
+    principles: [
+      { h: "Say it in one screen", b: "Role, level, domain and proof of craft above the fold. If the first screen doesn't earn the second, nothing else matters." },
+      { h: "Show the thinking, not just the pixels", b: "Every case leads with the problem and the tradeoff. Screens appear as evidence after the argument, never as the argument." },
+      { h: "Make the constraint the concept", b: "Confidential work is presented as a deliberately designed encrypted state — locked, labelled, unlockable on request. It signals 'real production systems' better than a blurred screenshot ever could." },
+      { h: "Look like the domain", b: "I design operational systems, so the site reads like one: terminal type, system labels, monospace metadata. Form follows the subject." },
+      { h: "Craft can't cost speed", b: "Every heavy idea needs an escape hatch — adaptive loading, static fallbacks, reduced-motion paths. A recruiter on mobile data is the real test." }
+    ],
+
+    ideation: {
+      lead: "Three ways to solve 'prove depth without showing the work'.",
+      alts: [
+        { h: "Classic case-study grid", b: "Safe, fast to build, and completely invisible. Solves the layout problem and none of the actual problem. Rejected." },
+        { h: "Written essays, no visuals", b: "Honest about the NDA and strong on thinking — but a designer who shows no design asks too much faith. Rejected." },
+        { h: "Live product + designed lock", b: "Chosen. Embed real, interactive prototypes for what I can show; present what I can't as an explicit encrypted case file. Evidence where possible, honest design where not." }
+      ],
+      tradeoff: "The 3D hero and live embedded prototypes are the reason the site is memorable, and also the reason it's heavy. I kept them, but every one of them is gated: the hero skips entirely on slow connections, prototypes swap to static images on mobile, and all motion has a reduced-motion path."
+    },
+
+    overview: [
+      "This is the portfolio you're reading — designed and built end to end, solo. It exists to solve a specific career problem: I work in logistics software, where the interesting work is confidential and the visible work is dense.",
+      "Rather than fight that, the site is built around it — real interactive prototypes where I'm allowed to show them, and a deliberately designed 'encrypted case file' where I'm not.",
+      "Everything runs on a single hand-built design system with no framework and no CMS, deployed as static files."
+    ],
+
+    sections: [
+      { k: "01", h: "One screen, one claim", b: "The hero states role, domain and years immediately, with a real-time 3D machine behind it doing the differentiating. You know what I do before you scroll." },
+      { k: "02", h: "Evidence, not screenshots", b: "Where NDA allows, the actual product runs on the page — live, interactive prototypes you can click through, not flat images of a design file." },
+      { k: "03", h: "The lock as a designed state", b: "Confidential cases are encrypted in the page itself: text scrambles, visuals seal behind an 'access required' cover, and a passphrase decrypts them. The constraint becomes a feature." },
+      { k: "04", h: "A system, not a set of pages", b: "One token layer, one component set, two full themes. Every page composes from the same parts — which is why a new case study is a data entry, not a redesign." }
+    ],
+
+    designSystem: {
+      lead: "Everything on the site composes from one hand-built system — the 'Amber Terminal' language, documented in full below.",
+      items: [
+        "Token layer: colour, type scale, spacing, radius, motion",
+        "One CTA component with every state and size variant",
+        "Dual theming — full palette swap through tokens alone",
+        "Scroll-reveal, hover-scramble and fill-wipe as shared behaviours",
+        "Adaptive loading built into the system, not bolted on"
+      ]
+    },
+
+    validation: {
+      lead: "Tested on real devices, and the failures were specific and unglamorous.",
+      changes: [
+        { h: "The hero hid its own copy on phones", b: "On portrait screens the 3D machine sat directly behind the intro paragraph, making the one thing that has to be readable unreadable. The text now anchors to the top with a contrast wash behind it — the exact opposite of the desktop composition." },
+        { h: "Tablets got the desktop scroll experience", b: "The pinned horizontal case gallery gated on width alone, so touch tablets inherited a scroll-jacked interaction driven by raw scroll events — it stuttered badly. Now it requires a real mouse, and touch gets a clean vertical column." },
+        { h: "The lock leaked", b: "The design-system page injected its content after the encryption pass had already run, so the 'locked' page rendered fully readable. The gate now watches for content added later and encrypts it too." },
+        { h: "Dead space on mobile cards", b: "Case cards reserved a fixed 70vh media area sized for desktop, leaving ~330px of empty black around each mockup on a phone. Sized to content instead — cards shrank by a third." }
+      ]
+    },
+
+    impact: {
+      metrics: [
+        { before: "~30MB", after: "gated", label: "Hero payload on slow links", source: "Adaptive loading — skipped entirely on data-saver / slow connections" },
+        { before: "live iframes", after: "static", label: "Prototypes on mobile", source: "Full mini-apps swapped for pre-rendered posters on phones" },
+        { before: "951px", after: "636px", label: "Case card height on a 375px phone", source: "Removed fixed desktop media reservation" },
+        { after: "~1.1MB", label: "Saved by the production build", source: "Minified HTML/CSS/JS across 61 pages" }
+      ],
+      note: "Measured on the real site, not a lab. The point of every number here is the same: the memorable, heavy ideas survived — they just learned to get out of the way when the device or the connection can't afford them."
+    },
+
+    learning: {
+      h: "What surprised me",
+      b: "That the constraint was the strongest idea available. I spent weeks trying to work around the NDA before realising a designed, explicit lock says more about the seniority of the work than any screenshot I was allowed to publish."
+    },
+
+    outcomes: [
+      { n: "12 cases", l: "one shared system" },
+      { n: "2 themes", l: "swapped via tokens" },
+      { n: "0 frameworks", l: "hand-built, static" }
+    ],
+
+    interviewer: {
+      lead: "I had a portfolio problem most designers don't: my best work is confidential and my visible work is dense enterprise tooling. So I stopped treating the portfolio as a gallery and designed it as an argument — with the NDA built in as a feature rather than apologised for.",
+      points: [
+        { h: "My role", b: "Everything — research, IA, interaction and visual design, the design system, and the entire front-end build and deployment. Solo, self-initiated." },
+        { h: "The hardest call", b: "Keeping the 3D hero. It's the single heaviest thing on the site and the single biggest reason anyone remembers it. I kept it and paid for it in engineering instead of design: it detects slow connections and skips itself, and there's a static fallback that most visitors never know exists." },
+        { h: "Designing the constraint", b: "The NDA gate is the piece I'd defend hardest. It's honest — nothing confidential is exposed — and it communicates that the work is real production software, which is exactly what a screenshot of a table fails to do." },
+        { h: "If I had more time", b: "Less scroll-jacking. A few sections take control of the scroll to tell a story and I still think they're a net cost — they're the first thing I'd simplify. I'd also write the content before designing the container next time; several layout problems were really writing problems." }
+      ]
+    },
     next: "stock-on-wheel"
   }
 };
