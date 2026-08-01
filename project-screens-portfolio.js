@@ -118,30 +118,25 @@
     '.pf-state{font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#7d7d7d;display:block;margin-bottom:7px;}',
     '.pf-st{display:flex;flex-direction:column;}',
 
-    /* demo components — real markup, real states */
-    '.pfb{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:var(--font-mono);font-size:11px;font-weight:500;',
-    '  letter-spacing:.1em;text-transform:uppercase;padding:12px 20px;min-height:42px;border:1px solid var(--accent);color:#f2f2f2;',
-    '  background:transparent;position:relative;z-index:0;overflow:hidden;cursor:pointer;transition:color .3s var(--ease,cubic-bezier(.22,1,.36,1));}',
-    '.pfb::before{content:"";position:absolute;inset:0;background:var(--accent);transform:translateY(101%);transition:transform .35s var(--ease,cubic-bezier(.22,1,.36,1));z-index:-1;}',
-    '.pfb:hover::before,.pfb.is-hover::before{transform:translateY(0);}',
-    '.pfb:hover,.pfb.is-hover{color:#0a0c11;}',
-    '.pfb--primary{background:var(--accent);color:#0a0c11;}',
-    '.pfb--ghost{border-color:rgba(242,242,242,.15);}',
-    '.pfb--sm{padding:7px 12px;min-height:30px;font-size:10px;}',
-    '.pfb--disabled{opacity:.38;pointer-events:none;}',
-    '.pfb.is-focus{outline:2px solid var(--accent);outline-offset:3px;}',
-    '.pfb .arw{transition:transform .3s var(--ease,cubic-bezier(.22,1,.36,1));}',
-    '.pfb:hover .arw,.pfb.is-hover .arw{transform:translateX(4px);}',
-    '.pft{font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#9a9a9a;',
-    '  border:1px solid rgba(242,242,242,.15);border-radius:999px;padding:6px 13px;display:inline-block;}',
-    '.pft.is-on{color:#fa4c14;border-color:rgba(250,76,20,.45);background:rgba(250,76,20,.08);}',
+    /* demo components — .btn below is the site's real, global button class
+       (styles.css), used as-is rather than reimplemented, so this demo can
+       never drift from the live CTA. The z-index:0 keeps its own fill-wipe
+       pseudo-element from escaping behind the stage background. */
+    '.pf-stage .btn{position:relative;z-index:0;min-width:230px;justify-content:center;}',
+    '.pf-chip{font-style:normal;font-family:var(--font-mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;',
+    '  color:var(--text-dim);background:rgba(242,242,242,.06);border:1px solid var(--line-2);padding:5px 8px;display:inline-block;}',
+    '.pf-chip--on{color:#fa4c14;border-color:rgba(250,76,20,.45);background:rgba(250,76,20,.08);}',
     '.pfdot{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#9a9a9a;}',
     '.pfdot i{width:7px;height:7px;border-radius:50%;background:#fa4c14;box-shadow:0 0 10px rgba(250,76,20,.45);flex:none;}',
     '.pfdot.ok i{background:#46d39a;box-shadow:0 0 10px rgba(70,211,154,.45);}',
     '.pfdot.mute i{background:#7d7d7d;box-shadow:none;}',
-    '.pffield{display:flex;align-items:center;gap:9px;border:1px solid rgba(242,242,242,.15);background:#05070b;padding:11px 13px;min-width:230px;}',
-    '.pffield span{font-family:var(--font-mono);font-size:11px;color:#fa4c14;}',
-    '.pffield input{flex:1;background:none;border:0;outline:0;color:#f2f2f2;font-family:var(--font-mono);font-size:12px;letter-spacing:.16em;min-width:0;}',
+    /* values below are lifted 1:1 from .cg-hud__field / .cg-hud__input
+       (case-gate.js), so this demo matches the real passphrase field even on
+       pages where that script never runs — it bails out early on a case
+       flagged open:true, so it never injects its own styles there. */
+    '.pffield{display:flex;align-items:center;gap:8px;border:1px solid var(--line-2);background:var(--bg);padding:0 11px;min-width:230px;}',
+    '.pffield span{font-size:12px;color:var(--accent);opacity:.8;}',
+    '.pffield input{flex:1;background:none;border:0;outline:0;color:var(--text);font-family:var(--font-mono);font-size:13px;letter-spacing:.16em;padding:11px 0;min-width:0;}',
     '.pfcard{border:1px solid rgba(242,242,242,.10);background:#101116;padding:16px;max-width:270px;}',
     '.pfcard__m{height:88px;background:radial-gradient(120% 80% at 50% 0%,rgba(250,76,20,.10),transparent 60%),#07080b;border:1px solid rgba(242,242,242,.06);margin-bottom:13px;',
     '  display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;color:#5a5c63;}',
@@ -308,7 +303,7 @@
   }
   function st(label, el) { return '<div class="pf-st"><span class="pf-state">' + label + '</span>' + el + '</div>'; }
 
-  var arw = '<svg class="arw" width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H5M12 4V11" stroke="currentColor" stroke-width="1.6"/></svg>';
+  var arw = '<svg class="arrow" width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H5M12 4V11" stroke="currentColor" stroke-width="1.6"/></svg>';
 
   var spacing = [4, 8, 12, 18, 26, 38, 56, 80].map(function (n) {
     return '<div class="pf-scale__i"><div class="pf-scale__b" style="height:' + Math.round(n * 0.85) + 'px"></div><span class="pf-scale__l">' + n + '</span></div>';
@@ -349,29 +344,29 @@
 
       sub('Components — live') +
       '<div class="pf-stage">' +
-        specRow('Button', 'One component, three variants and one size modifier. The hover is a fill-wipe rising from the bottom edge — used site-wide so any accent fill behaves identically.',
+        specRow('Button', 'One component, three variants and one size modifier — the actual site-wide class, not a lookalike. The hover is a fill-wipe rising from the bottom edge, so any accent fill behaves identically everywhere it appears.',
           '.btn · .btn--primary · .btn--ghost · .btn--sm',
-          st('rest', '<span class="pfb">Start a project ' + arw + '</span>') +
-          st('hover', '<span class="pfb is-hover">Start a project ' + arw + '</span>') +
-          st('primary', '<span class="pfb pfb--primary">View case ' + arw + '</span>') +
-          st('ghost / sm', '<span class="pfb pfb--ghost pfb--sm">View case ' + arw + '</span>') +
-          st('focus', '<span class="pfb is-focus">Focus ring</span>') +
-          st('disabled', '<span class="pfb pfb--disabled">Unavailable</span>')) +
+          st('rest', '<span class="btn">Start a project ' + arw + '</span>') +
+          st('hover', '<span class="btn" style="border-color:var(--accent);color:#0a0c11;background:var(--accent)">Start a project ' + arw + '</span>') +
+          st('primary', '<span class="btn btn--primary">View case ' + arw + '</span>') +
+          st('ghost / sm', '<span class="btn btn--ghost btn--sm">View case ' + arw + '</span>') +
+          st('focus', '<span class="btn" style="outline:2px solid var(--accent);outline-offset:3px">Focus ring</span>') +
+          st('disabled', '<span class="btn" style="opacity:.38;pointer-events:none">Unavailable</span>')) +
 
-        specRow('Tag', 'Non-interactive classification. Pill shape is reserved exclusively for tags so it never competes with a button.',
-          '.tag',
-          st('rest', '<span class="pft">Logistics</span>') +
-          st('active', '<span class="pft is-on">Design System</span>') +
-          st('group', '<span class="pft">B2B</span> <span class="pft">Mobile</span>')) +
+        specRow('Tag chip', 'There is no separate pill component — every tag on the site is this exact chip: square corners (never a pill, so it can’t be mistaken for a button), translucent glass over whatever sits behind it.',
+          '.casecard__tags i',
+          st('rest', '<span class="pf-chip">Logistics</span>') +
+          st('active', '<span class="pf-chip pf-chip--on">Design System</span>') +
+          st('group', '<span class="pf-chip">B2B</span> <span class="pf-chip">Mobile</span>')) +
 
-        specRow('Status', 'A single dot carries system state. Colour is never the only signal — the label always states it in words.',
-          '.pip · aria-live',
+        specRow('Status', 'Proposed pattern, not yet promoted to a shared class — the one recurring shape for system state across prototypes. A single dot carries it, but colour is never the only signal: the label always states it in words too.',
+          'proposed · not yet a shared class',
           st('live', '<span class="pfdot"><i></i>Recording</span>') +
           st('ok', '<span class="pfdot ok"><i></i>Deployed</span>') +
           st('idle', '<span class="pfdot mute"><i></i>Archived</span>')) +
 
-        specRow('Field', 'Square, mono, ground-dark. Caret prefix marks it as a command line rather than a form input.',
-          '.cg-hud__field',
+        specRow('Field', 'Square, mono, ground-dark. Caret prefix marks it as a command line rather than a form input — lifted directly from the NDA passphrase field’s own spec.',
+          '.cg-hud__field · .cg-hud__input',
           '<label class="pffield"><span>&gt;</span><input type="text" placeholder="PASSPHRASE" aria-label="Passphrase demo" /></label>') +
       '</div>' +
 
@@ -381,7 +376,7 @@
           '<div class="pfcard"><div class="pfcard__m">LIVE PRODUCT</div>' +
             '<span class="pfcard__t">Demand forecasting</span>' +
             '<span class="pfcard__d">From a chart the planner can trust to a purchase order, in one step.</span>' +
-            '<div style="margin-top:12px;display:flex;gap:7px"><span class="pft" style="font-size:9px;padding:4px 10px">Data</span><span class="pft" style="font-size:9px;padding:4px 10px">Web</span></div>' +
+            '<div style="margin-top:12px;display:flex;gap:7px"><span class="pf-chip">Data</span><span class="pf-chip">Web</span></div>' +
           '</div>') +
 
         specRow('NDA lock', 'The system\'s signature state. Confidential copy is replaced in the DOM with scrambled glyphs and visuals seal behind an access cover; the correct passphrase resolves each character back to its real value.',
