@@ -89,6 +89,7 @@
             '<a href="about.html" class="bigfoot__navlink">About</a>' +
             '<a href="blog.html" class="bigfoot__navlink">Blogs</a>' +
             '<a href="glossary.html" class="bigfoot__navlink">Glossary</a>' +
+            '<a href="project-portfolio.html" class="bigfoot__navlink">This site</a>' +
           '</span>' +
           '<span>\u00a9 2026 Gourav Sharma</span>' +
           '<span class="links">' +
