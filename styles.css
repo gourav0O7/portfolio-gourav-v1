@@ -3213,15 +3213,20 @@ html.gold .theme-toggle { background: rgba(242, 168, 30, 0.92); border-color: va
 .casestack .casecard__media .mbook--card { max-height: 100%; }
 
 /* fallback: no-JS / reduced-motion / mobile / touch → simple vertical column.
-   Also fires on (hover:none)/(pointer:coarse) regardless of width — case-stack.js's
-   pin only activates for min-width:861px AND hover:hover AND pointer:fine (a real
-   mouse), matching case-scroll.js's own gate. Without this, a touch tablet wider
-   than 860px (iPad landscape, Android tablets) would fail that JS check, so the
-   script would clear every card's inline transform/z-index and leave them at the
-   unconditional base CSS value of translate3d(118%,0,0) — stuck off-screen with
-   only the first card ever visible. This keeps the CSS fallback in lockstep with
-   the JS gate for every case where the pin doesn't run. */
-@media (max-width: 860px), (hover: none), (pointer: coarse) {
+   Also fires on (any-hover:none)/(any-pointer:coarse) regardless of width —
+   case-stack.js's pin only activates for min-width:861px AND any-hover:hover
+   AND any-pointer:fine (a real mouse available, on ANY attached input, not
+   just the primary one — see the comment in case-stack.js for why: plain
+   hover/pointer report the primary input only, and Chrome/Edge on Windows
+   call a machine with any touchscreen touch-primary even when a mouse is
+   what's actually driving the page, which silently broke this for ordinary
+   Windows desktops/laptops with a mouse). Without this fallback CSS staying
+   in lockstep, a touch tablet wider than 860px (iPad landscape, Android
+   tablets) would fail the JS check, so the script would clear every card's
+   inline transform/z-index and leave them at the unconditional base CSS
+   value of translate3d(118%,0,0) — stuck off-screen with only the first
+   card ever visible. */
+@media (max-width: 860px), (any-hover: none), (any-pointer: coarse) {
   .casestack .casescroll__track { position: static; height: auto; overflow: visible; }
   .casestack .casecard {
     position: relative; inset: auto; transform: none !important; height: auto;

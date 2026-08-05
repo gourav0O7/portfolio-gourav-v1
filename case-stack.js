@@ -47,7 +47,13 @@
   // pinned cards jumped and stuttered instead of sliding smoothly — the
   // static vertical-column CSS fallback (already built for <=860px) is the
   // right experience for touch regardless of how wide the tablet is.
-  var wide = window.matchMedia('(min-width: 861px) and (hover: hover) and (pointer: fine)');
+  // NOTE: any-hover/any-pointer, not hover/pointer — those report the
+  // PRIMARY input only, and Chrome/Edge on Windows treat a machine with any
+  // touchscreen attached as touch-primary even while a mouse drives the
+  // page. That silently forced the vertical fallback on ordinary Windows
+  // desktops/laptops with a mouse. any-hover/any-pointer ask "is a fine
+  // pointer available at all", which is what we actually care about here.
+  var wide = window.matchMedia('(min-width: 861px) and (any-hover: hover) and (any-pointer: fine)');
   var PER = 92; // vh of scroll travel per card
 
   function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
