@@ -4006,7 +4006,11 @@ html.gold .casecard__mock { background: radial-gradient(130% 95% at 50% -8%, rgb
   .casestack .casecard { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
   .casestack .casecard__media,
   .casestack .casecard__media--device {
-    order: -1; grid-column: auto; width: 100%;
+    /* order set by the (max-width:860px),(any-hover:none),(any-pointer:coarse)
+       block above (order:1, ahead of .casecard__cap's order:2) — not
+       repeated here to avoid two competing declarations for the same
+       property on the same selector. */
+    grid-column: auto; width: 100%;
     min-height: clamp(240px, 46vw, 380px);
     border-left: 0; box-shadow: inset 0 -1px 0 var(--line);
   }
