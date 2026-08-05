@@ -3073,33 +3073,6 @@ html.gold .theme-toggle { background: rgba(242, 168, 30, 0.92); border-color: va
   user-select: none;
 }
 
-/* Nav buttons */
-.tag-rail__nav {
-  display: flex;
-  gap: 10px;
-  margin-top: 22px;
-  padding: 0 var(--gutter);
-}
-.tag-nav {
-  width: 46px; height: 46px;
-  border-radius: 50%;
-  border: 1px solid var(--line-2);
-  color: var(--text);
-  font-size: 18px;
-  display: grid; place-items: center;
-  transition: border-color .2s, background .2s, transform .2s;
-}
-.tag-nav:hover { border-color: var(--accent); background: var(--accent-soft); }
-.tag-nav:active { transform: scale(.92); }
-.tag-nav[disabled] { opacity: .3; pointer-events: none; }
-.tag-rail__hint {
-  margin-left: auto;
-  align-self: center;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  color: var(--text-faint);
-}
 .tag-rail__more {
   align-self: center;
   font-family: var(--font-mono);
