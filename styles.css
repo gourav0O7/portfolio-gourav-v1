@@ -35,6 +35,15 @@ a[href="blog.html"]{display:none!important;}
      theme itself and would be the wrong thing to use here. */
   --cover-dark: #0a0c11;
 
+  /* RGB triplet (no alpha) for drop shadows cast by cards/panels whose own
+     background flips with the theme — e.g. rgba(var(--shadow-rgb), .8).
+     Pure black reads as a natural, blended shadow on this dark theme's
+     near-black page, but the exact same pure-black shadow under a
+     gold-theme card (bright golden bg on all sides) reads as a harsh,
+     out-of-place dark smear. html.gold repins this to its own ink tone
+     instead so the shadow still looks like it belongs on that page. */
+  --shadow-rgb: 0, 0, 0;
+
   /* Silver / chrome — metallic secondary accent.
      Use as: background: var(--chrome); + background-clip: text; for text. */
   --silver:       #d6d8db;
@@ -1135,7 +1144,7 @@ body:has(.bigfoot) > .footer { display: none; }
 .phonegate { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 24px; }
 .phonegate[hidden] { display: none; }
 .phonegate__scrim { position: absolute; inset: 0; background: color-mix(in oklab, var(--bg) 72%, transparent); backdrop-filter: blur(8px); animation: pgfade 0.3s var(--ease); }
-.phonegate__panel { position: relative; width: min(440px, 94%); background: var(--bg-1); border: 1px solid var(--line-accent); padding: clamp(26px, 4vw, 40px); box-shadow: 0 40px 90px -30px rgba(0,0,0,0.8); animation: pgrise 0.4s var(--ease); }
+.phonegate__panel { position: relative; width: min(440px, 94%); background: var(--bg-1); border: 1px solid var(--line-accent); padding: clamp(26px, 4vw, 40px); box-shadow: 0 40px 90px -30px rgba(var(--shadow-rgb), 0.8); animation: pgrise 0.4s var(--ease); }
 .phonegate__panel::before, .phonegate__panel::after { content: ""; position: absolute; width: 18px; height: 18px; border: 2px solid var(--accent); pointer-events: none; }
 .phonegate__panel::before { top: -2px; left: -2px; border-right: 0; border-bottom: 0; }
 .phonegate__panel::after { bottom: -2px; right: -2px; border-left: 0; border-top: 0; }
@@ -1609,7 +1618,7 @@ html.booting, html.booting body { overflow: hidden; }
   transform-origin: 50% 0;
   display: block;
   isolation: isolate;
-  box-shadow: 0 30px 80px -30px rgba(0,0,0,0.55);
+  box-shadow: 0 30px 80px -30px rgba(var(--shadow-rgb), 0.55);
   overflow: hidden;
 }
 /* progressive offset so each card peeks below the previous when stacked */
@@ -1633,7 +1642,7 @@ html.booting, html.booting body { overflow: hidden; }
 .stackcard--teal {
   background: var(--bg-1);
   border: 1px solid var(--line-2);
-  box-shadow: 0 30px 80px -30px rgba(0,0,0,0.7);
+  box-shadow: 0 30px 80px -30px rgba(var(--shadow-rgb), 0.7);
 }
 
 /* hairline accent rule across the top of the chassis */
@@ -2394,6 +2403,11 @@ html.gold {
   /* metallic chrome → flat ink, to keep the duotone clean */
   --chrome: #1a1206;
   --chrome-glow: rgba(26, 18, 6, 0.25);
+
+  /* card/panel drop shadows: swap pure black for this theme's own ink tone
+     (same #1a1206 already used for --text/--accent) so shadows read as
+     belonging to the gold page instead of a harsh black smear under it. */
+  --shadow-rgb: 26, 18, 6;
 }
 
 html.gold { background: #f2a81e; }
@@ -2854,7 +2868,7 @@ html.gold .theme-toggle { background: rgba(242, 168, 30, 0.92); border-color: va
   border: 1px solid var(--line-2);
   border-radius: 22px;
   overflow: hidden;
-  box-shadow: 0 26px 50px -24px rgba(0,0,0,.85);
+  box-shadow: 0 26px 50px -24px rgba(var(--shadow-rgb), .85);
   transform-origin: 50% calc(var(--hole-y) + 7px);   /* swing around the wire centre — keeps the on-card wire glued to the cable */
   will-change: transform;
 }
@@ -3185,7 +3199,7 @@ html.gold .theme-toggle { background: rgba(242, 168, 30, 0.92); border-color: va
   box-sizing: border-box; overflow: hidden;
   background: var(--bg-2, #101116);
   border: 1px solid var(--line); border-radius: 0;
-  box-shadow: 0 40px 90px -50px rgba(0,0,0,.8);
+  box-shadow: 0 40px 90px -50px rgba(var(--shadow-rgb), .8);
   transform: translate3d(118%, 0, 0); will-change: transform;
   cursor: default; /* only .casecard__cta navigates now, not the whole card */
 }
@@ -3316,13 +3330,13 @@ html.gold .theme-toggle { background: rgba(242, 168, 30, 0.92); border-color: va
     linear-gradient(180deg, rgba(255,255,255,0.02), transparent 14%),
     var(--bg-1);
   border: 1px solid var(--line-2);
-  box-shadow: 0 30px 70px -50px rgba(0,0,0,0.9);
+  box-shadow: 0 30px 70px -50px rgba(var(--shadow-rgb), 0.9);
   transition: border-color 0.4s var(--ease), transform 0.5s var(--ease), box-shadow 0.5s var(--ease);
 }
 .casecard:hover {
   border-color: var(--line-accent);
   transform: translateY(-4px);
-  box-shadow: 0 44px 90px -50px rgba(0,0,0,0.95);
+  box-shadow: 0 44px 90px -50px rgba(var(--shadow-rgb), 0.95);
 }
 
 /* media viewport — portrait, holds the iso art */
