@@ -152,7 +152,7 @@
     function build() {
       var r = soon.getBoundingClientRect();
       W = Math.max(1, r.width); H = Math.max(1, r.height);
-      var dpr = Math.min(2, window.devicePixelRatio || 1);
+      var dpr = Math.min(1.5, window.devicePixelRatio || 1);
       canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
       canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -234,10 +234,18 @@
       pts.sort(function (a, b) { return b.z - a.z; });      // far → near
 
       var zNear = -RMAX * scale, zFar = RMAX * scale;
+      var lastFont = -1;
       for (var n = 0; n < pts.length; n++) {
         var pt = pts[n];
-        var fs2 = Math.max(4, GS * pt.s);
-        ctx.font = fs2.toFixed(1) + 'px ui-monospace,Menlo,Consolas,monospace';
+        // round to whole px so nearby depths share a cached font string —
+        // setting ctx.font is one of the most expensive canvas calls, and
+        // with 2000+ points/frame re-parsing a unique string every point
+        // was the main cause of the jank on this card.
+        var fs2 = Math.max(4, Math.round(GS * pt.s));
+        if (fs2 !== lastFont) {
+          ctx.font = fs2 + 'px ui-monospace,Menlo,Consolas,monospace';
+          lastFont = fs2;
+        }
         if (pt.kind === 'g') {
           ctx.fillStyle = 'rgba(' + accRGB[0] + ',' + accRGB[1] + ',' + accRGB[2] + ',0.7)';
         } else if (pt.kind === 'p') {
@@ -276,10 +284,19 @@
         }
       }
       draw();
-      raf = requestAnimationFrame(step);
     }
 
-    function ensureRunning() { if (!running && !reduce) { running = true; raf = requestAnimationFrame(step); } }
+    // throttle to ~30fps — this is ambient decoration, not something that
+    // benefits from 60fps, and halving draw calls matters a lot with three
+    // of these running their own independent loop at once
+    var lastDrawTime = 0, FRAME_MS = 1000 / 30;
+    function ensureRunning() { if (!running && !reduce) { running = true; raf = requestAnimationFrame(loop); } }
+    function loop(now) {
+      raf = requestAnimationFrame(loop);
+      if (now - lastDrawTime < FRAME_MS) return;
+      lastDrawTime = now;
+      step();
+    }
 
     card.addEventListener('pointerenter', function () { hovered = true; ensureRunning(); });
     card.addEventListener('pointermove', function (e) {
