@@ -66,16 +66,36 @@
     onScroll();
   }
 
+  // The card under the cursor changes as cards slide through on scroll, but
+  // the cursor itself never moves — so the native mouseenter a CTA's hover
+  // scramble (nav-scramble.js) listens for never fires for any card after
+  // the first one you scroll onto normally. Track which card is topmost and,
+  // if the (stationary) cursor is now sitting over it, fire the mouseenter
+  // by hand so its scramble still plays.
+  var activeCard = null;
+  function syncHover() {
+    var top = clamp(Math.round(lastP), 0, cards.length - 1);
+    var card = cards[top];
+    if (card === activeCard) return;
+    activeCard = card;
+    if (card && card.matches && card.matches(':hover')) {
+      card.dispatchEvent(new MouseEvent('mouseenter', { bubbles: false }));
+    }
+  }
+
+  var lastP = 0;
   function onScroll() {
     if (!active()) return;
     var vh = window.innerHeight;
     var top = root.getBoundingClientRect().top;
     var total = root.offsetHeight - vh;
     var p = total > 0 ? clamp(-top / total, 0, 1) * (cards.length - 1) : 0;
+    lastP = p;
     for (var i = 0; i < cards.length; i++) {
       var x = clamp(i - p, 0, 1);   // 1 = waiting off-right, 0 = covering
       cards[i].style.transform = x > 0.0001 ? 'translate3d(' + (x * 118) + '%,0,0)' : 'translate3d(0,0,0)';
     }
+    syncHover();
   }
 
   layout();
