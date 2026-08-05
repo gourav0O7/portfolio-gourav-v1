@@ -2437,6 +2437,24 @@ html.gold .loader__panel {
   --line-2:       rgba(242, 242, 242, 0.12);
 }
 
+/* Piano — same "regardless of theme" problem as the loader above: its keys
+   (.pkey/.pkey__blk) are hardcoded near-black on purpose, but the container
+   background and the pressed-key glow both read var(--bg)/var(--bg-1)/
+   var(--accent). In gold mode --accent flips to near-black ink too, so a
+   pressed key (var(--accent) fill) became almost the same near-black as an
+   unpressed key (hardcoded fill) — no visible feedback at all, and the gold
+   var(--bg-1) container behind near-black keys looked broken rather than
+   the intentional dark instrument it is elsewhere. Re-pin to the dark-theme
+   values so the whole piano renders identically in every theme.  */
+html.gold .piano {
+  --bg:           #07080b;
+  --bg-1:         #0a0c11;
+  --accent:       #fa4c14;
+  --accent-2:     #ff6a33;
+  --accent-glow:  rgba(250, 76, 20, 0.45);
+  --text-faint:   #7d7d7d;
+}
+
 /* chrome / silver text → solid ink */
 html.gold .chrome-text,
 html.gold .hero__name em,
