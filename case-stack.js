@@ -21,18 +21,23 @@
     }
     if (cap && c.tagName === 'A' && c.getAttribute('href') && !cap.querySelector('.casecard__cta')) {
       var cta = document.createElement('span');
-      cta.className = 'casecard__cta';
+      // .pill \u2014 the exact same outline\u2192accent-fill CTA as the "Let's talk"
+      // button in the footer. The old permanently-orange-filled button made
+      // the hover scramble's dark-on-orange dud glyphs barely legible;
+      // .pill stays outlined/light by default and only floods accent color
+      // on hover, so the scramble always renders on a light (or, on hover,
+      // deliberately high-contrast dark-on-accent) background, same as
+      // every other .pill on the site.
+      cta.className = 'casecard__cta pill';
       // Label as a DIRECT text node (not wrapped in its own span) \u2014 that's
       // what nav-scramble.js's directLabel() reads to decide if an element
       // is scramble-eligible. Wrapping it broke that silently: nav-scramble
       // was already explicitly wired to this class, but always found an
       // empty label and bailed, so this CTA never got the hover-scramble
       // every other CTA on the site has. Only the trailing arrow is a
-      // nested span (directLabel() ignores non-text children by design).
+      // nested element (directLabel() ignores non-text children by design).
       cta.appendChild(document.createTextNode('View case study'));
-      var arw = document.createElement('span');
-      arw.className = 'casecard__cta-arw'; arw.setAttribute('aria-hidden', 'true'); arw.textContent = '\u2192';
-      cta.appendChild(arw);
+      cta.insertAdjacentHTML('beforeend', '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 12L12 4M12 4H5M12 4V11" stroke="currentColor" stroke-width="1.6"/></svg>');
       cap.appendChild(cta);
     }
   });

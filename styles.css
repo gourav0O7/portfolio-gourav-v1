@@ -3907,27 +3907,19 @@ html.gold .theme-toggle { background: rgba(242, 168, 30, 0.92); border-color: va
 }
 .casestack .casecard__meta .casecard__go { display: none; }
 
-/* CTA — the single Von Restorff pop: solid accent, large target (Fitts) */
-.casestack .casecard__cta {
-  align-self: flex-start; margin-top: clamp(16px, 2vw, 30px);
-  display: inline-flex; align-items: center; gap: 12px;
-  padding: 14px 22px; border: 0; border-radius: 2px;
-  background: var(--accent); color: #0a0b0d !important;
-  font-family: var(--font-mono); font-weight: 600;
-  font-size: 12.5px; letter-spacing: 0.1em; text-transform: uppercase;
-  cursor: pointer; position: relative; overflow: hidden;
-  box-shadow: 0 6px 22px -10px var(--accent-glow);
-  transition: transform 0.3s var(--ease), box-shadow 0.35s var(--ease), background 0.3s var(--ease);
+/* CTA — same .pill as the footer's "Let's talk": outlined/light by default,
+   accent fill only on hover. The old permanently-orange-filled version made
+   the hover-scramble's dark text nearly illegible against solid accent; this
+   keeps it legible in both states, same as every other .pill on the site.
+   Only spacing and the hover TRIGGER are custom here — the whole card
+   invites the click (Fitts), not just the small pill itself, so its
+   fill/lift react to the ancestor .casecard:hover, not just its own. */
+.casestack .casecard__cta { margin-top: clamp(16px, 2vw, 30px); cursor: pointer; }
+.casestack .casecard:hover .casecard__cta {
+  transform: translateY(-2px); border-color: var(--accent); color: #0a0c11;
 }
-.casestack .casecard__cta::before {
-  content: ""; position: absolute; inset: 0; background: #fff; opacity: 0;
-  transition: opacity 0.3s var(--ease);
-}
-.casestack .casecard__cta-arw { position: relative; z-index: 1; }
-.casestack .casecard__cta-arw { transition: transform 0.3s var(--ease); }
-.casestack .casecard:hover .casecard__cta { transform: translateY(-2px); box-shadow: 0 12px 30px -10px var(--accent-glow); }
-.casestack .casecard:hover .casecard__cta::before { opacity: 0.14; }
-.casestack .casecard:hover .casecard__cta-arw { transform: translateX(5px); }
+.casestack .casecard:hover .casecard__cta::before { transform: translateY(0); }
+.casestack .casecard:hover .casecard__cta svg { transform: translate(2px, -2px); }
 
 /* ================= RIGHT — clean product plate ================= */
 .casestack .casecard__no { display: none; }        /* remove competing ghost number */
@@ -3964,7 +3956,10 @@ html.gold .casecard__media--device {
     radial-gradient(92% 62% at 50% -6%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 62%),
     linear-gradient(165deg, var(--bg-2), var(--bg-1));
 }
-html.gold .casecard__cta { color: #1a1204 !important; }
+/* gold's --accent is dark ink (the fill), so hover text needs to flip to
+   the golden --bg to stay legible — same swap html.gold .pill:hover already
+   does; ours just triggers off the ancestor card hover instead. */
+html.gold .casestack .casecard:hover .casecard__cta { color: var(--bg); }
 html.gold .casecard__mock { background: radial-gradient(130% 95% at 50% -8%, rgba(58,44,12,0.5), transparent 60%), #241a08; }
 
 /* ================= micro-interactions (reduced-motion safe) ================= */
