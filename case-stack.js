@@ -11,7 +11,9 @@
   if (!cards.length) return;
 
   // move tags into the write-up column (they live in .casecard__media by default),
-  // and inject a real CTA element (links only) that nav-scramble can target.
+  // and inject a real CTA link (the card itself is a plain div now \u2014 only
+  // this CTA navigates, so tabbing through the page lands cleanly on "View
+  // case study" instead of the whole sprawling card being one giant link).
   cards.forEach(function (c) {
     var cap = c.querySelector('.casecard__cap');
     var tags = c.querySelector('.casecard__tags');
@@ -19,8 +21,9 @@
       var meta = cap.querySelector('.casecard__meta');
       cap.insertBefore(tags, meta || null);
     }
-    if (cap && c.tagName === 'A' && c.getAttribute('href') && !cap.querySelector('.casecard__cta')) {
-      var cta = document.createElement('span');
+    if (cap && c.dataset.href && !cap.querySelector('.casecard__cta')) {
+      var cta = document.createElement('a');
+      cta.href = c.dataset.href;
       // .pill \u2014 the exact same outline\u2192accent-fill CTA as the "Let's talk"
       // button in the footer. The old permanently-orange-filled button made
       // the hover scramble's dark-on-orange dud glyphs barely legible;

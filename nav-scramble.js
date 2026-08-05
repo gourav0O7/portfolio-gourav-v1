@@ -18,7 +18,13 @@
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // Don't touch these — icon-only, functional, or structurally complex.
-  var SKIP_MATCH = '.brand, .nav__burger, .theme-toggle, .gbtn, .ohgame__exit, .ohcar__play, image-slot';
+  // .casecard__cta is skipped here on purpose even though it's a real <a>
+  // now: it gets its own forced-wire pass below with the ancestor .casecard
+  // as the trigger (so hovering anywhere on the card scrambles it, not just
+  // the small pill itself). If this generic pass reached it first, it'd
+  // wire it with the default self-only trigger and the dedicated pass below
+  // would silently no-op (wire() bails once dataset.fxWired is set).
+  var SKIP_MATCH = '.brand, .nav__burger, .theme-toggle, .gbtn, .ohgame__exit, .ohcar__play, image-slot, .casecard__cta';
   var SKIP_WITHIN = '.loader, .ohgame, [data-reward], .bigfoot__marquee, .cap__list';
 
   function Scramble(el) {
