@@ -28,6 +28,20 @@
       var c = new Native();
       ctxs.push(c);
       if (isMuted()) { try { c.suspend(); } catch (e) {} }
+      // Every other audio script (piano, click-sfx, easter-egg, bigfoot,
+      // theme-toggle, drive-game, loader) unlocks its OWN context on the
+      // first user gesture by calling c.resume() unconditionally — none of
+      // them check the mute state first. Muting, then merely clicking
+      // anywhere or hovering a piano key, silently resumed the context and
+      // un-muted the whole site. Patch resume() itself (same trick as
+      // HTMLMediaElement.play() below) so it's a no-op while muted — every
+      // script's own resume() call now automatically respects the toggle
+      // without any of them needing to check it themselves.
+      var nativeResume = c.resume.bind(c);
+      c.resume = function () {
+        if (isMuted()) return Promise.resolve();
+        return nativeResume();
+      };
       return c;
     };
     Patched.prototype = Native.prototype;
