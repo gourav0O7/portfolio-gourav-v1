@@ -3912,15 +3912,12 @@ html.gold .theme-toggle { background: rgba(242, 168, 30, 0.92); border-color: va
    accent fill only on hover. The old permanently-orange-filled version made
    the hover-scramble's dark text nearly illegible against solid accent; this
    keeps it legible in both states, same as every other .pill on the site.
-   Only spacing and the hover TRIGGER are custom here — the whole card
-   invites the click (Fitts), not just the small pill itself, so its
-   fill/lift react to the ancestor .casecard:hover, not just its own. */
+   Fill/lift/arrow-shift come from .pill's own :hover rules — only spacing
+   and the lift transform are custom here. The card itself isn't clickable
+   any more, so the hover reaction is scoped to the pill alone, not the
+   whole card. */
 .casestack .casecard__cta { margin-top: clamp(16px, 2vw, 30px); cursor: pointer; }
-.casestack .casecard:hover .casecard__cta {
-  transform: translateY(-2px); border-color: var(--accent); color: #0a0c11;
-}
-.casestack .casecard:hover .casecard__cta::before { transform: translateY(0); }
-.casestack .casecard:hover .casecard__cta svg { transform: translate(2px, -2px); }
+.casestack .casecard__cta:hover { transform: translateY(-2px); }
 
 /* ================= RIGHT — clean product plate ================= */
 .casestack .casecard__no { display: none; }        /* remove competing ghost number */
@@ -3958,9 +3955,10 @@ html.gold .casecard__media--device {
     linear-gradient(165deg, var(--bg-2), var(--bg-1));
 }
 /* gold's --accent is dark ink (the fill), so hover text needs to flip to
-   the golden --bg to stay legible — same swap html.gold .pill:hover already
-   does; ours just triggers off the ancestor card hover instead. */
-html.gold .casestack .casecard:hover .casecard__cta { color: var(--bg); }
+   the golden --bg to stay legible — matches html.gold .pill:hover, which
+   already covers this since .casecard__cta carries the .pill class too;
+   kept explicit here for clarity/specificity parity with the block above. */
+html.gold .casestack .casecard__cta:hover { color: var(--bg); }
 html.gold .casecard__mock { background: radial-gradient(130% 95% at 50% -8%, rgba(58,44,12,0.5), transparent 60%), #241a08; }
 
 /* ================= micro-interactions (reduced-motion safe) ================= */
@@ -3981,8 +3979,8 @@ html.gold .casecard__mock { background: radial-gradient(130% 95% at 50% -8%, rgb
   .casestack .casecard:hover .casecard__tags,
   .casestack .casecard:hover .casecard__meta,
   .casestack .casecard:hover .casecard__mock,
-  .casestack .casecard:hover .casecard__device,
-  .casestack .casecard:hover .casecard__cta { transform: none; }
+  .casestack .casecard:hover .casecard__device { transform: none; }
+  .casestack .casecard__cta:hover { transform: none; }
 }
 
 /* ================= responsive — mobile & tablet (<=860px) ================= */
