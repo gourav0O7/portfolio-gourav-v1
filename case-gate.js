@@ -48,6 +48,24 @@
     return sha256Hex(val).then(function (hex) { return hex === PASSPHRASE_HASH; });
   }
 
+  // Exposed so other scripts (live-prototype buttons in the per-project
+  // screens modules) can gate themselves the same way this file gates text
+  // and images — defined unconditionally, before the early-return below, so
+  // they work even on pages that never mount a gate at all (caseGateLocked
+  // just returns false there, since there's nothing to unlock).
+  window.caseGateLocked = function () {
+    if (!document.getElementById('caseGate')) return false;
+    try { return localStorage.getItem(STORE_KEY) !== '1'; } catch (_) { return false; }
+  };
+  window.caseGatePrompt = function () {
+    var chip = document.querySelector('.cg-hud__chip');
+    if (!chip) return;
+    chip.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (!chip.closest('.cg-hud').classList.contains('is-open')) chip.click();
+    var hud = chip.closest('.cg-hud');
+    if (hud) { hud.classList.remove('shake'); void hud.offsetWidth; hud.classList.add('shake'); }
+  };
+
   var gate = document.getElementById('caseGate');
   if (!gate) return;
 
@@ -115,7 +133,11 @@
     '.case-vault__cover svg{color:var(--accent)}' +
     '.case-vault__tag{font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--text)}' +
     '.case-vault__sub{font-family:var(--font-mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-faint)}' +
-    '.case-vault.unsealed .case-vault__cover{opacity:0;pointer-events:none}';
+    '.case-vault.unsealed .case-vault__cover{opacity:0;pointer-events:none}' +
+    /* dim the live-prototype CTAs while locked — clicking them still
+       redirects to the passphrase prompt (belt-and-braces), but they
+       shouldn't look inviting/clickable until the NDA gate is open */
+    '.cg-locked [data-open-otp],.cg-locked [data-open-proto],.cg-locked [data-open-bis]{opacity:.4;filter:grayscale(.4);cursor:not-allowed}';
   document.head.appendChild(css);
 
   var LOCK = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="4" y="10.5" width="16" height="10" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M7.5 10.5V7.5a4.5 4.5 0 0 1 9 0v3" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="15" r="1.4" fill="currentColor"/></svg>';
@@ -315,6 +337,7 @@
   /* ---- decryption sweep ---- */
   function unlock(hud) {
     sessionUnlocked = true;
+    document.documentElement.classList.remove('cg-locked');
     clearInterval(flickerTimer);
     if (hud) {
       hud.classList.remove('is-open');
@@ -344,6 +367,7 @@
 
   function arm() {
     if (unlocked) { gate.classList.remove('is-arming'); return; }
+    document.documentElement.classList.add('cg-locked');
     try {
       buildHud();
       encryptText();

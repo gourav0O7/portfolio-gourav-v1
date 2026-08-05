@@ -1,20 +1,14 @@
 /* ============================================================
-   PAGE TRANSITION — masked text reveal (matches gustaffurusten.se).
-   No full-screen curtain. Headings/eyebrows slide within a clipped
-   box, staggered line by line: EXIT slides each up and out
-   (translateY 0 -> -150%), ENTER slides each up into place
-   (translateY 150% -> 0). The rest of the page does a quick plain
-   fade alongside it.
+   PAGE TRANSITION — curtain effect, site-wide.
+   A full-viewport panel slides UP to cover the screen on exit,
+   then slides further UP and off on the next page's load, so the
+   incoming page is always revealed from behind a moving curtain
+   rather than a hard cut or plain fade.
 
-   IMPORTANT: this must never touch a heading's OWN transform/class —
-   several headings are also driven by the site's existing scroll-
-   reveal system (rise.js: .reveal/.rise/.is-rise-in), which sets its
-   own inline transform on the same element. Animating the heading
-   directly fights that system and can leave it permanently stuck
-   off-screen. So instead: each heading gets overflow:hidden (a
-   property rise.js doesn't touch) and its text is moved once into a
-   dedicated inner wrapper span that WE own exclusively — only that
-   wrapper's transform is ever touched.
+   The covering state lives on <html> via a ::before pseudo-element
+   so it exists the instant the document starts parsing — no DOM
+   node needs to exist yet, so there's no flash of the raw page
+   before the curtain is in place on load.
    ============================================================ */
 (function () {
   'use strict';
@@ -22,87 +16,54 @@
   var reduce = window.matchMedia &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  var STAGGER_MS = 45;
-  var LINE_MS = 620;
-  var EXTRA_FADE_MS = 260;   // rest-of-page fade, layered under the line reveal
-
-  var HEADING_SEL = 'h1, h2, .eyebrow, .hero__readout';
+  var DURATION_MS = 640;
 
   var style = document.createElement('style');
   style.textContent =
-    '.pt-mask{overflow:hidden!important}' +
-    '.pt-wrap{display:inline-block;will-change:transform}' +
-    'html.pt-fading body{opacity:0}' +
-    'body{transition:opacity ' + (EXTRA_FADE_MS / 1000) + 's ease}';
+    'html::before{content:"";position:fixed;inset:0;background:#0a0c11;z-index:99999;' +
+      'transform:translateY(-100%);pointer-events:none;' +
+      'transition:transform ' + (DURATION_MS / 1000) + 's cubic-bezier(.76,0,.24,1);}' +
+    'html.pt-cover::before{transform:translateY(0);pointer-events:auto;}' +
+    'html.pt-cover-exit::before{transform:translateY(-100%);}' +
+    'html.pt-instant::before{transition:none!important;}' +
+    'html.gold::before{background:#f2a81e;}';
   (document.head || document.documentElement).appendChild(style);
 
-  function headings() {
-    return Array.prototype.slice.call(document.querySelectorAll(HEADING_SEL))
-      .filter(function (el) { return el.offsetParent !== null; });
-  }
+  var root = document.documentElement;
 
-  // wrap each heading's existing children ONCE in a span we own; reuse it
-  // on repeat calls instead of re-wrapping
-  function getWraps(els) {
-    var out = [];
-    for (var i = 0; i < els.length; i++) {
-      var el = els[i];
-      var wrap = el.__ptWrap;
-      if (!wrap) {
-        wrap = document.createElement('span');
-        wrap.className = 'pt-wrap';
-        while (el.firstChild) wrap.appendChild(el.firstChild);
-        el.appendChild(wrap);
-        el.__ptWrap = wrap;
-      }
-      el.classList.add('pt-mask');
-      out.push(wrap);
-    }
-    return out;
-  }
-
-  /* ---- ENTER: wrapped text starts pushed down inside its clipped box, eases up ---- */
-  var noEnter = document.documentElement.hasAttribute('data-pt-no-enter');
+  /* ---- ENTER: curtain starts fully covering (no transition), then lifts off ---- */
   function playEnter() {
-    if (reduce || noEnter) return;
-    var wraps = getWraps(headings());
-    if (!wraps.length) return;
-    wraps.forEach(function (w) {
-      w.style.transition = 'none';
-      w.style.transform = 'translateY(150%)';
-    });
-    void document.body.offsetWidth;
+    if (reduce) { root.classList.remove('pt-cover', 'pt-instant'); return; }
+    root.classList.add('pt-cover', 'pt-instant');
+    // force the instant (transition:none) covered state to paint once...
+    void root.offsetWidth;
     requestAnimationFrame(function () {
+      root.classList.remove('pt-instant');
       requestAnimationFrame(function () {
-        wraps.forEach(function (w, i) {
-          w.style.transition = 'transform ' + (LINE_MS / 1000) + 's cubic-bezier(.16,1,.3,1) ' + (i * STAGGER_MS / 1000) + 's';
-          w.style.transform = 'translateY(0)';
-        });
+        // ...then transition it away on the next frame.
+        root.classList.add('pt-cover-exit');
+        setTimeout(function () {
+          root.classList.remove('pt-cover', 'pt-cover-exit');
+        }, DURATION_MS + 60);
       });
     });
   }
+  // Cover instantly at parse time (before first paint) so there's nothing
+  // to flash — the reveal above then plays once the DOM is interactive.
+  root.classList.add('pt-cover', 'pt-instant');
   if (document.readyState !== 'loading') playEnter();
   else window.addEventListener('DOMContentLoaded', playEnter);
   window.addEventListener('pageshow', function (e) { if (e.persisted) playEnter(); });
 
-  /* ---- EXIT: wrapped text slides up and out, rest of page fades, then navigate ---- */
+  /* ---- EXIT: curtain rises to cover the screen, then navigate ---- */
   var leaving = false;
   function playExit(href) {
     if (leaving) return;
     leaving = true;
     if (reduce) { window.location.href = href; return; }
-
-    var wraps = getWraps(headings());
-    wraps.forEach(function (w, i) {
-      w.style.transition = 'transform ' + (LINE_MS / 1000) + 's cubic-bezier(.4,0,.2,1) ' + (i * STAGGER_MS / 1000) + 's';
-      requestAnimationFrame(function () { w.style.transform = 'translateY(-150%)'; });
-    });
-    requestAnimationFrame(function () {
-      document.documentElement.classList.add('pt-fading');
-    });
-
-    var total = Math.max(EXTRA_FADE_MS, wraps.length * STAGGER_MS + LINE_MS * 0.55);
-    setTimeout(function () { window.location.href = href; }, total);
+    root.classList.remove('pt-cover-exit', 'pt-instant');
+    root.classList.add('pt-cover');
+    setTimeout(function () { window.location.href = href; }, DURATION_MS);
   }
 
   function isInternal(a) {
@@ -129,4 +90,10 @@
     e.preventDefault();
     playExit(a.href);
   }, true);
+
+  // bfcache restores can leave the curtain mid-animation from the page that
+  // was navigated away from — always land in the fully-revealed state.
+  window.addEventListener('pagehide', function () {
+    root.classList.remove('pt-cover', 'pt-cover-exit', 'pt-instant');
+  });
 })();

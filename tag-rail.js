@@ -1,10 +1,12 @@
 
 /* Testimonial luggage-tag rail.
-   On desktop the section PINS: scrolling down moves the tag row left until
-   the last card is reached, then the page scroll continues. On small screens
-   / reduced-motion it falls back to a normal native horizontal scroll. */
+   The section PINS on every screen size: scrolling down moves the tag row
+   left until the last card is reached, then the page scroll continues. It
+   never hijacks touch input — it only reads window.scrollY — so the same
+   pin behaviour works identically with a mouse wheel or a touch scroll.
+   Only reduced-motion falls back to a normal native horizontal scroll. */
 (function () {
-  var mq = window.matchMedia('(min-width: 760px) and (prefers-reduced-motion: no-preference)');
+  var mq = window.matchMedia('(prefers-reduced-motion: no-preference)');
 
   function init(section) {
     var rail = section.querySelector('[data-tagrail]');

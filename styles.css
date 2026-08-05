@@ -3262,8 +3262,9 @@ html.gold .theme-toggle { background: rgba(242, 168, 30, 0.92); border-color: va
      phones. Match that specificity here and let the content set the height. */
   .casestack .casecard__media,
   .worksec:not(.is-pinned) .casestack .casecard__media {
-    min-height: 0; order: 2; padding: clamp(16px, 5vw, 28px);
+    min-height: 0; order: 1; padding: clamp(16px, 5vw, 28px);
   }
+  .casestack .casecard__cap { order: 2; }
   /* "Coming soon" cards have no mockup to size to — the .casecard__soon canvas
      is position:absolute and contributes zero intrinsic height, so the
      min-height:0 above (correct for real screenshots) collapsed this to

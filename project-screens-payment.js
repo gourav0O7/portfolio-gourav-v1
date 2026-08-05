@@ -217,7 +217,11 @@
   }
 
   document.addEventListener('click', function (e) {
-    if (e.target.closest && e.target.closest('[data-open-proto]')) { e.preventDefault(); openModal(); return; }
+    if (e.target.closest && e.target.closest('[data-open-proto]')) {
+      e.preventDefault();
+      if (window.caseGateLocked && window.caseGateLocked()) { window.caseGatePrompt && window.caseGatePrompt(); return; }
+      openModal(); return;
+    }
     if (!modal) return;
     var netBtn = e.target.closest('[data-net]');
     if (netBtn) { var n = netBtn.getAttribute('data-net'); setNetUI(n); postToProto({ type: 'pay-net', net: n }); return; }

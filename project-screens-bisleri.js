@@ -271,7 +271,11 @@
 
   document.addEventListener('click', function (e) {
     var opener = e.target.closest && e.target.closest('[data-open-bis]');
-    if (opener) { e.preventDefault(); openModal(opener.getAttribute('data-open-bis'), opener.getAttribute('data-seed') || ''); return; }
+    if (opener) {
+      e.preventDefault();
+      if (window.caseGateLocked && window.caseGateLocked()) { window.caseGatePrompt && window.caseGatePrompt(); return; }
+      openModal(opener.getAttribute('data-open-bis'), opener.getAttribute('data-seed') || ''); return;
+    }
     var m = e.target.closest && e.target.closest('.bis-modal');
     if (!m) return;
     if (e.target.closest('[data-reset]')) {
@@ -286,6 +290,7 @@
       var f = document.activeElement;
       if (f && f.hasAttribute && f.hasAttribute('data-open-bis')) {
         e.preventDefault();
+        if (window.caseGateLocked && window.caseGateLocked()) { window.caseGatePrompt && window.caseGatePrompt(); return; }
         openModal(f.getAttribute('data-open-bis'), f.getAttribute('data-seed') || '');
       }
     }
