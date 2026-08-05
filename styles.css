@@ -3992,6 +3992,16 @@ html.gold .casecard__media--device {
    kept explicit here for clarity/specificity parity with the block above. */
 html.gold .casestack .casecard__cta:hover { color: var(--bg); }
 html.gold .casecard__mock { background: radial-gradient(130% 95% at 50% -8%, rgba(58,44,12,0.5), transparent 60%), #241a08; }
+/* "Coming soon" hourglass canvas — same problem as the piano: gold's
+   --accent is near-black ink, but casecard-soon.js reads --accent off
+   this element to color the falling sand/pile glyphs, and rendering
+   near-black sand on the already-dark --cover-dark background made the
+   whole animation read as a flat, barely-visible blob instead of a
+   glowing hourglass. Re-pin --accent back to the bright orange (same
+   value casecard-soon.js already falls back to) so the animation reads
+   identically in every theme; --cover-dark itself is already
+   gold-parity'd separately, so the surrounding card doesn't change. */
+html.gold .casecard--soon { --accent: #fa4c14; }
 
 /* ================= micro-interactions (reduced-motion safe) ================= */
 .casestack .casecard__title, .casestack .casecard__desc,
