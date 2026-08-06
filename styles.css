@@ -3909,14 +3909,25 @@ html.gold .casecard__soon {
   background: var(--bg-1);
 }
 /* "Coming soon" hourglass sand — casecard-soon.js reads --accent off
-   .casecard--soon to color the falling sand/pile glyphs. gold's real
-   --accent is near-black ink, which (a) barely showed up at all against
-   the dark backdrop this used to sit on, and (b) even fixed for contrast,
-   plain brand-orange sand looks out of place now that the well itself is
-   gold, not dark. Real hourglass sand reads warm/amber anyway — use gold
-   theme's own deep panel tone (--bg-3) so the sand looks like sand, sits
-   in the gold family, and stays clearly visible against the --bg-1 well. */
-html.gold .casecard--soon { --accent: var(--bg-3); }
+   .casecard--soon to color the falling sand/pile glyphs. This used to be
+   force-repinned to brand-orange, back when the well behind it was still
+   dark ink and gold theme's real --accent (near-black ink) had nothing to
+   contrast against. Now that the well is gold (--bg-1, above), gold
+   theme's OWN --accent — ink — is exactly right here: dark ink sand
+   grains on a gold well is high-contrast AND matches the "ink is the
+   interactive/accent color" rule every other gold-theme element already
+   follows (buttons, pills, etc). No override needed — remove the old
+   orange repin and let the real gold accent apply. */
+
+/* "Coming soon" pill badge (bottom-left corner label + pulsing dot) — its
+   chip is intentionally always dark (a small label, same in every theme),
+   but its text/dot used theme-reactive colors that go dark-on-dark in
+   gold mode: var(--text-dim) is ink-brown, var(--accent) is near-black
+   ink, both nearly invisible against the chip's rgba(12,13,18,.7)
+   background. Pin them to fixed light/gold values that read against that
+   dark chip regardless of theme. */
+html.gold .casecard__soon b { color: rgba(232, 230, 224, 0.85); }
+html.gold .casecard__soon b::before { background: var(--bg); }
 
 /* ================= micro-interactions (reduced-motion safe) ================= */
 .casestack .casecard__title, .casestack .casecard__desc,
