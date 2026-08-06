@@ -3897,17 +3897,26 @@ html.gold .casecard__media--device {
    already covers this since .casecard__cta carries the .pill class too;
    kept explicit here for clarity/specificity parity with the block above. */
 html.gold .casestack .casecard__cta:hover { color: var(--bg); }
-html.gold .casecard__mock { background: radial-gradient(130% 95% at 50% -8%, rgba(58,44,12,0.5), transparent 60%), #241a08; }
-/* "Coming soon" hourglass canvas — same problem as the piano: gold's
-   --accent is near-black ink, but casecard-soon.js reads --accent off
-   this element to color the falling sand/pile glyphs, and rendering
-   near-black sand on the already-dark --cover-dark background made the
-   whole animation read as a flat, barely-visible blob instead of a
-   glowing hourglass. Re-pin --accent back to the bright orange (same
-   value casecard-soon.js already falls back to) so the animation reads
-   identically in every theme; --cover-dark itself is already
-   gold-parity'd separately, so the surrounding card doesn't change. */
-html.gold .casecard--soon { --accent: #fa4c14; }
+/* Card media well — the image/mock area reads as a golden screen set into
+   the still-dark outer card frame, instead of staying dark ink. Covers
+   every card type: real screenshots (.casecard__mock), the plain
+   placeholder media well (.casecard__media--soon, used pre-mount), and the
+   "coming soon" hourglass canvas's own background (.casecard__soon). */
+html.gold .casecard__mock,
+html.gold .casecard__media--soon,
+html.gold .casestack .casecard--soon .casecard__media,
+html.gold .casecard__soon {
+  background: var(--bg-1);
+}
+/* "Coming soon" hourglass sand — casecard-soon.js reads --accent off
+   .casecard--soon to color the falling sand/pile glyphs. gold's real
+   --accent is near-black ink, which (a) barely showed up at all against
+   the dark backdrop this used to sit on, and (b) even fixed for contrast,
+   plain brand-orange sand looks out of place now that the well itself is
+   gold, not dark. Real hourglass sand reads warm/amber anyway — use gold
+   theme's own deep panel tone (--bg-3) so the sand looks like sand, sits
+   in the gold family, and stays clearly visible against the --bg-1 well. */
+html.gold .casecard--soon { --accent: var(--bg-3); }
 
 /* ================= micro-interactions (reduced-motion safe) ================= */
 .casestack .casecard__title, .casestack .casecard__desc,
