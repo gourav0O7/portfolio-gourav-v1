@@ -33,7 +33,7 @@
   // to wait on. IMPORTANT: seed bytesTotal here — whichever script creates
   // the shared object first wins, and the loader runs first, so if we left
   // it 0 the percentage would divide by zero and sit at 000 the whole time.
-  var KNOWN_TOTAL = 18673600 + 11949440; // commodore64.glb + hero-reel.mp4
+  var KNOWN_TOTAL = 5219392 + 11949440; // commodore64.glb (quantized + WebP textures) + hero-reel.mp4
   var AL = window.__assetLoad = window.__assetLoad ||
     { c64: 0, video: 0, c64Done: false, videoDone: false, bytesLoaded: 0, bytesTotal: 0 };
   if (!AL.bytesTotal) AL.bytesTotal = KNOWN_TOTAL;
