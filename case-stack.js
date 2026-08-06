@@ -1,7 +1,10 @@
-/* Pinned horizontal card stack: one case panel visible at a time; each next
-   panel slides in from the right and fully covers the previous as you scroll.
-   Also relocates each card's tags into the left write-up column.
-   Static vertical column on mobile / reduced-motion (CSS handles those). */
+/* Pinned card stack: one case panel visible at a time; each next panel
+   slides in from the right/bottom and fully covers the previous as you
+   scroll. Runs on every screen size and input type — only
+   prefers-reduced-motion falls back to a plain static column (CSS
+   handles that). Also relocates each card's tags into the left write-up
+   column. The <=860px per-card internal layout (image on top, text
+   below) is a separate CSS breakpoint independent of this pin. */
 (function () {
   var root = document.getElementById('caseScroll');
   if (!root || !root.classList.contains('casestack')) return;
@@ -46,26 +49,22 @@
   });
 
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-  // Pin/scroll-jack only for a real mouse + wide viewport — matching the
-  // same gate case-scroll.js already uses for its horizontal drag-scroll.
-  // Width alone used to be the only check, so any touch tablet >=861px
-  // (iPad landscape, Android tablets) got the pinned scroll-jacked stack,
-  // driven by raw `scroll` events keyed to getBoundingClientRect().top.
-  // Touch/momentum scrolling fires those events in irregular bursts, so the
-  // pinned cards jumped and stuttered instead of sliding smoothly — the
-  // static vertical-column CSS fallback (already built for <=860px) is the
-  // right experience for touch regardless of how wide the tablet is.
-  // NOTE: any-hover/any-pointer, not hover/pointer — those report the
-  // PRIMARY input only, and Chrome/Edge on Windows treat a machine with any
-  // touchscreen attached as touch-primary even while a mouse drives the
-  // page. That silently forced the vertical fallback on ordinary Windows
-  // desktops/laptops with a mouse. any-hover/any-pointer ask "is a fine
-  // pointer available at all", which is what we actually care about here.
-  var wide = window.matchMedia('(min-width: 861px) and (any-hover: hover) and (any-pointer: fine)');
+  // Pin/scroll-jack on every device now, not just wide + mouse — this used
+  // to also require (any-hover:hover) and (any-pointer:fine), unpinning for
+  // any touch device regardless of screen size, on the theory that raw
+  // `scroll` events during touch momentum fire in irregular bursts and make
+  // the pin jump/stutter. In practice this only reads window.scrollY /
+  // getBoundingClientRect() on each scroll event — it doesn't fight touch
+  // scrolling the way a wheel-delta-driven interaction would — so that
+  // concern doesn't actually apply here. The only real fallback left is
+  // prefers-reduced-motion, which is what it's actually for. The <=860px
+  // per-card internal layout (image on top, text below, taller/scrollable
+  // safety margin) is unaffected — it's a separate CSS breakpoint that
+  // still applies at any screen size regardless of whether the pin is on.
   var PER = 92; // vh of scroll travel per card
 
   function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
-  function active() { return wide.matches && !reduce.matches; }
+  function active() { return !reduce.matches; }
 
   function layout() {
     if (!active()) { root.style.height = ''; cards.forEach(function (c) { c.style.transform = ''; c.style.zIndex = ''; }); return; }
@@ -89,5 +88,5 @@
   layout();
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', layout);
-  if (wide.addEventListener) { wide.addEventListener('change', layout); reduce.addEventListener('change', layout); }
+  if (reduce.addEventListener) reduce.addEventListener('change', layout);
 })();

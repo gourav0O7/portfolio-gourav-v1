@@ -3151,25 +3151,17 @@ html.gold .theme-toggle { background: rgba(242, 168, 30, 0.92); border-color: va
 .casestack .ccphone { --pw: min(270px, 30vh); }
 .casestack .casecard__media .mbook--card { max-height: 100%; }
 
-/* fallback: no-JS / reduced-motion / mobile / touch → simple vertical column.
-   Also fires on (any-hover:none)/(any-pointer:coarse) regardless of width —
-   case-stack.js's pin only activates for min-width:861px AND any-hover:hover
-   AND any-pointer:fine (a real mouse available, on ANY attached input, not
-   just the primary one — see the comment in case-stack.js for why: plain
-   hover/pointer report the primary input only, and Chrome/Edge on Windows
-   call a machine with any touchscreen touch-primary even when a mouse is
-   what's actually driving the page, which silently broke this for ordinary
-   Windows desktops/laptops with a mouse). Without this fallback CSS staying
-   in lockstep, a touch tablet wider than 860px (iPad landscape, Android
-   tablets) would fail the JS check, so the script would clear every card's
-   inline transform/z-index and leave them at the unconditional base CSS
-   value of translate3d(118%,0,0) — stuck off-screen with only the first
-   card ever visible. */
-@media (max-width: 860px), (any-hover: none), (any-pointer: coarse) {
-  .casestack .casescroll__track { position: static; height: auto; overflow: visible; }
+/* <=860px: per-card INTERNAL layout only (image stacked above text instead
+   of a 40/60 side-by-side split, which doesn't fit a phone) — independent
+   of whether the pin/slide effect (case-stack.js) is running. It runs on
+   every screen size now, touch included, so this stays in the still
+   position:absolute, still JS-transformed card; only reduced-motion (below)
+   actually drops out of the pin into plain static flow. overflow-y:auto is
+   a safety net in case a longer description doesn't fit the pinned
+   envelope's fixed 8vh top/bottom inset at small viewport heights. */
+@media (max-width: 860px) {
   .casestack .casecard {
-    position: relative; inset: auto; transform: none !important; height: auto;
-    grid-template-columns: 1fr; min-height: 0; margin-bottom: 16px; border: 1px solid var(--line); border-radius: 0;
+    grid-template-columns: 1fr; min-height: 0; overflow-y: auto;
   }
   .casestack .casecard__cap { padding: clamp(28px, 7vw, 44px); }
   /* Size the media to its mockup instead of a 70vh min-height. The homepage
@@ -3192,6 +3184,10 @@ html.gold .theme-toggle { background: rgba(242, 168, 30, 0.92); border-color: va
     min-height: min(360px, 62vw); padding: 0;
   }
 }
+/* The only actual "unpin" fallback left — case-stack.js's active() also
+   checks prefers-reduced-motion and skips positioning/transforming cards
+   entirely when it's set, so this mirrors that in CSS for the case JS
+   hasn't run yet (or is disabled) too. */
 @media (prefers-reduced-motion: reduce) {
   .casestack .casescroll__track { position: static; height: auto; overflow: visible; }
   .casestack .casecard { position: relative; inset: auto; transform: none !important; height: auto; min-height: 78vh; margin-bottom: 16px; }
@@ -3953,13 +3949,18 @@ html.gold .casecard__soon b::before { background: var(--bg); }
 
 /* ================= responsive — mobile & tablet (<=860px) ================= */
 @media (max-width: 860px) {
-  .casestack .casecard { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+  /* overflow-y (not overflow:hidden) — the pin now runs at every width, so
+     this card can be position:absolute inside a fixed 8vh top/bottom
+     envelope; this is the actual safety net (set with the rest of the
+     <=860px rules above) that lets a longer description scroll internally
+     instead of getting silently clipped. Don't reintroduce overflow:hidden
+     here, it'd cancel that out. */
+  .casestack .casecard { display: flex; flex-direction: column; min-height: 0; }
   .casestack .casecard__media,
   .casestack .casecard__media--device {
-    /* order set by the (max-width:860px),(any-hover:none),(any-pointer:coarse)
-       block above (order:1, ahead of .casecard__cap's order:2) — not
-       repeated here to avoid two competing declarations for the same
-       property on the same selector. */
+    /* order set in the plain (max-width:860px) block above (order:1, ahead
+       of .casecard__cap's order:2) — not repeated here to avoid two
+       competing declarations for the same property on the same selector. */
     grid-column: auto; width: 100%;
     min-height: clamp(240px, 46vw, 380px);
     border-left: 0; box-shadow: inset 0 -1px 0 var(--line);
