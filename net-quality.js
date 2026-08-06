@@ -38,7 +38,21 @@
     if (override === 'fast') return false;
 
     var c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-    if (!c) return false;                      // API unsupported → assume capable
+    if (!c) {
+      // Network Information API is unsupported on the entire Safari family
+      // (desktop AND mobile) — every Safari visit was silently defaulting
+      // to "fast" here and paying the full ~30MB homepage boot cost
+      // (commodore64.glb + hero-reel.mp4) regardless of actual connection
+      // speed. We can't measure real throughput without the API, but a
+      // touch-primary device with no fine pointer (no mouse/trackpad) is a
+      // reasonable proxy for "phone, possibly on cellular" — the group most
+      // likely to actually be on a slow/metered connection. Desktop Safari
+      // (Mac, presumably wifi/broadband) is left as "fast", same as before.
+      var touchPrimary = window.matchMedia &&
+        window.matchMedia('(pointer: coarse)').matches &&
+        window.matchMedia('(hover: none)').matches;
+      return !!touchPrimary;
+    }
 
     if (c.saveData === true) return true;       // explicit Data Saver / Lite mode
     // effectiveType is one of: 'slow-2g' | '2g' | '3g' | '4g'

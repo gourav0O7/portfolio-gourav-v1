@@ -447,6 +447,13 @@
     var box = document.querySelector('[data-glb]');
     if (!box || box.dataset.glbInit) return;
 
+    // .bigfoot__glb is currently `display:none` in CSS ("hidden for now —
+    // reversible, delete that rule to bring the can back"). A hidden
+    // element has no layout box, so whether an IntersectionObserver ever
+    // fires "intersecting" for it is implementation-defined — not a safe
+    // bet for a 16MB model. Bail out explicitly instead of relying on that.
+    if (getComputedStyle(box).display === 'none') { box.dataset.glbInit = 'skipped'; return; }
+
     // On lite / data-saver connections, never load model-viewer or the .glb —
     // the can is purely decorative (aria-hidden). Leave the slot empty.
     if (window.__lite) { box.dataset.glbInit = 'skipped'; return; }

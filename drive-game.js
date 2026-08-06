@@ -637,8 +637,33 @@
 
   /* ---------- wire up ---------- */
   applyShowroom();
-  if ('requestIdleCallback' in window) requestIdleCallback(preloadModels, { timeout: 3000 });
-  else setTimeout(preloadModels, 1800);
+  // preloadModels() background-fetches BOTH ~17-20MB GLBs (current theme's
+  // car is already loading via applyShowroom() -> model-viewer; this warms
+  // the OTHER theme's car too, so a later theme swap is instant). That's a
+  // reasonable trade for someone actually looking at the showroom, but
+  // firing it unconditionally on an idle callback meant every visit to this
+  // page silently downloaded up to ~37MB in the background within a few
+  // seconds — even on a slow connection, even if the visitor never scrolled
+  // anywhere near the car. Gate it the same way the neighboring inline
+  // model-viewer loader in about.html already gates its own fetch: skip on
+  // lite/data-saver connections, and wait until the showroom is actually
+  // near the viewport.
+  if (!window.__lite) {
+    if ('IntersectionObserver' in window) {
+      var glbIo = new IntersectionObserver(function (entries) {
+        if (entries.some(function (e) { return e.isIntersecting; })) {
+          glbIo.disconnect();
+          if ('requestIdleCallback' in window) requestIdleCallback(preloadModels, { timeout: 3000 });
+          else setTimeout(preloadModels, 1800);
+        }
+      }, { rootMargin: '600px 0px' });
+      glbIo.observe(car3d);
+    } else if ('requestIdleCallback' in window) {
+      requestIdleCallback(preloadModels, { timeout: 3000 });
+    } else {
+      setTimeout(preloadModels, 1800);
+    }
+  }
   playBtn.addEventListener('click', play);
   if (exitBtn) exitBtn.addEventListener('click', exit);
   if (rewardEl) {
