@@ -24,7 +24,7 @@ const POSE_B_FOV = 34;
 // only — the real Content-Length is used when the server sends one; it's
 // read from actual bytes streamed off the network either way, so this
 // works even behind a proxy that strips Content-Length. ----
-const KNOWN_SIZES = { c64: 5219392, video: 11949440 };
+const KNOWN_SIZES = { c64: 5219392, video: 5596623 };
 const AL = window.__assetLoad = window.__assetLoad || {
   c64: 0, video: 0, c64Done: false, videoDone: false,
   bytesLoaded: 0, bytesTotal: KNOWN_SIZES.c64 + KNOWN_SIZES.video
