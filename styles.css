@@ -2904,17 +2904,19 @@ html.gold .theme-toggle { background: rgba(242, 168, 30, 0.92); border-color: va
 .casestack .ccphone { --pw: min(270px, 30vh); }
 .casestack .casecard__media .mbook--card { max-height: 100%; }
 
-/* <=860px: per-card INTERNAL layout only (image stacked above text instead
-   of a 40/60 side-by-side split, which doesn't fit a phone) — independent
-   of whether the pin/slide effect (case-stack.js) is running. It runs on
-   every screen size now, touch included, so this stays in the still
-   position:absolute, still JS-transformed card; only reduced-motion (below)
-   actually drops out of the pin into plain static flow. overflow-y:auto is
-   a safety net in case a longer description doesn't fit the pinned
-   envelope's fixed 8vh top/bottom inset at small viewport heights. */
+/* fallback: mobile / reduced-motion → simple vertical column. Tried making
+   the pin run at every width (including phones) for a stretch — broke real
+   phones: the pinned card sits inside a fixed 8vh top/bottom envelope, and
+   the image-on-top + full text stack doesn't fit that envelope at phone
+   widths, so images rendered cropped in half. The 40/60 side-by-side card
+   this pin is built around just doesn't work below ~861px, regardless of
+   input device — case-stack.js's active() now checks the same min-width:861px
+   threshold this CSS gate uses, so they stay in lockstep. */
 @media (max-width: 860px) {
+  .casestack .casescroll__track { position: static; height: auto; overflow: visible; }
   .casestack .casecard {
-    grid-template-columns: 1fr; min-height: 0; overflow-y: auto;
+    position: relative; inset: auto; transform: none !important; height: auto;
+    grid-template-columns: 1fr; min-height: 0; margin-bottom: 16px;
   }
   .casestack .casecard__cap { padding: clamp(28px, 7vw, 44px); }
   /* Size the media to its mockup instead of a 70vh min-height. The homepage
@@ -2937,10 +2939,6 @@ html.gold .theme-toggle { background: rgba(242, 168, 30, 0.92); border-color: va
     min-height: min(360px, 62vw); padding: 0;
   }
 }
-/* The only actual "unpin" fallback left — case-stack.js's active() also
-   checks prefers-reduced-motion and skips positioning/transforming cards
-   entirely when it's set, so this mirrors that in CSS for the case JS
-   hasn't run yet (or is disabled) too. */
 @media (prefers-reduced-motion: reduce) {
   .casestack .casescroll__track { position: static; height: auto; overflow: visible; }
   .casestack .casecard { position: relative; inset: auto; transform: none !important; height: auto; min-height: 78vh; margin-bottom: 16px; }
@@ -3702,13 +3700,7 @@ html.gold .casecard__soon b::before { background: var(--bg); }
 
 /* ================= responsive — mobile & tablet (<=860px) ================= */
 @media (max-width: 860px) {
-  /* overflow-y (not overflow:hidden) — the pin now runs at every width, so
-     this card can be position:absolute inside a fixed 8vh top/bottom
-     envelope; this is the actual safety net (set with the rest of the
-     <=860px rules above) that lets a longer description scroll internally
-     instead of getting silently clipped. Don't reintroduce overflow:hidden
-     here, it'd cancel that out. */
-  .casestack .casecard { display: flex; flex-direction: column; min-height: 0; }
+  .casestack .casecard { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
   .casestack .casecard__media,
   .casestack .casecard__media--device {
     /* order set in the plain (max-width:860px) block above (order:1, ahead

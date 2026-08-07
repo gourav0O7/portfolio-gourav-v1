@@ -1,10 +1,7 @@
 /* Pinned card stack: one case panel visible at a time; each next panel
-   slides in from the right/bottom and fully covers the previous as you
-   scroll. Runs on every screen size and input type — only
-   prefers-reduced-motion falls back to a plain static column (CSS
-   handles that). Also relocates each card's tags into the left write-up
-   column. The <=860px per-card internal layout (image on top, text
-   below) is a separate CSS breakpoint independent of this pin. */
+   slides in from the right and fully covers the previous as you scroll.
+   Static vertical column below 861px / reduced-motion (CSS handles those).
+   Also relocates each card's tags into the left write-up column. */
 (function () {
   var root = document.getElementById('caseScroll');
   if (!root || !root.classList.contains('casestack')) return;
@@ -49,22 +46,22 @@
   });
 
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-  // Pin/scroll-jack on every device now, not just wide + mouse — this used
-  // to also require (any-hover:hover) and (any-pointer:fine), unpinning for
-  // any touch device regardless of screen size, on the theory that raw
-  // `scroll` events during touch momentum fire in irregular bursts and make
-  // the pin jump/stutter. In practice this only reads window.scrollY /
-  // getBoundingClientRect() on each scroll event — it doesn't fight touch
-  // scrolling the way a wheel-delta-driven interaction would — so that
-  // concern doesn't actually apply here. The only real fallback left is
-  // prefers-reduced-motion, which is what it's actually for. The <=860px
-  // per-card internal layout (image on top, text below, taller/scrollable
-  // safety margin) is unaffected — it's a separate CSS breakpoint that
-  // still applies at any screen size regardless of whether the pin is on.
+  // Pin by WIDTH only now — not input type. This used to also require
+  // (any-hover:hover) and (any-pointer:fine), unpinning any touch device
+  // regardless of screen size; that part was fine (a touch laptop/tablet
+  // wide enough to fit the pinned layout should still get it) but it also
+  // got tried as "pin at every width, touch included" for a stretch, which
+  // broke real phones: the pinned card sits inside a fixed 8vh top/bottom
+  // envelope, and at phone widths the image-on-top + full text stack
+  // doesn't fit that envelope — images were rendering cropped in half.
+  // The 40/60 side-by-side card layout this pin is built around simply
+  // doesn't work below ~861px regardless of input device, so width is the
+  // right gate, same threshold the CSS fallback below already uses.
+  var wide = window.matchMedia('(min-width: 861px)');
   var PER = 92; // vh of scroll travel per card
 
   function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
-  function active() { return !reduce.matches; }
+  function active() { return wide.matches && !reduce.matches; }
 
   function layout() {
     if (!active()) { root.style.height = ''; cards.forEach(function (c) { c.style.transform = ''; c.style.zIndex = ''; }); return; }
@@ -88,5 +85,5 @@
   layout();
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', layout);
-  if (reduce.addEventListener) reduce.addEventListener('change', layout);
+  if (wide.addEventListener) { wide.addEventListener('change', layout); reduce.addEventListener('change', layout); }
 })();
