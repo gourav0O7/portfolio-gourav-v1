@@ -106,18 +106,15 @@
     document.querySelectorAll('a, button').forEach(function (el) { wire(el); });
     // CTAs nested inside whole-card links: wire the label, but fire the
     // scramble when the parent card is hovered.
-    document.querySelectorAll('.stackcard__cta').forEach(function (el) {
-      wire(el, { force: true, trigger: el.closest('.stackcard') || el });
-    });
     document.querySelectorAll('.feature__cta').forEach(function (el) {
       wire(el, { force: true, trigger: el.closest('.feature') || el });
     });
     document.querySelectorAll('.workmore__txt').forEach(function (el) {
       wire(el, { force: true, trigger: el.closest('.workmore__cta') || el });
     });
-    // Case-card "View case" CTA: same treatment as .stackcard__cta above —
-    // it's a <span> inside the whole-card <a>, not its own link, so it needs
-    // an explicit wire + a trigger on the ancestor card.
+    // Case-card "View case" CTA — it's a <span> inside the whole-card <a>,
+    // not its own link, so it needs an explicit wire + a trigger on the
+    // ancestor card.
     document.querySelectorAll('.casecard__go').forEach(function (el) {
       wire(el, { force: true, trigger: el.closest('.casecard') || el });
     });

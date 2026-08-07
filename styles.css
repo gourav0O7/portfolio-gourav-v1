@@ -1524,217 +1524,6 @@ html.booting, html.booting body { overflow: hidden; }
   .hero__name.is-glitching .glitch { animation: none; }
 }
 
-/* ============================================================
-   Stack-cards (homepage Selected Work) — sticky overlap
-   Each card stays sticky as you scroll; the next card slides
-   up over it. Colored "mat" with inset white card inside.
-   ============================================================ */
-.stackcards { display: flex; flex-direction: column; gap: clamp(40px, 6vw, 80px); padding-block: clamp(20px, 4vw, 40px); perspective: 1600px; }
-
-.stackcard {
-  position: sticky;
-  top: calc(var(--nav-h) + 24px);
-  border-radius: 0;
-  padding: clamp(14px, 2vw, 24px);
-  /* slow, smooth feel */
-  transition: transform 0.4s var(--ease);
-  will-change: transform;
-  transform-origin: 50% 0;
-  display: block;
-  isolation: isolate;
-  box-shadow: 0 30px 80px -30px rgba(var(--shadow-rgb), 0.55);
-  overflow: hidden;
-}
-/* progressive offset so each card peeks below the previous when stacked */
-.stackcard:nth-child(1) { top: calc(var(--nav-h) + 24px); }
-.stackcard:nth-child(2) { top: calc(var(--nav-h) + 44px); }
-.stackcard:nth-child(3) { top: calc(var(--nav-h) + 64px); }
-.stackcard:nth-child(4) { top: calc(var(--nav-h) + 84px); }
-.stackcard:nth-child(5) { top: calc(var(--nav-h) + 104px); }
-.stackcard:nth-child(6) { top: calc(var(--nav-h) + 124px); }
-
-/* All cards share one dark instrument-panel treatment.
-   Differentiation comes from the iso art + content, not chroma.
-   The outer .stackcard is the frame; .stackcard__inner is the
-   actual screen, with a hairline inset so it reads as a panel
-   inside a chassis. */
-.stackcard--orange,
-.stackcard--blue,
-.stackcard--amber,
-.stackcard--olive,
-.stackcard--plum,
-.stackcard--teal {
-  background: var(--bg-1);
-  border: 1px solid var(--line-2);
-  box-shadow: 0 30px 80px -30px rgba(var(--shadow-rgb), 0.7);
-}
-
-/* hairline accent rule across the top of the chassis */
-.stackcard::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent 0%, var(--accent) 12%, var(--accent) 88%, transparent 100%);
-  opacity: 0.55;
-  pointer-events: none;
-  z-index: 2;
-}
-
-/* corner brackets on the chassis — instrument-viewport feel */
-.stackcard__inner {
-  background: var(--bg-2);
-  color: var(--text);
-  border-radius: 0;
-  border: 1px solid var(--line);
-  padding: 0;
-  display: grid;
-  grid-template-columns: 1.05fr 1fr;
-  gap: 0;
-  align-items: stretch;
-  min-height: clamp(340px, 44vw, 480px);
-  position: relative;
-}
-.stackcard__inner::before,
-.stackcard__inner::after {
-  content: "";
-  position: absolute;
-  width: 14px; height: 14px;
-  border: 1px solid var(--line-accent);
-  pointer-events: none;
-  z-index: 3;
-}
-.stackcard__inner::before { top: 10px; left: 10px; border-right: 0; border-bottom: 0; }
-.stackcard__inner::after  { bottom: 10px; right: 10px; border-left: 0; border-top: 0; }
-
-/* Text column. Hairline divider between text + vis. */
-.stackcard__inner > div:first-child {
-  padding-block: clamp(36px, 5vw, 60px);
-  padding-left:  clamp(32px, 4.5vw, 60px);
-  padding-right: clamp(32px, 4vw, 56px);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  text-align: left;
-  border-right: 1px solid var(--line);
-  position: relative;
-}
-
-.stackcard__meta {
-  display: inline-flex; gap: 14px; align-items: center;
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em;
-  text-transform: uppercase; color: var(--text-faint);
-  margin-bottom: clamp(20px, 3vw, 32px);
-}
-.stackcard__meta .num { color: var(--accent); font-weight: 600; }
-.stackcard__meta .dot { width: 3px; height: 3px; background: var(--text-faint); border-radius: 50%; flex-shrink: 0; }
-
-.stackcard__title {
-  font-family: var(--font-display);
-  font-size: clamp(26px, 3.2vw, 44px);
-  font-weight: 500;
-  line-height: 1.06;
-  letter-spacing: -0.025em;
-  color: var(--text);
-  text-wrap: pretty;
-  margin-bottom: clamp(16px, 2vw, 22px);
-}
-.stackcard__title em {
-  font-family: var(--font-display);
-  font-style: normal;
-  font-weight: 500;
-  letter-spacing: -0.025em;
-  color: var(--accent);
-}
-
-.stackcard__lead {
-  font-size: clamp(14.5px, 1.3vw, 16px);
-  line-height: 1.6;
-  color: var(--text-dim);
-  max-width: 44ch;
-  margin-bottom: clamp(24px, 3vw, 34px);
-}
-.stackcard__lead b { color: var(--text); font-weight: 500; }
-
-/* CTA: hairline mono pill in the tactical style — not a black blob. */
-.stackcard__cta {
-  display: inline-flex; align-items: center; gap: 12px;
-  background: transparent;
-  color: var(--text);
-  padding: 12px 18px;
-  border: 1px solid var(--line-2);
-  border-radius: 0;
-  font-family: var(--font-mono);
-  font-size: 11px; font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  transition: 0.25s var(--ease);
-  position: relative;
-}
-.stackcard__cta::before {
-  content: "";
-  position: absolute; left: 0; top: 50%;
-  width: 0; height: 1px; background: var(--accent);
-  transform: translateY(-50%);
-  transition: width 0.3s var(--ease);
-}
-.stackcard__cta svg { transition: transform 0.25s var(--ease); color: var(--accent); }
-.stackcard:hover .stackcard__cta { border-color: var(--accent); color: var(--accent); padding-left: 28px; }
-.stackcard:hover .stackcard__cta::before { width: 14px; }
-.stackcard:hover .stackcard__cta svg { transform: translate(3px, -3px); }
-
-/* Visual side: dark instrument viewport.
-   Subtle iso grid underlay, hairline border, scan corners. */
-.stackcard__vis {
-  position: relative;
-  background:
-    linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 32px 32px,
-    linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 32px 32px,
-    radial-gradient(ellipse at 50% 50%, var(--bg-2), var(--bg-1) 80%);
-  border-radius: 0;
-  overflow: hidden;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: inset 0 0 0 1px transparent;
-}
-.stackcard__vis::before,
-.stackcard__vis::after {
-  content: "";
-  position: absolute;
-  width: 12px; height: 12px;
-  border: 1px solid var(--line-accent);
-  pointer-events: none;
-}
-.stackcard__vis::before { top: 10px; right: 10px; border-left: 0; border-bottom: 0; }
-.stackcard__vis::after  { bottom: 10px; left: 10px; border-right: 0; border-top: 0; }
-.stackcard__vis svg { width: 90%; height: 90%; display: block; }
-.stackcard__vis .iso-wrap { width: 90%; height: 90%; display: block; }
-
-/* corner badge — case number sits on the chassis, not the screen */
-.stackcard__badge {
-  position: absolute; top: clamp(14px, 2vw, 22px); right: clamp(14px, 2vw, 22px);
-  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.18em;
-  color: var(--accent); text-transform: uppercase;
-  background: var(--bg-1);
-  padding: 5px 10px; border-radius: 0;
-  border: 1px solid var(--line-accent);
-  z-index: 4;
-  white-space: nowrap;
-}
-
-/* hover state on the dark card — subtle warm wash from the left edge,
-   matching .ohcard / .pcard interaction language */
-.stackcard { transition: transform 0.4s var(--ease), border-color 0.3s var(--ease); }
-.stackcard:hover { border-color: var(--line-accent); }
-.stackcard:hover .stackcard__inner { background: linear-gradient(180deg, var(--bg-2), var(--bg-3)); }
-
-@media (max-width: 860px) {
-  .stackcard { border-radius: 0; }
-  .stackcard__inner { grid-template-columns: 1fr; padding: 0; min-height: 0; border-radius: 0; }
-  .stackcard__inner > div:first-child { padding: 28px; border-right: 0; border-bottom: 1px solid var(--line); }
-  .stackcard__vis { aspect-ratio: 16/10; height: auto; }
-  .stackcard { top: calc(var(--nav-h) + 16px) !important; }
-}
 
 /* ============================================================
    v5 — White-accent pass
@@ -2068,10 +1857,6 @@ image-slot.hw-slot {
   .brand__face { opacity: 0; clip-path: inset(0 100% 0 0); }
   .brand__logo { opacity: 1; }
 
-  /* Case-study cards: ensure CTA + meta are always at full visibility */
-  .stackcard__cta { opacity: 1 !important; }
-  .stackcard:hover .stackcard__cta { border-color: var(--accent); color: var(--accent); }
-
   /* Testimonials: don't dim siblings (no hover signal to recover) */
   .tx-grid:hover .tx-card:not(:hover) { opacity: 1; filter: none; }
 
@@ -2088,15 +1873,6 @@ image-slot.hw-slot {
   .hero__readout > span:nth-child(2) { display: none; } /* drop "// PRODUCT & UI/UX DESIGNER" — already in role line */
 }
 
-/* --- Case study stack cards: stop sticking on small screens (cramped feel) --- */
-@media (max-width: 720px) {
-  .stackcard {
-    position: relative !important;
-    top: auto !important;
-    transform: none !important;
-  }
-}
-
 /* --- Anchor scroll: account for fixed nav so headings don't hide under it --- */
 section[id], header[id] { scroll-margin-top: calc(var(--nav-h) + 24px); }
 
@@ -2108,7 +1884,7 @@ section[id], header[id] { scroll-margin-top: calc(var(--nav-h) + 24px); }
 @media (prefers-reduced-motion: reduce) {
   .halftone, .bigfoot__marquee, .brand .dot, .blink, .cursor { animation: none !important; }
   .hero__name em { animation: none !important; }
-  .tx-card, .ohcard, .stackcard { transition: none !important; }
+  .tx-card, .ohcard { transition: none !important; }
 }
 
 /* --- Selection contrast (white-on-orange was fine, lock it in across page) --- */
@@ -2125,11 +1901,6 @@ section[id], header[id] { scroll-margin-top: calc(var(--nav-h) + 24px); }
    descendants (unlike overflow:hidden which breaks sticky in some engines).
    Applied to <main> rather than html/body for the same reason. --- */
 main { overflow-x: clip; }
-
-/* --- Stackcards are position:sticky — the global .reveal {opacity:0}
-   initial state can strand them if IntersectionObserver doesn't fire (sticky
-   + IO timing is fragile). Force the cards visible regardless. --- */
-.stackcard.reveal { opacity: 1; transform: none; }
 
 /* Same defensive override for section heading rows — IO can mis-time on
    nested paper sections (z-index isolation). */
@@ -2246,23 +2017,6 @@ body::after {
   position: absolute; left: 0; right: 0; top: 0; height: 1px;
   background: linear-gradient(90deg, transparent, var(--line-2) 25%, rgba(255,255,255,0.12) 50%, var(--line-2) 75%, transparent);
   pointer-events: none;
-}
-
-/* 10 — Stack-card chassis: refined hairline + a longer, softer shadow.
-   The single most-looked-at surface on the page — earns the extra depth. */
-.stackcard--orange,
-.stackcard--blue,
-.stackcard--amber,
-.stackcard--olive,
-.stackcard--plum,
-.stackcard--teal {
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.025), transparent 8%),
-    var(--bg-1) !important;
-  box-shadow:
-    0 1px 0 rgba(255,255,255,0.04) inset,
-    0 40px 80px -40px rgba(0,0,0,0.85),
-    0 12px 24px -16px rgba(0,0,0,0.55) !important;
 }
 
 /* 11 — Brand mark: subtle inner sheen. */
@@ -2425,7 +2179,6 @@ html.gold .hero__name .glitch em {
 
 /* decorative iso / card art → golden monochrome (products are exempt below) */
 html.gold .iso-wrap svg,
-html.gold .stackcard__vis svg,
 html.gold .portrait__img {
   filter: sepia(1) saturate(3.5) hue-rotate(-12deg) brightness(0.92) contrast(1.05);
 }
@@ -2433,7 +2186,7 @@ html.gold .portrait__img {
 /* smooth crossfade on the major colour-bearing surfaces */
 @media (prefers-reduced-motion: no-preference) {
   body { transition: color 0.4s var(--ease); }
-  .nav, .stackcard__inner, .hero__stat, .cap__col, .pcard,
+  .nav, .hero__stat, .cap__col, .pcard,
   .interviewer__item, .footer, .bigfoot { transition: background-color 0.4s var(--ease), border-color 0.4s var(--ease); }
 }
 
