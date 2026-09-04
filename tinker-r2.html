@@ -103,10 +103,10 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 
 .heroGrid{position:relative;z-index:1}
 .big{display:flex;align-items:flex-end;gap:var(--s3);flex:1;min-width:0}
-/* the numeral gets the same sticker treatment as the icons: hard ink
-   offset, no blur. It is the loudest object on the screen by design. */
-.big__n{font-family:var(--serif);font-weight:900;font-size:104px;line-height:.78;letter-spacing:-.06em;
-  text-shadow:5px 5px 0 var(--ink);position:relative;z-index:1}
+/* The illustration IS the number — it carries the count, the flames and the
+   crown, so no numeral is set in type beside it (that read as a duplicate). */
+.big__art{width:172px;flex:none;position:relative;z-index:1;
+  filter:drop-shadow(0 10px 16px rgba(27,26,23,.3))}
 .big__u{font-weight:900;font-size:24px;line-height:.92;padding-bottom:var(--s3);text-transform:uppercase;
   letter-spacing:-.01em;position:relative;z-index:1}
 .big__u em{display:block;font-style:normal;color:var(--amber)}
@@ -525,14 +525,6 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
    Six sticker illustrations of the mascot. They are placed only
    where they add information or reward — never as filler.
    ============================================================ */
-.heroArt{width:118px;flex:none;margin-left:auto;margin-top:calc(var(--s3) * -1);
-  filter:drop-shadow(0 8px 14px rgba(27,26,23,.3))}
-/* the "practiced today" sticker only exists once today is actually done */
-.stampArt{width:158px;margin-top:var(--s4);position:relative;z-index:1;transform:rotate(-3deg);display:none;
-  filter:drop-shadow(0 6px 12px rgba(27,26,23,.28))}
-.stampArt.on{display:block;animation:stampIn .5s var(--pop)}
-@keyframes stampIn{0%{transform:rotate(-14deg) scale(.5);opacity:0}
-  60%{transform:rotate(2deg) scale(1.08);opacity:1}100%{transform:rotate(-3deg) scale(1)}}
 /* run illustration sits on an ink tile — its source has a baked glow that
    is invisible against ink, which is why this one is not a cutout */
 .upArt{width:104px;height:74px;flex:none;border-radius:var(--r2);overflow:hidden;
@@ -567,7 +559,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 <section class="intro wrap">
   <span class="kicker">REPORT SCREEN · REDESIGN</span>
   <h1>Everyone gets the same screen from the same prompt. <em>This isn't that.</em></h1>
-  <p class="intro__lede">Same content, same order, <b>nothing deleted</b> — but none of the reference's card anatomy survived. Full-bleed colour zones, oversized type doing the hierarchy, sticker iconography, and a voice that <b>needles you into finishing</b> instead of politely reporting numbers.</p>
+  <p class="intro__lede">Same content, same order, <b>nothing deleted</b> — but the white cards are gone. Full-bleed colour blocks, big type doing the hierarchy, and a voice that <b>needles you into finishing</b> instead of politely reporting numbers.</p>
 </section>
 
 <section class="lab wrap">
@@ -596,10 +588,9 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
             </div>
             <div class="heroGrid">
               <div class="big">
-                <span class="big__n" id="days">12</span>
+                <img class="big__art" src="blob-assets/blob-streak.png" alt="12 day streak" />
                 <span class="big__u">days<em>deep</em></span>
               </div>
-              <img class="heroArt" src="blob-assets/blob-streak.png" alt="" aria-hidden="true" />
             </div>
             <div class="hstats">
               <span><b id="sessN">3</b>sessions</span>
@@ -616,7 +607,6 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
               <div class="wk__c"><span class="wk__m"></span><div class="wk__b" style="height:8%"></div><span class="wk__d">S</span></div>
               <div class="wk__c"><span class="wk__m"></span><div class="wk__b" style="height:8%"></div><span class="wk__d">S</span></div>
             </div>
-            <img class="stampArt" id="stampArt" src="blob-assets/blob-practiced.png" alt="Practiced today" />
           </div>
 
           <button class="zone zone--blob" id="blobCard">
@@ -820,82 +810,43 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 
       </div>
     </div>
-    <p class="stage__hint">Live. Tap <b>finish it, coward</b>, then <b>make the flex</b>. Sound is on — every tone fires from your own tap.</p>
   </div>
 
   <div class="notes">
     <div class="note">
       <div class="note__n">01</div>
-      <h3>The card anatomy is <em>gone</em></h3>
-      <p>The reference builds all seven sections identically: white rounded card, tiny uppercase label, title row, thin bar, button. I kept the content order and threw the pattern out.</p>
-      <p>Now it's <b>full-bleed colour zones</b> butted against each other. Hierarchy comes from an 84px numeral, not a box. The week is a real bar chart where height means minutes. Badges are overlapping stickers with hard offset shadows. Classes are a bento grid where the colour block <b>is</b> the tile. Settings are plain rows on canvas.</p>
+      <h3>No more white cards</h3>
+      <p>The reference stacks seven identical white cards. Same content, same order — but here each section is a <b>full-bleed colour block</b>. The colour tells you which section you're in, so the labels and boxes aren't needed.</p>
     </div>
     <div class="note">
       <div class="note__n">02</div>
-      <h3>The voice <em>taunts</em>, it doesn't report</h3>
-      <p>A report screen that politely states numbers gets ignored. This one needles you: <b>"you: 45 min. your phone: 6 hrs. ok."</b> · <b>"finish it, coward"</b> · <b>"19 min left. that's one bad reel."</b> · <b>"everyone's on it. you're not."</b></p>
-      <p>The rule that keeps it from turning nasty: <b>the taunt always aims at the situation or the app, never at the person</b>, and every line still carries the real number. WED reads "NOTHING. ZERO." on the receipt because the data says zero — the joke is the honesty, not an insult.</p>
+      <h3>It taunts you</h3>
+      <p>A screen that politely reports numbers gets ignored. This one needles: <b>"finish it, coward"</b>.</p>
+      <p>One rule keeps it from turning mean — <b>the joke is aimed at the situation, never the person</b>, and every line still carries the real number.</p>
     </div>
     <div class="note">
       <div class="note__n">03</div>
-      <h3>WIP — the mascot <em>is</em> your progress</h3>
-      <p>Duo works because it's a behavioural system tied to real data, not a character telling jokes. WIP is a lump of clay <b>sculpted as you practise</b> — shapeless early, nearly finished at 97%, slumping to a puddle when the streak dies.</p>
-      <p>Tinker teaches you to make things with your hands, so the mascot is the thing you're making. It says <b>"i'm 72% of a guy"</b> because it literally is. Its stage is a pure function of your percentage.</p>
+      <h3>BLOB is your progress bar</h3>
+      <p>BLOB is a lump of clay that gets <b>sculpted as you practise</b> — shapeless early, nearly finished at 97%, a puddle when your streak dies.</p>
+      <p>Tinker teaches you to make things by hand, so the mascot is the thing you're making. Its shape is calculated from your percentage, not decoration.</p>
     </div>
     <div class="note">
       <div class="note__n">04</div>
-      <h3>New icons, new treatment</h3>
-      <p>Not the previous set recoloured — different metaphors and a different technique. Streak is a <b>bolt</b>, not a flame. Badges are a <b>rosette</b>. Crochet is a <b>knot</b>, claymation a <b>pot</b>, storytelling a <b>speech bubble</b>. Tab bar uses a roof, a stack, a frame, a spark and a smiley.</p>
-      <p>The treatment is <b>sticker art</b>: flat kit colour, 3px ink outline, hard offset shadow — no gradients, no soft 3D. It matches the offset shadows on the bento blocks and stickers, so the whole screen reads as one material.</p>
+      <h3>Icons drawn as stickers</h3>
+      <p>Flat colour, 3px ink outline, hard offset shadow — no gradients. The same shadow sits on the tiles and badges, so the whole screen feels like one material.</p>
+      <p>Not pixel art: 8-bit reads as a millennial reference, not a Gen Z one.</p>
     </div>
     <div class="note">
       <div class="note__n">05</div>
-      <h3>The receipt is the viral object</h3>
-      <p>A thermal receipt is nostalgic, funny, and <b>already screenshot-shaped</b> — tall, narrow, legible at thumbnail size. The barcode regenerates every time. Buttons read <b>hide it</b> / <b>post it</b>, because that's the actual decision.</p>
-      <p>It's earned, not offered: it lands after you finish something, which is exactly when you'd want to post it.</p>
+      <h3>The flex card is the viral bit</h3>
+      <p>Built story-shaped so it drops straight into Instagram. It names <b>what you actually did</b>, not just a streak number, so it means something to whoever sees it.</p>
+      <p>It's earned, not offered — it only appears after you finish a lesson.</p>
     </div>
     <div class="note">
       <div class="note__n">06</div>
       <h3>Loud, then quiet, then loud</h3>
-      <p>Violet status, coral action, amber rewards — but the skills section is <b>plain canvas</b>. It holds seven rows of numbers and needs calm to stay readable. If everything shouts, nothing does.</p>
-      <p>Colour marks role, never decoration: coral only ever means "act", sage only ever means "done".</p>
-    </div>
-  </div>
-</section>
-
-<section class="band">
-  <div class="wrap">
-    <div class="band__h">
-      <h2>What changed, component by component</h2>
-      <p>Same seven sections, same order, nothing deleted — and not one piece of the reference's visual anatomy reused.</p>
-    </div>
-    <div class="cmp">
-      <div>
-        <h4>Reference</h4>
-        <ul>
-          <li>White rounded card per section</li>
-          <li>Tiny uppercase label at each card's top-left</li>
-          <li>Equal-width day chips, colour = practised</li>
-          <li>Percentage as small text beside the title</li>
-          <li>Badges as circles with a thin ring</li>
-          <li>Classes as image-box-on-top, text below</li>
-          <li>Settings inside a card with divider rows</li>
-          <li>Polite reporting voice: "Resume lesson"</li>
-        </ul>
-      </div>
-      <div>
-        <h4>This build</h4>
-        <ul>
-          <li>Full-bleed colour zones, butted edge to edge</li>
-          <li>No labels — the zone's colour identifies it</li>
-          <li>Real bar chart, height = minutes practised</li>
-          <li>84px and 38px numerals as the anchor</li>
-          <li>Rotated stickers, hard offset shadows, overlapping</li>
-          <li>Bento grid; the colour block is the tile</li>
-          <li>Plain rows on canvas, no container</li>
-          <li>Taunting voice: "finish it, coward"</li>
-        </ul>
-      </div>
+      <p>Violet, coral and amber shout — but the skills list sits on <b>plain canvas</b>. It holds seven rows of numbers and needs the quiet to stay readable.</p>
+      <p>If everything shouts, nothing does.</p>
     </div>
   </div>
 </section>
@@ -904,7 +855,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
   <div class="wrap">
     <div class="band__h">
       <h2>The icon set</h2>
-      <p>Sticker treatment across the board: flat kit colour, 3px ink outline, hard offset shadow, no gradients. The offset shadow is the same 4–5px used on the bento blocks and badge stickers, so icons and surfaces read as the same material.</p>
+      <p>Flat colour, 3px ink outline, hard offset shadow, no gradients — drawn by hand in SVG.</p>
     </div>
     <div class="iconwall" id="iconwall"></div>
   </div>
@@ -914,67 +865,66 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
   <div class="wrap">
     <div class="band__h">
       <h2>BLOB, illustrated</h2>
-      <p>Six sticker illustrations of the mascot, each placed where it carries <b>information or reward</b> — never as filler. BLOB is the only character in the app, so every illustration has to read as the same creature in a different state.</p>
+      <p>Each one is placed where it carries information or a reward — never as filler. <b>Illustrations generated with ChatGPT</b>, then cut out and colour-matched to the kit by hand.</p>
     </div>
     <div class="illwall">
       <figure class="illcard illcard--violet">
         <img src="blob-assets/blob-streak.png" alt="BLOB hugging the number 12 with flames behind it" />
-        <figcaption><b>Streak hero</b><span>Sits beside the day count in the status zone. The flames and the crown do the bragging so the copy doesn't have to.</span></figcaption>
-      </figure>
-      <figure class="illcard illcard--sage">
-        <img src="blob-assets/blob-practiced.png" alt="BLOB holding a Practiced today sign" />
-        <figcaption><b>Practiced today</b><span>Appears under the week strip <em>only after</em> you finish a lesson — it is a reward, so it cannot be on screen before it is earned.</span></figcaption>
+        <figcaption><b>Streak hero</b><span>Replaces the day count entirely — the drawing already says "12" louder than type could.</span></figcaption>
       </figure>
       <figure class="illcard illcard--ink">
         <img src="blob-assets/blob-run.png" alt="BLOB sprinting toward a finish flag" />
-        <figcaption><b>Sprint</b><span>Thumbnail for the in-progress lesson. Running at a finish line is the same idea as "39 min from finished", drawn instead of written.</span></figcaption>
+        <figcaption><b>Sprint</b><span>Thumbnail for the lesson in progress. Running at a finish line = "nearly done", drawn instead of written.</span></figcaption>
       </figure>
       <figure class="illcard illcard--lav">
         <img src="blob-assets/blob-highfive.png" alt="BLOB high-fiving a purple friend" />
-        <figcaption><b>High five</b><span>Marks the invite row. Two characters is the fastest way to signal that this action involves somebody else.</span></figcaption>
+        <figcaption><b>High five</b><span>Marks the invite row. Two characters instantly says "this involves someone else".</span></figcaption>
       </figure>
       <figure class="illcard illcard--amber">
         <img src="blob-assets/blob-flag.png" alt="BLOB marching with a lightning flag" />
-        <figcaption><b>Victory flag</b><span>Rides the corner of the shareable card. It has to survive being screenshotted at thumbnail size, so the silhouette is the loudest part.</span></figcaption>
+        <figcaption><b>Victory flag</b><span>Sits on the flex card. Bold silhouette so it still reads at thumbnail size.</span></figcaption>
+      </figure>
+      <figure class="illcard illcard--sage">
+        <img src="blob-assets/blob-practiced.png" alt="BLOB holding a Practiced today sign" />
+        <figcaption><b>Practiced today</b><span>Held back for the daily-reminder push, not the report screen.</span></figcaption>
       </figure>
       <figure class="illcard illcard--ink">
         <img src="blob-assets/blob-tablet.png" alt="BLOB relaxing with a tablet and headphones" />
-        <figcaption><b>Studying</b><span>Held back for the empty and paused states. Not on the main screen — a report screen should never show a mascot doing nothing.</span></figcaption>
+        <figcaption><b>Studying</b><span>Held back for empty and paused states — the report screen shouldn't show a mascot doing nothing.</span></figcaption>
       </figure>
     </div>
-    <p style="margin-top:var(--s5);color:var(--ink-2);max-width:66ch;font-size:15px">Two of the six shipped with a baked-in dark glow rather than transparency. Those are the two mounted on <b>ink tiles</b>, where the glow is invisible by design — the rest were cut to transparent so they can sit on any zone colour.</p>
   </div>
 </section>
 
 <section class="band">
   <div class="wrap">
     <div class="band__h">
-      <h2>Every colour was measured before it was used</h2>
-      <p>Sixteen kit tokens, none added. I tested each saturated one against white and ink first, and that decided the layout: <b>violet is the only kit colour dark enough to carry white text.</b> Everything else takes ink — and mint can't carry small text at all.</p>
+      <h2>Why each card got its colour</h2>
+      <p>All from the Design Kit, nothing invented. One colour per job — so you learn what a colour means once and it holds everywhere.</p>
     </div>
     <div class="ctwrap">
       <table class="ct">
-        <thead><tr><th>Token</th><th>White</th><th>Ink</th><th>So it's used for</th></tr></thead>
+        <thead><tr><th>Card</th><th>Colour</th><th>Why</th></tr></thead>
         <tbody>
-          <tr><td><span class="chip"><span class="dot" style="background:#6B4FC4"></span>violet</span> <code>#6B4FC4</code></td><td class="pass">5.93 ✓</td><td class="fail">2.93 ✕</td><td>The status zone — the one dark surface, white type.</td></tr>
-          <tr><td><span class="chip"><span class="dot" style="background:#F0552E"></span>coral</span> <code>#F0552E</code></td><td class="fail">3.47 ✕</td><td class="pass">5.01 ✓</td><td>The action zone. Ink type, ink button.</td></tr>
-          <tr><td><span class="chip"><span class="dot" style="background:#F0B93D"></span>amber</span> <code>#F0B93D</code></td><td class="fail">1.79 ✕</td><td class="pass">9.71 ✓</td><td>Rewards. The kit's strongest pair, so the loudest zone.</td></tr>
-          <tr><td><span class="chip"><span class="dot" style="background:#E2703A"></span>terracotta</span> <code>#E2703A</code></td><td class="fail">3.18 ✕</td><td class="pass">5.48 ✓</td><td>Bento block.</td></tr>
-          <tr><td><span class="chip"><span class="dot" style="background:#4E7FE0"></span>sky</span> <code>#4E7FE0</code></td><td class="fail">3.86 ✕</td><td class="pass">4.50 ✓</td><td>Bento block. Ink only just passes, so no small text on it.</td></tr>
-          <tr><td><span class="chip"><span class="dot" style="background:#6B8F3C"></span>sage</span> <code>#6B8F3C</code></td><td class="fail">3.74 ✕</td><td class="pass">4.66 ✓</td><td>Completion dots and chips.</td></tr>
-          <tr><td><span class="chip"><span class="dot" style="background:#2E8C6C"></span>mint</span> <code>#2E8C6C</code></td><td class="fail">4.13 ✕</td><td class="fail">4.21 ✕</td><td><b>Fails both.</b> Toggles and fills only, plus one bento block where type is white at 17px bold.</td></tr>
+          <tr><td><b>Status / streak</b></td><td><span class="chip"><span class="dot" style="background:#6B4FC4"></span>violet</span></td><td>It opens the screen, so it needed the most weight. Violet is the only kit colour dark enough to carry white text — that's what makes it the one "hero" surface.</td></tr>
+          <tr><td><b>Up next</b></td><td><span class="chip"><span class="dot" style="background:#F0552E"></span>coral</span></td><td>The hottest colour in the kit, saved for the one thing you're meant to tap. Coral appears nowhere else, so it always means <b>act</b>.</td></tr>
+          <tr><td><b>Skills list</b></td><td><span class="chip"><span class="dot" style="background:#FBF7EF;outline:1px solid #EAE6DC"></span>canvas</span></td><td>Seven rows of percentages and minutes. This is the one section you actually read, so it gets no colour at all.</td></tr>
+          <tr><td><b>Receipts / badges</b></td><td><span class="chip"><span class="dot" style="background:#F0B93D"></span>amber</span></td><td>Rewards should feel like the loudest moment. Amber on ink is the brightest, most readable pair in the kit — it can shout without hurting legibility.</td></tr>
+          <tr><td><b>BLOB card</b></td><td><span class="chip"><span class="dot" style="background:#2E8C6C"></span>mint</span></td><td>Sits between violet and coral and has to separate them without competing. Mint is the calmest saturated colour available.</td></tr>
+          <tr><td><b>Class tiles</b></td><td><span class="chip"><span class="dot" style="background:#E2703A"></span>terracotta</span> <span class="chip"><span class="dot" style="background:#4E7FE0"></span>sky</span></td><td>These are browsing tiles, not status. Different colours help you tell one class from another at a glance — the colour is identity, not meaning.</td></tr>
+          <tr><td><b>Done states</b></td><td><span class="chip"><span class="dot" style="background:#6B8F3C"></span>sage</span></td><td>Only ever used for finished things — ticks, completed rows, badge dots. Never used decoratively.</td></tr>
         </tbody>
       </table>
     </div>
-    <p style="margin-top:var(--s5);color:var(--ink-2);max-width:64ch;font-size:15px">Worth flagging for the kit: the reference puts small text on sky and mint, and white text on coral. All three fail AA. A darker step on sky and mint would let them carry type again.</p>
+    <p style="margin-top:var(--s5);color:var(--ink-2);max-width:64ch;font-size:15px">One thing worth flagging back to the kit: coral, sky and mint all fail AA with small text on them, so I kept text on those either large, bold, or on a white pill. A darker step of each would fix it.</p>
   </div>
 </section>
 
 <section class="band">
   <div class="wrap">
     <div class="band__h">
-      <h2>Voice: the taunt always carries the number</h2>
-      <p>Sarcasm aims at the situation or the app, never at the person. And <b>every rewritten line still contains the data it replaced</b> — the joke is the delivery, not a substitute for information.</p>
+      <h2>Every taunt still carries the number</h2>
+      <p>The joke is in the delivery — it never replaces the information.</p>
     </div>
     <div class="voice">
       <div class="vrow"><span class="was2">12-day streak</span><span class="arrow">→</span><span class="now">12 days deep</span></div>
@@ -1309,7 +1259,6 @@ document.getElementById('cta').addEventListener('click',function(){
   document.getElementById('trk').style.width='100%';
   document.getElementById('b1').style.width='97%';
   document.getElementById('p1').innerHTML='97<span style="font-size:20px">%</span>';
-  countTo(document.getElementById('days'),13,620);
   document.querySelector('.track').classList.add('sweep');
   document.querySelector('.strip__bar').classList.add('sweep');
   confetti(this);
@@ -1328,14 +1277,13 @@ document.getElementById('cta').addEventListener('click',function(){
   var ws=document.getElementById('wipArt');
   if(ws){ws.classList.remove('bob');ws.classList.add('squish');
     setTimeout(function(){ws.classList.remove('squish');ws.classList.add('bob');},820);}
-  var st=document.getElementById('stampArt');if(st)st.classList.add('on');
   Snd.done();
   setTimeout(function(){toast('flex card ready. go on then.');},1000);
 });
 
 var sheet=document.getElementById('sheet');
 document.getElementById('rcBtn').addEventListener('click',function(){
-  document.getElementById('scN').textContent=document.getElementById('days').textContent;
+  document.getElementById('scN').textContent=finished?'13':'12';
   document.getElementById('scMin').textContent=document.getElementById('minN').textContent;
   document.getElementById('scSess').textContent=document.getElementById('sessN').textContent;
   document.getElementById('scLine').textContent = finished
