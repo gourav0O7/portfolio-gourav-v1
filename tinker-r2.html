@@ -102,7 +102,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 .bell b{position:absolute;top:5px;right:6px;width:10px;height:10px;border-radius:var(--rp);background:var(--coral);border:2px solid var(--violet)}
 
 .heroGrid{position:relative;z-index:1}
-.big{display:flex;align-items:flex-end;gap:var(--s2);flex:1;min-width:0}
+.big{display:flex;align-items:flex-end;gap:0;flex:1;min-width:0}
 /* The illustration IS the number — it carries the count, the flames and the
    crown, so no numeral is set in type beside it (that read as a duplicate). */
 .big__art{width:168px;flex:none;position:relative;z-index:1;display:block;
@@ -110,8 +110,10 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 /* The "12" glyph bottoms out at 87% of the artwork's height — the feet carry on
    below it. Padding to that line so DAYS DEEP sits on the numeral's baseline,
    not on the bottom of the image box (which read as misaligned). */
-.big__u{font-weight:900;font-size:23px;line-height:.94;padding-bottom:18px;text-transform:uppercase;
-  letter-spacing:-.01em;position:relative;z-index:1}
+/* pulled in tight to the artwork — the "2" ends well before the image box does,
+   so a negative margin closes the optical gap the transparent edge leaves */
+.big__u{font-weight:900;font-size:31px;line-height:.9;padding-bottom:18px;text-transform:uppercase;
+  letter-spacing:-.02em;margin-left:-16px;position:relative;z-index:1}
 .big__u em{display:block;font-style:normal;color:var(--amber)}
 
 .wipWrap{width:112px;flex:none;text-align:center}
@@ -527,6 +529,22 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 @keyframes wobble{0%,100%{transform:rotate(-8deg)}30%{transform:rotate(6deg) scale(1.08)}60%{transform:rotate(-4deg)}}
 .sticker--a.wob{animation:wobble .5s var(--e)}
 .sticker--b.wob{animation:wobble .5s var(--e) .06s}
+/* Badges stamp in one after another when the receipts zone arrives — the
+   reward section earns an entrance, the same way the bars and rings do.
+   Each keeps its own resting rotation so the stack still looks hand-placed. */
+.sticker{--rot:0deg}
+.sticker--a{--rot:-8deg} .sticker--b{--rot:6deg} .sticker--more{--rot:-3deg}
+.zrev .sticker{opacity:0;transform:rotate(var(--rot)) scale(.4)}
+.zrev.in .sticker{animation:stamp .52s var(--pop) forwards}
+.zrev.in .sticker--b{animation-delay:.1s}
+.zrev.in .sticker--more{animation-delay:.2s}
+@keyframes stamp{
+  0%{opacity:0;transform:rotate(calc(var(--rot) - 16deg)) scale(.4)}
+  60%{opacity:1;transform:rotate(var(--rot)) scale(1.12)}
+  100%{opacity:1;transform:rotate(var(--rot)) scale(1)}}
+@media(prefers-reduced-motion:reduce){
+  .zrev .sticker{opacity:1;transform:rotate(var(--rot))}
+  .zrev.in .sticker{animation:none}}
 /* tab icons pop on select */
 @keyframes tabpop{0%{transform:scale(1)}40%{transform:scale(1.32) translateY(-3px)}100%{transform:scale(1)}}
 .tab .pops{display:inline-flex}
