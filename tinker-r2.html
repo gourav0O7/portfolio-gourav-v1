@@ -102,12 +102,15 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 .bell b{position:absolute;top:5px;right:6px;width:10px;height:10px;border-radius:var(--rp);background:var(--coral);border:2px solid var(--violet)}
 
 .heroGrid{position:relative;z-index:1}
-.big{display:flex;align-items:flex-end;gap:var(--s3);flex:1;min-width:0}
+.big{display:flex;align-items:flex-end;gap:var(--s2);flex:1;min-width:0}
 /* The illustration IS the number — it carries the count, the flames and the
    crown, so no numeral is set in type beside it (that read as a duplicate). */
-.big__art{width:172px;flex:none;position:relative;z-index:1;
+.big__art{width:168px;flex:none;position:relative;z-index:1;display:block;
   filter:drop-shadow(0 10px 16px rgba(27,26,23,.3))}
-.big__u{font-weight:900;font-size:24px;line-height:.92;padding-bottom:var(--s3);text-transform:uppercase;
+/* The "12" glyph bottoms out at 87% of the artwork's height — the feet carry on
+   below it. Padding to that line so DAYS DEEP sits on the numeral's baseline,
+   not on the bottom of the image box (which read as misaligned). */
+.big__u{font-weight:900;font-size:23px;line-height:.94;padding-bottom:18px;text-transform:uppercase;
   letter-spacing:-.01em;position:relative;z-index:1}
 .big__u em{display:block;font-style:normal;color:var(--amber)}
 
@@ -183,6 +186,11 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 
 .zhead{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s3)}
 .zhead h2{font-family:var(--serif);font-weight:900;font-size:25px;letter-spacing:-.03em}
+/* Slang names the section; the subline says what it actually is. The joke
+   never has to be understood for the screen to be usable. */
+.zsub{display:block;font-size:12px;font-weight:600;color:var(--ink-2);margin-top:3px;
+  font-family:var(--sans);letter-spacing:0;text-transform:none}
+.eyebrow .zsub{color:inherit;opacity:.8}
 .zhead a{font-size:13px;font-weight:800;color:var(--violet)}
 
 .strip{width:100%;padding:var(--s5) 0;border-bottom:2px solid var(--border);display:block}
@@ -214,6 +222,19 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 .row__t i{display:block;font-style:normal;font-size:11.5px;color:var(--ink-2);font-weight:500;margin-top:1px}
 .row__s{font-size:11px;font-weight:800;color:var(--ink-2);flex:none}
 .row__s--now{color:var(--coral)}
+/* Every unfinished lesson carries its own button. Status text alone ("untouched")
+   named the state but gave you nothing to press — this is the way in. */
+.go{flex:none;display:inline-flex;align-items:center;gap:5px;border:2.5px solid var(--ink);
+  border-radius:var(--rp);padding:7px 13px;font-size:11.5px;font-weight:900;
+  background:var(--surface);color:var(--ink);position:relative;
+  transition:transform .18s var(--pop),box-shadow .18s var(--e),background .2s var(--e)}
+.go--start{background:var(--coral);color:#fff;box-shadow:0 3px 0 var(--ink)}
+.go--resume{background:var(--amber);box-shadow:0 3px 0 var(--ink)}
+.go:active{transform:translateY(3px);box-shadow:0 0 0 var(--ink)}
+.go__tick{width:26px;height:26px;padding:0;justify-content:center;background:var(--sage);
+  color:#fff;box-shadow:none;border-radius:var(--rp)}
+.row--done .row__t{opacity:.62}
+@media(max-width:420px){.go{padding:6px 10px;font-size:11px}}
 
 .stickers{display:flex;align-items:center;margin-top:var(--s5);padding-left:var(--s2);position:relative;z-index:1}
 .sticker{width:74px;height:74px;border-radius:var(--rp);background:#fff;display:grid;place-items:center;flex:none;box-shadow:0 5px 0 var(--ink)}
@@ -244,7 +265,9 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 .pg__meta{display:block;font-size:10.5px;font-weight:700;color:var(--ink-2);opacity:.8;margin-top:2px}
 .pg__ring{width:46px;height:46px;flex:none;display:grid;place-items:center;position:relative}
 .pg__ring svg{position:absolute;inset:0}
-.pg__ring b{font-size:12px;font-weight:900}
+.pg__ring b{font-size:12px;font-weight:900;font-variant-numeric:tabular-nums;
+  transition:transform .2s var(--pop)}
+.pg__ring--go b{transform:scale(1.14)}
 .bx{border-radius:var(--r3);padding:var(--s4);min-height:130px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;box-shadow:0 4px 0 var(--ink)}
 .bx--wide{grid-column:1/-1;min-height:96px;flex-direction:row;align-items:center;gap:var(--s4)}
 .bx__t b{display:block;font-family:var(--serif);font-weight:900;font-size:17px;line-height:1.1;letter-spacing:-.02em}
@@ -282,8 +305,15 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 .tab.on{color:#fff}
 
 .sheet{position:absolute;inset:0;z-index:50;background:rgba(27,26,23,.72);display:flex;align-items:center;justify-content:center;padding:var(--s5);opacity:0;pointer-events:none;transition:opacity .3s var(--e)}
-.shareWrap{width:100%;max-width:280px;transform:translateY(20px) scale(.95);transition:transform .42s var(--pop)}
-.sheet.on .shareWrap{transform:none}
+/* The card flips in on its Y axis, like a physical card being turned over to
+   show you the front. Perspective on the wrapper so the rotation has depth. */
+.shareWrap{width:100%;max-width:280px;perspective:1100px}
+.shareWrap>.scard{transform:rotateY(-88deg) translateY(16px) scale(.94);opacity:.25;
+  transform-origin:50% 50%;
+  transition:transform .68s cubic-bezier(.2,.85,.3,1),opacity .3s var(--e)}
+.sheet.on .shareWrap>.scard{transform:none;opacity:1}
+@media(prefers-reduced-motion:reduce){
+  .shareWrap>.scard{transform:none;opacity:1;transition:none}}
 /* 9:16-ish story card — the shape people actually post */
 .scard{background:var(--violet);color:#fff;border-radius:var(--r4);padding:var(--s4);
   aspect-ratio:9/17.4;display:flex;flex-direction:column;overflow:hidden;position:relative;
@@ -595,7 +625,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
             <span class="doodle d2" data-dd="sparkle"></span>
             <div class="topbar">
               <div class="ava">SP</div>
-              <div class="topbar__id"><b>hey, sam</b><span>pro member (fancy)</span></div>
+              <div class="topbar__id"><b>hey, sam</b><span>Pro member · all classes unlocked</span></div>
               <button class="bell ring" data-tap aria-label="notifications"><span data-ic="bell" data-sz="20"></span><b></b></button>
             </div>
             <div class="heroGrid">
@@ -609,7 +639,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
               <span><b id="minN">45</b>minutes</span>
               <span><b>2</b>skills open</span>
             </div>
-            <div class="taunt" id="taunt"><span data-i3="bolt" data-sz="26"></span><p>you: 45 min this week. your phone: 6 hrs. bold.</p></div>
+            <div class="taunt" id="taunt"><span data-i3="bolt" data-sz="26"></span><p>45 min practising. 6 hrs on your phone. we both saw it.</p></div>
             <div class="wk">
               <div class="wk__c"><span class="wk__m">15m</span><div class="wk__b wk__b--on" style="height:52%"></div><span class="wk__d">M</span></div>
               <div class="wk__c"><span class="wk__m">20m</span><div class="wk__b wk__b--on" style="height:70%"></div><span class="wk__d">T</span></div>
@@ -634,7 +664,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 
           <!-- ZONE 2 · up next -->
           <div class="zone zone--coral">
-            <span class="eyebrow">next up, allegedly</span>
+            <span class="eyebrow">next up, allegedly<span class="zsub">Pick up where you left off</span></span>
             <div class="up">
               <span class="upArt"><img src="blob-assets/blob-run.png" alt="" aria-hidden="true" /></span>
               <div class="up__t">
@@ -649,7 +679,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 
           <!-- ZONE 3 · skills -->
           <div class="zone zone--plain">
-            <div class="zhead"><h2>the skills</h2><a href="#" data-noop>all of them</a></div>
+            <div class="zhead"><div><h2>the skills</h2><span class="zsub">Skills you're learning, lesson by lesson</span></div><a href="#" data-noop>all of them</a></div>
             <button class="strip open" data-strip>
               <div class="strip__r">
                 <div class="strip__t">
@@ -662,10 +692,10 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
               <div class="strip__bar"><i id="b1" style="width:72%;background:var(--coral)"></i></div>
             </button>
             <div class="rows">
-              <div class="row"><span class="lic lic--done"><span data-ic="linear" data-sz="17"></span></span><span class="row__t">Linear Motion<i>20/20 min</i></span><span class="row__s">done</span></div>
-              <div class="row"><span class="lic lic--done"><span data-ic="curve" data-sz="17"></span></span><span class="row__t">Curved Motion Paths<i>18/18 min</i></span><span class="row__s">done</span></div>
-              <div class="row"><span class="lic lic--now"><span data-i3="ball" data-sz="22"></span></span><span class="row__t">Bouncing Exercises<i id="l3">6/25 min</i></span><span class="row__s row__s--now" id="l3s">right here</span></div>
-              <div class="row"><span class="lic lic--todo"><span data-ic="ease" data-sz="17"></span></span><span class="row__t">Ease in &amp; Ease out<i>0/20 min</i></span><span class="row__s">untouched</span></div>
+              <div class="row row--done"><span class="lic lic--done"><span data-ic="linear" data-sz="17"></span></span><span class="row__t">Linear Motion<i>Finished · 20/20 min</i></span><button class="go go__tick" data-noop aria-label="Linear Motion finished — replay"><span data-ic="tick" data-sz="13"></span></button></div>
+              <div class="row row--done"><span class="lic lic--done"><span data-ic="curve" data-sz="17"></span></span><span class="row__t">Curved Motion Paths<i>Finished · 18/18 min</i></span><button class="go go__tick" data-noop aria-label="Curved Motion Paths finished — replay"><span data-ic="tick" data-sz="13"></span></button></div>
+              <div class="row" id="row3"><span class="lic lic--now"><span data-i3="ball" data-sz="22"></span></span><span class="row__t">Bouncing Exercises<i id="l3">In progress · 6/25 min</i></span><button class="go go--resume" id="l3s" data-noop>resume</button></div>
+              <div class="row"><span class="lic lic--todo"><span data-ic="ease" data-sz="17"></span></span><span class="row__t">Ease in &amp; Ease out<i>Not started · 0/20 min</i></span><button class="go go--start" data-noop>start</button></div>
             </div>
             <button class="strip" data-strip>
               <div class="strip__r">
@@ -679,15 +709,15 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
               <div class="strip__bar"><i style="width:40%;background:var(--violet)"></i></div>
             </button>
             <div class="rows">
-              <div class="row"><span class="lic lic--done"><span data-ic="keys" data-sz="17"></span></span><span class="row__t">Know Your Keys<i>15/15 min</i></span><span class="row__s">done</span></div>
-              <div class="row"><span class="lic lic--now"><span data-ic="bars" data-sz="17"></span></span><span class="row__t">Fingers Are Your Friends<i>4/20 min</i></span><span class="row__s row__s--now">right here</span></div>
-              <div class="row"><span class="lic lic--todo"><span data-ic="plus" data-sz="17"></span></span><span class="row__t">Practice Keys<i>0/15 min</i></span><span class="row__s">untouched</span></div>
+              <div class="row row--done"><span class="lic lic--done"><span data-ic="keys" data-sz="17"></span></span><span class="row__t">Know Your Keys<i>Finished · 15/15 min</i></span><button class="go go__tick" data-noop aria-label="Know Your Keys finished — replay"><span data-ic="tick" data-sz="13"></span></button></div>
+              <div class="row"><span class="lic lic--now"><span data-ic="bars" data-sz="17"></span></span><span class="row__t">Fingers Are Your Friends<i>In progress · 4/20 min</i></span><button class="go go--resume" data-noop>resume</button></div>
+              <div class="row"><span class="lic lic--todo"><span data-ic="plus" data-sz="17"></span></span><span class="row__t">Practice Keys<i>Not started · 0/15 min</i></span><button class="go go--start" data-noop>start</button></div>
             </div>
           </div>
 
           <!-- ZONE 4 · receipts -->
           <div class="zone zone--amber stripes">
-            <span class="eyebrow" style="position:relative;z-index:1">receipts · 12 earned</span>
+            <span class="eyebrow" style="position:relative;z-index:1">receipts · 12 earned<span class="zsub">Badges and certificates you've earned</span></span>
             <div class="stickers">
               <div class="sticker sticker--a"><span data-i3="bolt" data-sz="42"></span></div>
               <div class="sticker sticker--b"><span data-i3="rosette" data-sz="42"></span></div>
@@ -704,7 +734,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 
           <!-- ZONE 5 · classes -->
           <div class="zone zone--plain">
-            <div class="zhead"><h2>still going</h2><a href="#" data-noop>all of them</a></div>
+            <div class="zhead"><div><h2>still going</h2><span class="zsub">Classes you've started but not finished</span></div><a href="#" data-noop>all of them</a></div>
             <button class="pg" data-noop>
               <span class="pg__art pg__art--sky"><span data-i3="bubble" data-sz="38"></span></span>
               <span class="pg__b">
@@ -727,7 +757,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 
           <!-- ZONE 6 · for you -->
           <div class="zone zone--plain" style="padding-top:0">
-            <div class="zhead"><h2>for you</h2><a href="#" data-noop>all of them</a></div>
+            <div class="zhead"><div><h2>for you</h2><span class="zsub">New classes picked for you</span></div><a href="#" data-noop>all of them</a></div>
             <div class="fy">
               <button class="fycard fycard--terra" data-tilt data-noop>
                 <span class="fycard__flag">new</span>
@@ -750,9 +780,9 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 
           <!-- ZONE 7 · the boring bit -->
           <div class="zone zone--plain" style="padding-bottom:124px">
-            <h2 style="font-family:var(--serif);font-weight:900;font-size:25px;letter-spacing:-.03em">the boring bit</h2>
+            <div><h2 style="font-family:var(--serif);font-weight:900;font-size:25px;letter-spacing:-.03em">the boring bit</h2><span class="zsub">Account, plan and notification settings</span></div>
             <div class="plan">
-              <div class="plan__t"><b>Tinker Pro</b><span>$12.99/mo · renews 14 Aug</span></div>
+              <div class="plan__t"><b>Tinker Pro</b><span>$12.99/mo · next payment 14 Sep 2026</span></div>
               <span class="chipm">active</span>
             </div>
             <button class="linkrow" data-noop><span class="lr__t">Manage the bag<em>Change or cancel your Tinker Pro plan.</em></span><span data-ic="chev" data-sz="16"></span></button>
@@ -834,7 +864,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
       <div class="note__n">02</div>
       <h3>It taunts you</h3>
       <p>A screen that politely reports numbers gets ignored. This one needles: <b>"finish it, coward"</b>.</p>
-      <p>One rule keeps it from turning mean — <b>the joke is aimed at the situation, never the person</b>, and every line still carries the real number.</p>
+      <p>Two rules keep it usable. <b>The joke is aimed at the situation, never the person</b> — and <b>every slang heading carries a plain-English line under it</b>, so you never have to get the joke to find your settings.</p>
     </div>
     <div class="note">
       <div class="note__n">03</div>
@@ -937,10 +967,11 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
     <div class="band__h">
       <h2>Every taunt still carries the number</h2>
       <p>The joke is in the delivery — it never replaces the information.</p>
+      <p style="margin-top:var(--s3)"><b>And the slang never stands alone.</b> "the boring bit" is funny but it doesn't tell you it's settings, so every joke heading now carries a plain-English line under it — <em>"Account, plan and notification settings"</em>. Same for "still going" and "receipts". If you don't get the joke, or English isn't your first language, the screen still works. The personality is a layer on top of the label, never a replacement for it.</p>
     </div>
     <div class="voice">
       <div class="vrow"><span class="was2">12-day streak</span><span class="arrow">→</span><span class="now">12 days deep</span></div>
-      <div class="vrow"><span class="was2">3 sessions this week · 45m practiced</span><span class="arrow">→</span><span class="now">you: 45 min. your phone: 6 hrs. ok.</span></div>
+      <div class="vrow"><span class="was2">3 sessions this week · 45m practiced</span><span class="arrow">→</span><span class="now">45 min practising. 6 hrs on your phone. we both saw it.</span></div>
       <div class="vrow"><span class="was2">Up next</span><span class="arrow">→</span><span class="now">next up, allegedly</span></div>
       <div class="vrow"><span class="was2">Resume lesson</span><span class="arrow">→</span><span class="now">finish it, coward</span></div>
       <div class="vrow"><span class="was2">6/25 min</span><span class="arrow">→</span><span class="now">19 min left. that's one bad reel.</span></div>
@@ -1047,6 +1078,7 @@ var SH={
   smiley:'<circle cx="24" cy="24" r="17"/><circle cx="18" cy="20" r="2.4" fill="'+K.ink+'"/><circle cx="30" cy="20" r="2.4" fill="'+K.ink+'"/><path d="M17 29c4 4 10 4 14 0" fill="none"/>',
   bell:'<path d="M36 20a12 12 0 0 0-24 0c0 12-5 14-5 14h34s-5-2-5-14z"/><path d="M27 40a4 4 0 0 1-6 0" fill="none"/>',
   chev:'<path d="M19 12l12 12-12 12" fill="none"/>',
+  tick:'<path d="M11 25l9 9 17-19" fill="none"/>',
   /* lesson techniques — each icon states what the lesson teaches */
   linear:'<path d="M7 24h28M28 15l9 9-9 9" fill="none"/>',
   curve:'<path d="M6 32c8 0 10-16 18-16s10 16 18 16" fill="none"/>',
@@ -1071,7 +1103,7 @@ function line(name,sz){
    + SH[name].replace(/fill="#1B1A17"/g,'fill="currentColor"').replace(/<circle([^/]*?)r="2\.4"([^/]*?)\/>/g,'<circle$1r="2.4"$2 fill="currentColor"/>')
    + '</svg>';
 }
-var LINEONLY={roof:1,stack:1,frame:1,spark:1,smiley:1,bell:1,chev:1,play:1,sound:1,soundoff:1,receipt:1,linear:1,curve:1,ease:1,keys:1,bars:1,plus:1};
+var LINEONLY={roof:1,stack:1,frame:1,spark:1,smiley:1,bell:1,chev:1,tick:1,play:1,sound:1,soundoff:1,receipt:1,linear:1,curve:1,ease:1,keys:1,bars:1,plus:1};
 
 var DD={
   squiggle:'<svg width="54" height="26" viewBox="0 0 54 26" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round"><path d="M3 18c6-14 12 6 18-4s12 12 18-2"/></svg>',
@@ -1186,12 +1218,29 @@ var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         var h=b.style.height;b.style.height='0%';
         setTimeout(function(){b.style.height=h;},60+i*55);
       });
-      // rings draw on
-      e.target.querySelectorAll('.pg__ring svg circle:last-child').forEach(function(c){
-        var full=c.getAttribute('stroke-dasharray'),to=c.getAttribute('stroke-dashoffset');
-        c.style.transition='none';c.setAttribute('stroke-dashoffset',full);
-        setTimeout(function(){c.style.transition='stroke-dashoffset .9s cubic-bezier(.22,1,.36,1)';
-          c.setAttribute('stroke-dashoffset',to);},80);
+      // rings draw on, and the number counts up with the arc so the two agree
+      e.target.querySelectorAll('.pg__ring').forEach(function(ring){
+        var c=ring.querySelector('svg circle:last-child');
+        var lbl=ring.querySelector('b'), pct=+ring.dataset.ring||0;
+        if(c){
+          var full=c.getAttribute('stroke-dasharray'),to=c.getAttribute('stroke-dashoffset');
+          c.style.transition='none';c.setAttribute('stroke-dashoffset',full);
+          setTimeout(function(){c.style.transition='stroke-dashoffset .9s cubic-bezier(.22,1,.36,1)';
+            c.setAttribute('stroke-dashoffset',to);},80);
+        }
+        if(lbl && !reduce){
+          var t0=null, DUR=900;
+          lbl.textContent='0%';
+          ring.classList.add('pg__ring--go');
+          requestAnimationFrame(function step(ts){
+            if(t0===null)t0=ts;
+            var k=Math.min(1,(ts-t0)/DUR);
+            var eased=1-Math.pow(1-k,3);           // matches the arc's ease-out
+            lbl.textContent=Math.round(pct*eased)+'%';
+            if(k<1)requestAnimationFrame(step);
+            else ring.classList.remove('pg__ring--go');
+          });
+        }
       });
     });
   },{root:appEl,rootMargin:'0px 0px -6% 0px',threshold:.12});
@@ -1314,7 +1363,7 @@ document.querySelectorAll('[data-tilt]').forEach(function(c){
 document.getElementById('cta').addEventListener('click',function(){
   if(finished)return;finished=true;
   document.getElementById('mins').textContent='25';
-  document.getElementById('l3').textContent='25/25 min';
+  document.getElementById('l3').textContent='Finished · 25/25 min';
   document.getElementById('trk').style.width='100%';
   document.getElementById('b1').style.width='97%';
   document.getElementById('p1').innerHTML='97<span style="font-size:20px">%</span>';
@@ -1323,10 +1372,14 @@ document.getElementById('cta').addEventListener('click',function(){
   confetti(this);
   document.getElementById('sessN').textContent='4';
   document.getElementById('minN').textContent='64';
-  document.querySelector('#taunt p').textContent='64 min this week. ok, that’s actually respectable.';
+  document.querySelector('#taunt p').textContent='64 min practising. your phone dropped to 4 hrs. character growth.';
   document.getElementById('wkM').textContent='29m';
   document.getElementById('wkB').style.height='96%';
-  var s=document.getElementById('l3s');s.textContent='done';s.className='row__s';
+  /* the resume button becomes the finished tick, matching the rows above it */
+  var s=document.getElementById('l3s');
+  if(s){s.className='go go__tick';s.innerHTML='<span data-ic="tick" data-sz="13"></span>';
+    s.setAttribute('aria-label','Bouncing Exercises finished — replay');paint(s);}
+  var r3=document.getElementById('row3');if(r3)r3.classList.add('row--done');
   var lic=document.querySelector('.lic--now');if(lic)lic.className='lic lic--done';
   document.getElementById('n1').innerHTML='3 of 4 done · <em>14 min from finished.</em> one left. don’t get cocky.';
   document.querySelector('.up__t p').textContent='done. the clay is thrilled.';
