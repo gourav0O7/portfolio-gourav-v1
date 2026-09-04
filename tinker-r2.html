@@ -152,13 +152,23 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
   box-shadow:4px 4px 0 var(--ink);position:relative;z-index:1}
 .taunt p{font-size:13px;font-weight:900;line-height:1.25}
 
-.wk{display:grid;grid-template-columns:repeat(7,1fr);gap:var(--s2);align-items:end;margin-top:var(--s5);height:92px}
-.wk__c{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:var(--s2)}
-.wk__b{width:100%;border-radius:var(--r1);background:rgba(255,255,255,.16);transition:height .7s var(--pop)}
+.wk{display:grid;grid-template-columns:repeat(7,1fr);gap:var(--s2);align-items:end;margin-top:var(--s5);height:150px}
+/* Rows, not flex: the bar gets its own fixed track so its percentage height
+   is exact and can't shrink. Under flex the taller bars were compressing and
+   knocking their day labels a few pixels out of line with the rest. */
+.wk__c{display:grid;grid-template-rows:12px 1fr auto 14px;justify-items:center;
+  align-items:end;height:100%;gap:var(--s2)}
+.wk__b{width:100%;align-self:end;border-radius:var(--r1);background:rgba(255,255,255,.16);transition:height .7s var(--pop)}
 .wk__b--on{background:var(--amber)}
 .wk__b--now{background:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.3)}
 .wk__d{font-size:11px;font-weight:800;opacity:.8}
 .wk__m{font-size:9.5px;font-weight:800;opacity:.6;height:12px}
+/* The white bar was ambiguous against the amber ones, so today is named
+   outright underneath rather than left to be inferred from the colour. */
+.wk__now{height:14px;font-size:8.5px;font-weight:900;letter-spacing:.08em;
+  text-transform:uppercase;display:flex;align-items:center}
+.wk__c--today .wk__d{opacity:1}
+.wk__c--today .wk__now{background:#fff;color:var(--ink);border-radius:var(--rp);padding:0 6px}
 
 /* marquee taunt band between zones */
 /* ============================================================
@@ -168,20 +178,39 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
    (over the 18.66px bold threshold) and the two small lines sit
    on white pills with ink type instead of directly on the green.
    ============================================================ */
+/* Slimmer than it was: BLOB is a nice-to-have, and it was pushing the thing
+   you actually came to do below the fold. */
 .zone--blob{background:var(--mint-fg);color:#fff;border-radius:var(--r4);margin:var(--s3) var(--s2) 0;
-  display:flex;align-items:center;gap:var(--s4);width:calc(100% - var(--s4));text-align:left;
+  display:flex;align-items:center;gap:var(--s2);width:calc(100% - var(--s4));text-align:left;
+  padding:var(--s3) var(--s4) var(--s3) var(--s2);
   transition:transform .18s var(--pop)}
 .zone--blob:active{transform:scale(.985)}
 /* BLOB with the megaphone — it is the character literally announcing an
    opinion, so it sits free on the mint rather than boxed in a badge. */
-.blobface{width:112px;flex:none;display:block;align-self:center;margin-left:calc(var(--s2) * -1);
+.blobface{width:82px;flex:none;display:block;align-self:center;
   filter:drop-shadow(0 6px 10px rgba(27,26,23,.28))}
 .blobsay{flex:1;min-width:0}
 .blobsay__lbl{display:inline-block;background:#fff;color:var(--ink);font-size:10px;font-weight:900;
   letter-spacing:.12em;padding:4px 9px;border-radius:var(--rp);margin-bottom:var(--s2)}
 .blobsay b{display:block;font-family:var(--serif);font-weight:900;font-size:19px;line-height:1.2;letter-spacing:-.02em}
-.blobsay__tap{display:inline-block;margin-top:var(--s3);background:rgba(255,255,255,.94);color:var(--ink);
-  font-size:11px;font-weight:800;padding:5px 10px;border-radius:var(--rp)}
+.blobsay__tap{display:inline-block;margin-top:var(--s2);background:rgba(255,255,255,.94);color:var(--ink);
+  font-size:10.5px;font-weight:800;padding:4px 9px;border-radius:var(--rp)}
+
+/* Primary CTA promoted into the status zone. The lesson you owe is the point
+   of the screen, and it used to sit below the fold behind the BLOB card.
+   Coral because coral means "act" everywhere else on this screen too. */
+.topcta{display:flex;align-items:center;gap:var(--s3);width:100%;text-align:left;
+  margin-top:var(--s4);background:var(--coral);color:var(--ink);border:3px solid var(--ink);
+  border-radius:var(--rp);padding:var(--s3) var(--s3) var(--s3) var(--s4);
+  box-shadow:0 4px 0 var(--ink);position:relative;z-index:1;
+  transition:transform .16s var(--pop),box-shadow .16s var(--e)}
+.topcta:active{transform:translateY(4px);box-shadow:0 0 0 var(--ink)}
+.topcta__t{flex:1;min-width:0}
+.topcta__t em{display:block;font-style:normal;font-size:10.5px;font-weight:900;
+  letter-spacing:.1em;text-transform:uppercase;opacity:.78}
+.topcta__t b{display:block;font-size:15px;font-weight:900;letter-spacing:-.01em;margin-top:1px}
+.topcta__go{width:32px;height:32px;flex:none;border-radius:var(--rp);background:var(--ink);
+  color:#fff;display:grid;place-items:center}
 
 .marq{overflow:hidden;background:var(--ink);color:#fff;padding:var(--s2) 0;margin:var(--s3) 0 0;white-space:nowrap}
 .marq div{display:inline-block;animation:slide 16s linear infinite;font-size:12px;font-weight:900;letter-spacing:.04em}
@@ -701,14 +730,18 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
             </div>
             <div class="taunt" id="taunt"><span data-i3="bolt" data-sz="26"></span><p>45 min practising. 6 hrs on your phone. we both saw it.</p></div>
             <div class="wk">
-              <div class="wk__c"><span class="wk__m">15m</span><div class="wk__b wk__b--on" style="height:52%"></div><span class="wk__d">M</span></div>
-              <div class="wk__c"><span class="wk__m">20m</span><div class="wk__b wk__b--on" style="height:70%"></div><span class="wk__d">T</span></div>
-              <div class="wk__c"><span class="wk__m"></span><div class="wk__b" style="height:8%"></div><span class="wk__d">W</span></div>
-              <div class="wk__c"><span class="wk__m" id="wkM">10m</span><div class="wk__b wk__b--now" id="wkB" style="height:34%"></div><span class="wk__d">T</span></div>
-              <div class="wk__c"><span class="wk__m"></span><div class="wk__b" style="height:8%"></div><span class="wk__d">F</span></div>
-              <div class="wk__c"><span class="wk__m"></span><div class="wk__b" style="height:8%"></div><span class="wk__d">S</span></div>
-              <div class="wk__c"><span class="wk__m"></span><div class="wk__b" style="height:8%"></div><span class="wk__d">S</span></div>
+              <div class="wk__c"><span class="wk__m">15m</span><div class="wk__b wk__b--on" style="height:52%"></div><span class="wk__d">M</span><span class="wk__now"></span></div>
+              <div class="wk__c"><span class="wk__m">20m</span><div class="wk__b wk__b--on" style="height:70%"></div><span class="wk__d">T</span><span class="wk__now"></span></div>
+              <div class="wk__c"><span class="wk__m"></span><div class="wk__b" style="height:8%"></div><span class="wk__d">W</span><span class="wk__now"></span></div>
+              <div class="wk__c wk__c--today"><span class="wk__m" id="wkM">10m</span><div class="wk__b wk__b--now" id="wkB" style="height:34%"></div><span class="wk__d">T</span><span class="wk__now">today</span></div>
+              <div class="wk__c"><span class="wk__m"></span><div class="wk__b" style="height:8%"></div><span class="wk__d">F</span><span class="wk__now"></span></div>
+              <div class="wk__c"><span class="wk__m"></span><div class="wk__b" style="height:8%"></div><span class="wk__d">S</span><span class="wk__now"></span></div>
+              <div class="wk__c"><span class="wk__m"></span><div class="wk__b" style="height:8%"></div><span class="wk__d">S</span><span class="wk__now"></span></div>
             </div>
+            <button class="topcta" id="topCta">
+              <span class="topcta__t"><em>finish today</em><b id="topCtaL">Bouncing Exercises · 19 min left</b></span>
+              <span class="topcta__go"><span data-ic="chev" data-sz="14"></span></span>
+            </button>
           </div>
 
           <button class="zone zone--blob" id="blobCard">
@@ -828,7 +861,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
                 </span>
               </button>
               <button class="fycard fycard--lav" data-tilt data-noop>
-                <span class="fycard__flag fycard__flag--dark">3.2k</span>
+                <span class="fycard__flag fycard__flag--dark">3.2k learning</span>
                 <span class="fycard__art"><span data-i3="pot" data-sz="118"></span></span>
                 <span class="fycard__foot">
                   <span class="fycard__t"><b>Claymation</b><span>everyone's on it. you're not.</span></span>
@@ -842,7 +875,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
           <div class="zone zone--plain" style="padding-bottom:124px">
             <div><h2 style="font-family:var(--serif);font-weight:900;font-size:25px;letter-spacing:-.03em">the boring bit</h2><span class="zsub">Account, plan and notification settings</span></div>
             <div class="plan">
-              <div class="plan__t"><b>Tinker Pro</b><span>$12.99/mo · next payment 14 Sep 2026</span></div>
+              <div class="plan__t"><b>Tinker Pro</b><span>$12.99/mo · renews 14 Sep 2026</span></div>
               <span class="chipm">active</span>
             </div>
             <button class="linkrow" data-noop><span class="lr__t">Manage the bag<em>Change or cancel your Tinker Pro plan.</em></span><span data-ic="chev" data-sz="16"></span></button>
@@ -1455,9 +1488,24 @@ document.getElementById('cta').addEventListener('click',function(){
   var ws=document.getElementById('wipArt');
   if(ws){ws.classList.remove('bob');ws.classList.add('squish');
     setTimeout(function(){ws.classList.remove('squish');ws.classList.add('bob');},820);}
+  var tc=document.getElementById('topCta'),tcl=document.getElementById('topCtaL');
+  if(tcl)tcl.textContent='Ease in & Ease out · not started';
+  if(tc)tc.querySelector('em').textContent='up next';
   Snd.done();
   setTimeout(function(){toast('flex card ready. go on then.');},1000);
 });
+
+/* the promoted CTA is a shortcut to the same lesson, so it takes you to it
+   rather than pretending to be a second, different action */
+(function(){
+  var tc=document.getElementById('topCta');if(!tc)return;
+  tc.addEventListener('click',function(){
+    Snd.tap();
+    var target=document.querySelector('.zone--coral');
+    if(target)document.getElementById('app').scrollTo({top:target.offsetTop-14,
+      behavior:reduce?'instant':'smooth'});
+  });
+})();
 
 var sheet=document.getElementById('sheet');
 document.getElementById('rcBtn').addEventListener('click',function(){
