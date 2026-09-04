@@ -62,8 +62,15 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 .stage__hint{font-size:12.5px;color:var(--ink-2);text-align:center;max-width:36ch}
 .stage__hint b{color:var(--ink)}
 
-.iphone{width:392px;max-width:100%;height:828px;background:var(--ink);border-radius:58px;padding:11px;box-shadow:0 40px 90px -30px rgba(27,26,23,.5);position:relative;flex:none}
-.screen{width:100%;height:100%;background:var(--canvas);border-radius:47px;overflow:hidden;position:relative}
+/* The device is sized off whichever runs out first: its natural 392px, the
+   column it sits in, or the height the viewport can actually show. On a
+   laptop the third term wins, so the whole phone fits on screen at once
+   instead of running off the bottom. Height follows from the aspect ratio. */
+.iphone{width:min(392px,100%,calc((100dvh - 96px) * 392 / 828));
+  aspect-ratio:392/828;height:auto;
+  background:var(--ink);border-radius:clamp(42px,14.8%,58px);padding:11px;
+  box-shadow:0 40px 90px -30px rgba(27,26,23,.5);position:relative;flex:none}
+.screen{width:100%;height:100%;background:var(--canvas);border-radius:clamp(33px,12.5%,47px);overflow:hidden;position:relative}
 .island{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:112px;height:31px;background:var(--ink);border-radius:var(--rp);z-index:40}
 
 /* status bar: transparent overlay. No background, so nothing can leave a
@@ -158,8 +165,10 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
   display:flex;align-items:center;gap:var(--s4);width:calc(100% - var(--s4));text-align:left;
   transition:transform .18s var(--pop)}
 .zone--blob:active{transform:scale(.985)}
-.blobface{width:78px;height:78px;flex:none;border-radius:var(--rp);background:var(--amber);
-  border:3px solid var(--ink);display:grid;place-items:center;overflow:hidden;box-shadow:4px 4px 0 var(--ink)}
+/* BLOB with the megaphone — it is the character literally announcing an
+   opinion, so it sits free on the mint rather than boxed in a badge. */
+.blobface{width:112px;flex:none;display:block;align-self:center;margin-left:calc(var(--s2) * -1);
+  filter:drop-shadow(0 6px 10px rgba(27,26,23,.28))}
 .blobsay{flex:1;min-width:0}
 .blobsay__lbl{display:inline-block;background:#fff;color:var(--ink);font-size:10px;font-weight:900;
   letter-spacing:.12em;padding:4px 9px;border-radius:var(--rp);margin-bottom:var(--s2)}
@@ -406,6 +415,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 .illcard{border:3px solid var(--ink);border-radius:var(--r3);overflow:hidden;background:var(--surface);
   box-shadow:5px 5px 0 var(--ink)}
 .illcard img{display:block;width:100%;height:172px;object-fit:contain;padding:var(--s4)}
+.illcard--mint img{background:var(--mint-fg)}
 .illcard--violet img{background:var(--violet)}
 .illcard--sage img{background:var(--sage)}
 .illcard--ink img{background:var(--ink);object-fit:cover;padding:0}
@@ -618,8 +628,9 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 
 <section class="intro wrap">
   <span class="kicker">REPORT SCREEN · REDESIGN</span>
-  <h1>Everyone gets the same screen from the same prompt. <em>This isn't that.</em></h1>
-  <p class="intro__lede">Same content, same order, <b>nothing deleted</b> — but the white cards are gone. Full-bleed colour blocks, big type doing the hierarchy, and a voice that <b>needles you into finishing</b> instead of politely reporting numbers.</p>
+  <h1>Tinker's Report screen, <em>rebuilt for a Gen Z audience.</em></h1>
+  <p class="intro__lede">The brief: redesign the Report screen for a skills-learning app — <b>same seven sections, same order, nothing removed</b>, built only from the supplied Design Kit. The goal was a screen that makes you want to finish the lesson, not just one that tells you how far along you are.</p>
+  <p class="intro__lede" style="margin-top:var(--s3)">The prototype below is live — tap through it. Everything under it explains why each decision was made, including <b>the parts I'd still change</b>.</p>
 </section>
 
 <section class="lab wrap">
@@ -670,7 +681,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
           </div>
 
           <button class="zone zone--blob" id="blobCard">
-            <span class="blobface bob" id="wipArt"></span>
+            <img class="blobface bob" id="wipArt" src="blob-assets/blob-megaphone.png" alt="" aria-hidden="true" />
             <span class="blobsay">
               <span class="blobsay__lbl">BLOB SAYS</span>
               <b id="wipSay">Twelve days in and still no crochet callouses. Interesting.</b>
@@ -886,9 +897,9 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
     </div>
     <div class="note">
       <div class="note__n">03</div>
-      <h3>BLOB is your progress bar</h3>
-      <p>BLOB is a lump of clay that gets <b>sculpted as you practise</b> — shapeless early, nearly finished at 97%, a puddle when your streak dies.</p>
-      <p>Tinker teaches you to make things by hand, so the mascot is the thing you're making. Its shape is calculated from your percentage, not decoration.</p>
+      <h3>BLOB has an opinion</h3>
+      <p>Every app has a mascot that says "great job!". BLOB reads your actual numbers and comments on them — <b>"I'm 72% of a guy. Do something about that."</b> Tap it and it says something else.</p>
+      <p>It's not decoration: every line it says is generated from real data on the screen, so it can never contradict what you're looking at.</p>
     </div>
     <div class="note">
       <div class="note__n">04</div>
@@ -928,6 +939,10 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
       <p>Each one is placed where it carries information or a reward — never as filler. <b>Illustrations generated with ChatGPT</b>, then cut out and colour-matched to the kit by hand.</p>
     </div>
     <div class="illwall">
+      <figure class="illcard illcard--mint">
+        <img src="blob-assets/blob-megaphone.png" alt="BLOB shouting through a megaphone" />
+        <figcaption><b>Megaphone</b><span>Fronts the "BLOB says" card. A character holding a megaphone is the clearest possible way to say <em>this bit is an opinion, not a stat</em>.</span></figcaption>
+      </figure>
       <figure class="illcard illcard--violet">
         <img src="blob-assets/blob-streak.png" alt="BLOB hugging the number 12 with flames behind it" />
         <figcaption><b>Streak hero</b><span>Replaces the day count entirely — the drawing already says "12" louder than type could.</span></figcaption>
@@ -1161,7 +1176,9 @@ var WS={
 };
 function stageFor(p,alive){ if(!alive)return 'slumped'; if(p<34)return 'lump'; if(p<71)return 'forming'; return 'sculpted'; }
 var wipArt=document.getElementById('wipArt'),wipSay=document.getElementById('wipSay');
-function setWip(st,line){ wipArt.innerHTML=clay(WS[st],66); if(line)wipSay.textContent=line; }
+/* BLOB's portrait is a fixed illustration now, so only the line changes here.
+   The progress-driven clay stages still drive the copy, not the artwork. */
+function setWip(st,line){ if(line)wipSay.textContent=line; }
 
 /* BLOB's opinions. Tapping cycles them; they reference real numbers so the
    character never drifts away from the data on screen. */
