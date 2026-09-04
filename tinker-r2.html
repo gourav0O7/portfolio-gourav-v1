@@ -97,8 +97,12 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 .doodle{position:absolute;pointer-events:none;opacity:.5}
 .d1{top:62px;left:10px} .d2{bottom:14px;right:-4px;opacity:.35}
 /* diagonal stripe texture, built from the zone's own ink at low alpha */
-.stripes::before{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
-  background:repeating-linear-gradient(-45deg,rgba(27,26,23,.07) 0 8px,transparent 8px 18px)}
+/* the stripes drift slowly across the reward zone, so the card is never
+   completely static the way the rest of the screen is */
+.stripes::before{content:"";position:absolute;inset:-40%;pointer-events:none;border-radius:inherit;
+  background:repeating-linear-gradient(-45deg,rgba(27,26,23,.07) 0 8px,transparent 8px 18px);
+  animation:drift 9s linear infinite}
+@keyframes drift{to{transform:translate(25.45px,-25.45px)}}
 
 .topbar{display:flex;align-items:center;gap:var(--s3);padding-bottom:var(--s5)}
 .ava{width:40px;height:40px;border-radius:var(--rp);background:rgba(255,255,255,.22);color:#fff;display:grid;place-items:center;font-weight:900;font-size:13px;flex:none}
@@ -202,7 +206,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 .zsub{display:block;font-size:12px;font-weight:600;color:var(--ink-2);margin-top:3px;
   font-family:var(--sans);letter-spacing:0;text-transform:none}
 .eyebrow .zsub{color:inherit;opacity:.8}
-.zhead a{font-size:13px;font-weight:800;color:var(--violet)}
+.zhead a{font-size:13px;font-weight:800;color:var(--violet);flex:none;white-space:nowrap}
 
 .strip{width:100%;padding:var(--s5) 0;border-bottom:2px solid var(--border);display:block}
 .strip__r{display:flex;align-items:center;gap:var(--s4)}
@@ -258,7 +262,17 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 .aline__t b{display:block;font-size:14.5px;font-weight:900}
 .aline__t span{display:block;font-size:12px;opacity:.75}
 .subcap{text-align:center;font-size:11.5px;font-weight:600;opacity:.75;margin-top:var(--s2);position:relative;z-index:1}
-.getrc{width:100%;margin-top:var(--s4);background:var(--ink);color:#fff;border-radius:var(--rp);padding:var(--s4);font-weight:900;font-size:15px;min-height:54px;display:flex;align-items:center;justify-content:center;gap:var(--s2);position:relative;z-index:1}
+.getrc{width:100%;margin-top:var(--s4);background:var(--ink);color:#fff;border-radius:var(--rp);padding:var(--s4);font-weight:900;font-size:15px;min-height:54px;display:flex;align-items:center;justify-content:center;gap:var(--s2);position:relative;z-index:1;overflow:hidden}
+/* a light sweeps the CTA every few seconds — this is the share action, so it
+   is the one control on the screen allowed to ask for attention on its own */
+.getrc::after{content:"";position:absolute;top:0;bottom:0;width:45%;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,.22),transparent);
+  animation:ctaSweep 4.4s var(--e) 1.4s infinite;pointer-events:none}
+@keyframes ctaSweep{0%{left:-55%}42%,100%{left:115%}}
+@keyframes morePulse{0%,100%{transform:rotate(-3deg) scale(1)}
+  50%{transform:rotate(-3deg) scale(1.07)}}
+@media(prefers-reduced-motion:reduce){
+  .stripes::before,.getrc::after{animation:none}}
 
 .bento{display:grid;grid-template-columns:1fr 1fr;gap:var(--s3);margin-top:var(--s4)}
 /* in-progress rows: name, the actual next lesson, who teaches it, and how
@@ -547,7 +561,10 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 .zrev .sticker{opacity:0;transform:rotate(var(--rot)) scale(.4)}
 .zrev.in .sticker{animation:stamp .52s var(--pop) forwards}
 .zrev.in .sticker--b{animation-delay:.1s}
-.zrev.in .sticker--more{animation-delay:.2s}
+/* the +10 pill stamps in last, then keeps breathing so the stack reads
+   as "there are more behind these two" */
+.zrev.in .sticker--more{animation:stamp .52s var(--pop) .2s forwards,
+  morePulse 2.6s var(--e) .9s infinite}
 @keyframes stamp{
   0%{opacity:0;transform:rotate(calc(var(--rot) - 16deg)) scale(.4)}
   60%{opacity:1;transform:rotate(var(--rot)) scale(1.12)}
