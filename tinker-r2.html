@@ -62,15 +62,18 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 .stage__hint{font-size:12.5px;color:var(--ink-2);text-align:center;max-width:36ch}
 .stage__hint b{color:var(--ink)}
 
-/* The device is sized off whichever runs out first: its natural 392px, the
-   column it sits in, or the height the viewport can actually show. On a
-   laptop the third term wins, so the whole phone fits on screen at once
-   instead of running off the bottom. Height follows from the aspect ratio. */
-.iphone{width:min(392px,100%,calc((100dvh - 96px) * 392 / 828));
-  aspect-ratio:392/828;height:auto;
-  background:var(--ink);border-radius:clamp(42px,14.8%,58px);padding:11px;
-  box-shadow:0 40px 90px -30px rgba(27,26,23,.5);position:relative;flex:none}
-.screen{width:100%;height:100%;background:var(--canvas);border-radius:clamp(33px,12.5%,47px);overflow:hidden;position:relative}
+.iphone{width:392px;max-width:100%;height:828px;background:var(--ink);border-radius:58px;padding:11px;box-shadow:0 40px 90px -30px rgba(27,26,23,.5);position:relative;flex:none;transform-origin:top center}
+/* The device keeps its true 392x828 layout at every size, so the padding and
+   spacing inside are always exactly as designed. To fit a short laptop screen
+   we scale the whole rendered device instead of resizing it, and pull the
+   layout box in by the height the scale gives back so nothing gaps below. */
+@media(min-width:981px){
+  @media(max-height:900px){.iphone{transform:scale(.88);margin-bottom:-99px}}
+  @media(max-height:820px){.iphone{transform:scale(.80);margin-bottom:-166px}}
+  @media(max-height:740px){.iphone{transform:scale(.72);margin-bottom:-232px}}
+  @media(max-height:660px){.iphone{transform:scale(.63);margin-bottom:-306px}}
+}
+.screen{width:100%;height:100%;background:var(--canvas);border-radius:47px;overflow:hidden;position:relative}
 .island{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:112px;height:31px;background:var(--ink);border-radius:var(--rp);z-index:40}
 
 /* status bar: transparent overlay. No background, so nothing can leave a
