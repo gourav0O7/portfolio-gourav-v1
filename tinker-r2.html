@@ -562,12 +562,23 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 .sticker{--rot:0deg}
 .sticker--a{--rot:-8deg} .sticker--b{--rot:6deg} .sticker--more{--rot:-3deg}
 .zrev .sticker{opacity:0;transform:rotate(var(--rot)) scale(.4)}
-.zrev.in .sticker{animation:stamp .52s var(--pop) forwards}
-.zrev.in .sticker--b{animation-delay:.1s}
+.zrev.in .sticker{animation:stamp .52s var(--pop) .45s forwards}
+.zrev.in .sticker--b{animation-delay:.55s}
 /* the +10 pill stamps in last, then keeps breathing so the stack reads
    as "there are more behind these two" */
-.zrev.in .sticker--more{animation:stamp .52s var(--pop) .2s forwards,
-  morePulse 2.6s var(--e) .9s infinite}
+.zrev.in .sticker--more{animation:stamp .52s var(--pop) .65s forwards,
+  morePulse 2.6s var(--e) 1.35s infinite}
+
+/* The rewards card flips down into place on its top edge, like a card being
+   dealt onto the screen. It is the only zone that gets this: it is the payoff
+   section, so it is allowed the biggest entrance. The badges stamp in after
+   the flip has landed rather than during it. */
+.zone--amber.zrev{opacity:0;transform:perspective(1000px) rotateX(-82deg);
+  transform-origin:50% 0%;
+  transition:transform .9s cubic-bezier(.28,.86,.36,1.035),opacity .42s var(--e)}
+.zone--amber.zrev.in{opacity:1;transform:perspective(1000px) rotateX(0deg)}
+@media(prefers-reduced-motion:reduce){
+  .zone--amber.zrev,.zone--amber.zrev.in{transform:none;opacity:1;transition:none}}
 @keyframes stamp{
   0%{opacity:0;transform:rotate(calc(var(--rot) - 16deg)) scale(.4)}
   60%{opacity:1;transform:rotate(var(--rot)) scale(1.12)}
