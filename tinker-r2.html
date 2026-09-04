@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex, nofollow" />
-<title>Tinker — Report screen, rebuilt for Gen Z · Gourav Sharma</title>
+<title>Tinker Report screen redesign · Gourav Sharma</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Inter:wght@400;500;600;700;800;900&display=swap" />
@@ -646,8 +646,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 <section class="intro wrap">
   <span class="kicker">REPORT SCREEN · REDESIGN</span>
   <h1>Tinker's Report screen, <em>rebuilt for a Gen Z audience.</em></h1>
-  <p class="intro__lede">The brief: redesign the Report screen for a skills-learning app — <b>same seven sections, same order, nothing removed</b>, built only from the supplied Design Kit. The goal was a screen that makes you want to finish the lesson, not just one that tells you how far along you are.</p>
-  <p class="intro__lede" style="margin-top:var(--s3)">The prototype below is live — tap through it. Everything under it explains why each decision was made, including <b>the parts I'd still change</b>.</p>
+  <p class="intro__lede">The brief was to redesign the Report screen for a skills-learning app, keeping <b>the same seven sections in the same order with nothing removed</b>, and building only from the supplied Design Kit. I wanted a screen that makes you want to finish the lesson, not one that just tells you how far along you are.</p>
+  <p class="intro__lede" style="margin-top:var(--s3)">The prototype below is live, so tap through it. Everything under it explains why each decision was made, including <b>the parts I'd still change</b>.</p>
 </section>
 
 <section class="lab wrap">
@@ -738,8 +738,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
               <div class="strip__bar"><i id="b1" style="width:72%;background:var(--coral)"></i></div>
             </button>
             <div class="rows">
-              <div class="row row--done"><span class="lic lic--done"><span data-ic="linear" data-sz="17"></span></span><span class="row__t">Linear Motion<i>Finished · 20/20 min</i></span><button class="go go__tick" data-noop aria-label="Linear Motion finished — replay"><span data-ic="tick" data-sz="13"></span></button></div>
-              <div class="row row--done"><span class="lic lic--done"><span data-ic="curve" data-sz="17"></span></span><span class="row__t">Curved Motion Paths<i>Finished · 18/18 min</i></span><button class="go go__tick" data-noop aria-label="Curved Motion Paths finished — replay"><span data-ic="tick" data-sz="13"></span></button></div>
+              <div class="row row--done"><span class="lic lic--done"><span data-ic="linear" data-sz="17"></span></span><span class="row__t">Linear Motion<i>Finished · 20/20 min</i></span><button class="go go__tick" data-noop aria-label="Linear Motion finished, replay"><span data-ic="tick" data-sz="13"></span></button></div>
+              <div class="row row--done"><span class="lic lic--done"><span data-ic="curve" data-sz="17"></span></span><span class="row__t">Curved Motion Paths<i>Finished · 18/18 min</i></span><button class="go go__tick" data-noop aria-label="Curved Motion Paths finished, replay"><span data-ic="tick" data-sz="13"></span></button></div>
               <div class="row" id="row3"><span class="lic lic--now"><span data-i3="ball" data-sz="22"></span></span><span class="row__t">Bouncing Exercises<i id="l3">In progress · 6/25 min</i></span><button class="go go--resume" id="l3s" data-noop>resume</button></div>
               <div class="row"><span class="lic lic--todo"><span data-ic="ease" data-sz="17"></span></span><span class="row__t">Ease in &amp; Ease out<i>Not started · 0/20 min</i></span><button class="go go--start" data-noop>start</button></div>
             </div>
@@ -755,7 +755,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
               <div class="strip__bar"><i style="width:40%;background:var(--violet)"></i></div>
             </button>
             <div class="rows">
-              <div class="row row--done"><span class="lic lic--done"><span data-ic="keys" data-sz="17"></span></span><span class="row__t">Know Your Keys<i>Finished · 15/15 min</i></span><button class="go go__tick" data-noop aria-label="Know Your Keys finished — replay"><span data-ic="tick" data-sz="13"></span></button></div>
+              <div class="row row--done"><span class="lic lic--done"><span data-ic="keys" data-sz="17"></span></span><span class="row__t">Know Your Keys<i>Finished · 15/15 min</i></span><button class="go go__tick" data-noop aria-label="Know Your Keys finished, replay"><span data-ic="tick" data-sz="13"></span></button></div>
               <div class="row"><span class="lic lic--now"><span data-ic="bars" data-sz="17"></span></span><span class="row__t">Fingers Are Your Friends<i>In progress · 4/20 min</i></span><button class="go go--resume" data-noop>resume</button></div>
               <div class="row"><span class="lic lic--todo"><span data-ic="plus" data-sz="17"></span></span><span class="row__t">Practice Keys<i>Not started · 0/15 min</i></span><button class="go go--start" data-noop>start</button></div>
             </div>
@@ -904,36 +904,36 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
     <div class="note">
       <div class="note__n">01</div>
       <h3>No more white cards</h3>
-      <p>The reference stacks seven identical white cards. Same content, same order — but here each section is a <b>full-bleed colour block</b>. The colour tells you which section you're in, so the labels and boxes aren't needed.</p>
+      <p>The reference stacks seven identical white cards. I kept the same content in the same order, but here each section is a <b>full-bleed colour block</b>. The colour tells you which section you're in, so the labels and boxes stopped being necessary.</p>
     </div>
     <div class="note">
       <div class="note__n">02</div>
       <h3>It taunts you</h3>
       <p>A screen that politely reports numbers gets ignored. This one needles: <b>"finish it, coward"</b>.</p>
-      <p>Two rules keep it usable. <b>The joke is aimed at the situation, never the person</b> — and <b>every slang heading carries a plain-English line under it</b>, so you never have to get the joke to find your settings.</p>
+      <p>Two rules keep it usable. <b>The joke is aimed at the situation, never the person.</b> And <b>every slang heading carries a plain-English line under it</b>, so you never have to get the joke to find your settings.</p>
     </div>
     <div class="note">
       <div class="note__n">03</div>
       <h3>BLOB has an opinion</h3>
-      <p>Every app has a mascot that says "great job!". BLOB reads your actual numbers and comments on them — <b>"I'm 72% of a guy. Do something about that."</b> Tap it and it says something else.</p>
-      <p>It's not decoration: every line it says is generated from real data on the screen, so it can never contradict what you're looking at.</p>
+      <p>Every app has a mascot that says "great job!". BLOB reads your actual numbers and comments on them instead. <b>"I'm 72% of a guy. Do something about that."</b> Tap it and it says something else.</p>
+      <p>It isn't decoration. Every line it says comes from real numbers on the screen, so it can never contradict what you're looking at.</p>
     </div>
     <div class="note">
       <div class="note__n">04</div>
       <h3>Icons drawn as stickers</h3>
-      <p>Flat colour, 3px ink outline, hard offset shadow — no gradients. The same shadow sits on the tiles and badges, so the whole screen feels like one material.</p>
+      <p>Flat colour, 3px ink outline, hard offset shadow, no gradients. The same shadow sits on the tiles and badges, so the whole screen feels like one material.</p>
       <p>Not pixel art: 8-bit reads as a millennial reference, not a Gen Z one.</p>
     </div>
     <div class="note">
       <div class="note__n">05</div>
       <h3>The flex card is the viral bit</h3>
       <p>Built story-shaped so it drops straight into Instagram. It names <b>what you actually did</b>, not just a streak number, so it means something to whoever sees it.</p>
-      <p>It's earned, not offered — it only appears after you finish a lesson.</p>
+      <p>It's earned rather than offered. It only appears after you finish a lesson.</p>
     </div>
     <div class="note">
       <div class="note__n">06</div>
       <h3>Loud, then quiet, then loud</h3>
-      <p>Violet, coral and amber shout — but the skills list sits on <b>plain canvas</b>. It holds seven rows of numbers and needs the quiet to stay readable.</p>
+      <p>Violet, coral and amber shout, but the skills list sits on <b>plain canvas</b>. It holds seven rows of numbers and needs the quiet to stay readable.</p>
       <p>If everything shouts, nothing does.</p>
     </div>
   </div>
@@ -943,7 +943,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
   <div class="wrap">
     <div class="band__h">
       <h2>The icon set</h2>
-      <p>Flat colour, 3px ink outline, hard offset shadow, no gradients — drawn by hand in SVG.</p>
+      <p>Flat colour, 3px ink outline, hard offset shadow, no gradients. All drawn by hand in SVG.</p>
     </div>
     <div class="iconwall" id="iconwall"></div>
   </div>
@@ -953,24 +953,24 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
   <div class="wrap">
     <div class="band__h">
       <h2>BLOB, illustrated</h2>
-      <p>Each one is placed where it carries information or a reward — never as filler. <b>Illustrations generated with ChatGPT</b>, then cut out and colour-matched to the kit by hand.</p>
+      <p>Each one sits where it carries information or a reward, never as filler. <b>Illustrations generated with ChatGPT</b>, then cut out and colour-matched to the kit by hand.</p>
     </div>
     <div class="illwall">
       <figure class="illcard illcard--mint">
         <img src="blob-assets/blob-megaphone.png" alt="BLOB shouting through a megaphone" />
-        <figcaption><b>Megaphone</b><span>Fronts the "BLOB says" card. A character holding a megaphone is the clearest possible way to say <em>this bit is an opinion, not a stat</em>.</span></figcaption>
+        <figcaption><b>Megaphone</b><span>Fronts the "BLOB says" card. A character holding a megaphone is the clearest way to say <em>this bit is an opinion, not a stat</em>.</span></figcaption>
       </figure>
       <figure class="illcard illcard--violet">
         <img src="blob-assets/blob-streak.png" alt="BLOB hugging the number 12 with flames behind it" />
-        <figcaption><b>Streak hero</b><span>Replaces the day count entirely — the drawing already says "12" louder than type could.</span></figcaption>
+        <figcaption><b>Streak hero</b><span>Replaces the day count entirely, because the drawing already says "12" louder than type could.</span></figcaption>
       </figure>
       <figure class="illcard illcard--ink">
         <img src="blob-assets/blob-run.png" alt="BLOB sprinting toward a finish flag" />
-        <figcaption><b>Sprint</b><span>Thumbnail for the lesson in progress. Running at a finish line = "nearly done", drawn instead of written.</span></figcaption>
+        <figcaption><b>Sprint</b><span>Thumbnail for the lesson in progress. Running at a finish line says "nearly done" without writing it.</span></figcaption>
       </figure>
       <figure class="illcard illcard--lav">
         <img src="blob-assets/blob-highfive.png" alt="BLOB high-fiving a purple friend" />
-        <figcaption><b>High five</b><span>Marks the invite row. Two characters instantly says "this involves someone else".</span></figcaption>
+        <figcaption><b>High five</b><span>Marks the invite row. Two characters instantly say this involves somebody else.</span></figcaption>
       </figure>
       <figure class="illcard illcard--amber">
         <img src="blob-assets/blob-flag.png" alt="BLOB marching with a lightning flag" />
@@ -982,7 +982,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
       </figure>
       <figure class="illcard illcard--ink">
         <img src="blob-assets/blob-tablet.png" alt="BLOB relaxing with a tablet and headphones" />
-        <figcaption><b>Studying</b><span>Held back for empty and paused states — the report screen shouldn't show a mascot doing nothing.</span></figcaption>
+        <figcaption><b>Studying</b><span>Held back for empty and paused states. A report screen shouldn't show a mascot doing nothing.</span></figcaption>
       </figure>
     </div>
   </div>
@@ -992,23 +992,23 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
   <div class="wrap">
     <div class="band__h">
       <h2>Why each card got its colour</h2>
-      <p>All from the Design Kit, nothing invented. One colour per job — so you learn what a colour means once and it holds everywhere.</p>
+      <p>All from the Design Kit, nothing invented. One colour per job, so you learn what a colour means once and it holds everywhere.</p>
     </div>
     <div class="ctwrap">
       <table class="ct">
         <thead><tr><th>Card</th><th>Colour</th><th>Why</th></tr></thead>
         <tbody>
-          <tr><td><b>Status / streak</b></td><td><span class="chip"><span class="dot" style="background:#6B4FC4"></span>violet</span></td><td>It opens the screen, so it needed the most weight. Violet is the only kit colour dark enough to carry white text — that's what makes it the one "hero" surface.</td></tr>
+          <tr><td><b>Status / streak</b></td><td><span class="chip"><span class="dot" style="background:#6B4FC4"></span>violet</span></td><td>It opens the screen, so it needed the most weight. Violet is the only kit colour dark enough to carry white text, which is what makes it the one hero surface.</td></tr>
           <tr><td><b>Up next</b></td><td><span class="chip"><span class="dot" style="background:#F0552E"></span>coral</span></td><td>The hottest colour in the kit, saved for the one thing you're meant to tap. Coral appears nowhere else, so it always means <b>act</b>.</td></tr>
           <tr><td><b>Skills list</b></td><td><span class="chip"><span class="dot" style="background:#FBF7EF;outline:1px solid #EAE6DC"></span>canvas</span></td><td>Seven rows of percentages and minutes. This is the one section you actually read, so it gets no colour at all.</td></tr>
-          <tr><td><b>Receipts / badges</b></td><td><span class="chip"><span class="dot" style="background:#F0B93D"></span>amber</span></td><td>Rewards should feel like the loudest moment. Amber on ink is the brightest, most readable pair in the kit — it can shout without hurting legibility.</td></tr>
+          <tr><td><b>Receipts / badges</b></td><td><span class="chip"><span class="dot" style="background:#F0B93D"></span>amber</span></td><td>Rewards should feel like the loudest moment. Amber on ink is the brightest, most readable pair in the kit, so it can shout without hurting legibility.</td></tr>
           <tr><td><b>BLOB card</b></td><td><span class="chip"><span class="dot" style="background:#2E8C6C"></span>mint</span></td><td>Sits between violet and coral and has to separate them without competing. Mint is the calmest saturated colour available.</td></tr>
-          <tr><td><b>Class tiles</b></td><td><span class="chip"><span class="dot" style="background:#E2703A"></span>terracotta</span> <span class="chip"><span class="dot" style="background:#4E7FE0"></span>sky</span></td><td>These are browsing tiles, not status. Different colours help you tell one class from another at a glance — the colour is identity, not meaning.</td></tr>
-          <tr><td><b>Done states</b></td><td><span class="chip"><span class="dot" style="background:#6B8F3C"></span>sage</span></td><td>Only ever used for finished things — ticks, completed rows, badge dots. Never used decoratively.</td></tr>
+          <tr><td><b>Class tiles</b></td><td><span class="chip"><span class="dot" style="background:#E2703A"></span>terracotta</span> <span class="chip"><span class="dot" style="background:#4E7FE0"></span>sky</span></td><td>These are browsing tiles, not status. Different colours help you tell one class from another at a glance, so here the colour is identity rather than meaning.</td></tr>
+          <tr><td><b>Done states</b></td><td><span class="chip"><span class="dot" style="background:#6B8F3C"></span>sage</span></td><td>Only ever used for finished things: ticks, completed rows, badge dots. Never used decoratively.</td></tr>
         </tbody>
       </table>
     </div>
-    <p style="margin-top:var(--s5);color:var(--ink-2);max-width:64ch;font-size:15px">One thing worth flagging back to the kit: coral, sky and mint all fail AA with small text on them, so I kept text on those either large, bold, or on a white pill. A darker step of each would fix it.</p>
+    <p style="margin-top:var(--s5);color:var(--ink-2);max-width:64ch;font-size:15px">One thing worth flagging back to the kit: coral, sky and mint all fail AA with small text on them. I worked around it by keeping text on those either large, bold, or sitting on a white pill, but a darker step of each would fix it properly.</p>
   </div>
 </section>
 
@@ -1016,8 +1016,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
   <div class="wrap">
     <div class="band__h">
       <h2>Every taunt still carries the number</h2>
-      <p>The joke is in the delivery — it never replaces the information.</p>
-      <p style="margin-top:var(--s3)"><b>And the slang never stands alone.</b> "the boring bit" is funny but it doesn't tell you it's settings, so every joke heading now carries a plain-English line under it — <em>"Account, plan and notification settings"</em>. Same for "still going" and "receipts". If you don't get the joke, or English isn't your first language, the screen still works. The personality is a layer on top of the label, never a replacement for it.</p>
+      <p>The joke is in the delivery. It never replaces the information.</p>
+      <p style="margin-top:var(--s3)"><b>And the slang never stands alone.</b> "the boring bit" is funny but it doesn't tell you it's settings, so every joke heading now carries a plain line under it: <em>"Account, plan and notification settings"</em>. Same for "still going" and "receipts". If you don't get the joke, or English isn't your first language, the screen still works. The personality sits on top of the label. It never replaces it.</p>
     </div>
     <div class="voice">
       <div class="vrow"><span class="was2">12-day streak</span><span class="arrow">→</span><span class="now">12 days deep</span></div>
@@ -1045,43 +1045,43 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
   <div class="wrap">
     <div class="band__h">
       <h2>What I'm not happy with yet</h2>
-      <p>This was built in a few days, so there are things I'd redo with more time and a round of real feedback. Here's what I'd pick up first.</p>
+      <p>This was built in a few days, so there are things I'd redo given more time and a round of real feedback. Here's what I'd pick up first.</p>
     </div>
     <div class="gaps">
       <div class="gap">
         <div>
           <h4>The copy isn't there yet</h4>
-          <p>Some lines land, some are trying too hard. "finish it, coward" works. A few others are jokes I wrote for myself, not for the user. I'd cut the weakest third, and I'd want a rule for how the tone softens when someone is genuinely struggling — right now it taunts the same way whether you're on day 12 or day 1.</p>
+          <p>Some lines land, some are trying too hard. "finish it, coward" works. A few others are jokes I wrote for myself rather than for the user. I'd cut the weakest third. I'd also want a rule for how the tone softens when someone is genuinely struggling, because right now it taunts you the same way on day 1 as it does on day 12.</p>
         </div>
       </div>
       <div class="gap">
         <div>
           <h4>"Still going" is the weakest section</h4>
-          <p>The class tiles are the one part I'd rebuild. Right now they're just coloured boxes with a name on them — they don't tell you where you left off, how long is left, or why you should go back to that class instead of a different one. It's the section I spent the least time on and it shows.</p>
+          <p>The class tiles are the one part I'd rebuild. Right now they're coloured boxes with a name on them. They don't tell you where you left off, how long is left, or why you'd go back to that class instead of a different one. It's the section I spent the least time on and it shows.</p>
         </div>
       </div>
       <div class="gap">
         <div>
           <h4>The icons could be sharper</h4>
-          <p>I drew them all by hand in SVG to keep them consistent, but a few of the metaphors are a stretch — the knot for crochet and the pot for claymation take a second to read. They're consistent, which is the important part, but consistent isn't the same as obvious. Those need another pass.</p>
+          <p>I drew them all by hand in SVG to keep them consistent, but a few of the metaphors are a stretch. The knot for crochet and the pot for claymation both take a second to read. Consistency is the important part and I got that, but consistent isn't the same as obvious. Those need another pass.</p>
         </div>
       </div>
       <div class="gap">
         <div>
           <h4>I've only designed the good day</h4>
-          <p>Everything here assumes you have a streak and a lesson in progress. I haven't designed day one, the empty state, or the screen you see after you've been away for a month — and that last one is probably the most important screen in the whole app, because it's where people decide whether to come back.</p>
+          <p>Everything here assumes you already have a streak and a lesson in progress. I haven't designed day one, the empty state, or the screen you see after being away for a month. That last one is probably the most important screen in the app, because it's where people decide whether to come back.</p>
         </div>
       </div>
       <div class="gap">
         <div>
           <h4>The taunting needs a limit</h4>
-          <p>It's funny the first week. I don't know if it's still funny in week six, and I don't have data to say either way. I'd want the tone to earn its way up — start gentle, get cheekier as the streak grows — and I'd want an easy way to turn it off without turning off notifications entirely.</p>
+          <p>It's funny the first week. I don't know whether it's still funny in week six, and I don't have the data to say either way. I'd want the tone to earn its way up, starting gentle and getting cheekier as the streak grows. I'd also want an easy way to turn it off without turning off notifications entirely.</p>
         </div>
       </div>
       <div class="gap">
         <div>
           <h4>None of this has been tested on anyone</h4>
-          <p>Every decision here is reasoned, but reasoning isn't validation. The flex card in particular is a guess — I think people would share it, but I'd want to actually watch five people hit that screen before I believed it.</p>
+          <p>Every decision here is reasoned, but reasoning isn't validation. The flex card in particular is a guess. I think people would share it, but I'd want to watch five people actually hit that screen before I believed it.</p>
         </div>
       </div>
     </div>
@@ -1090,7 +1090,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 
 <footer class="pgfoot">
   <div class="wrap pgfoot__in">
-    <span>Tinker · Round 4 challenge — Report screen redesign</span>
+    <span>Tinker · Round 4 challenge · Report screen redesign</span>
     <span>Gourav Sharma · Product Designer</span>
   </div>
 </footer>
@@ -1430,7 +1430,7 @@ document.getElementById('cta').addEventListener('click',function(){
   /* the resume button becomes the finished tick, matching the rows above it */
   var s=document.getElementById('l3s');
   if(s){s.className='go go__tick';s.innerHTML='<span data-ic="tick" data-sz="13"></span>';
-    s.setAttribute('aria-label','Bouncing Exercises finished — replay');paint(s);}
+    s.setAttribute('aria-label','Bouncing Exercises finished, replay');paint(s);}
   var r3=document.getElementById('row3');if(r3)r3.classList.add('row--done');
   var lic=document.querySelector('.lic--now');if(lic)lic.className='lic lic--done';
   document.getElementById('n1').innerHTML='3 of 4 done · <em>14 min from finished.</em> one left. don’t get cocky.';
