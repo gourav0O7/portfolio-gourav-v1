@@ -425,6 +425,18 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 .was2{color:var(--ink-2);font-size:14px;text-decoration:line-through}
 .now{font-size:14.5px;font-weight:700}
 .arrow{color:var(--coral);font-weight:900}
+/* honest-gaps list — deliberately plainer than the rest of the page.
+   This section is me talking, not the product talking. */
+.gaps{display:grid;gap:var(--s3);counter-reset:g}
+.gap{background:var(--surface);border:2px solid var(--ink);border-radius:var(--r2);
+  padding:clamp(18px,2.2vw,24px);display:grid;grid-template-columns:auto 1fr;
+  gap:var(--s3);align-items:start}
+.gap::before{counter-increment:g;content:counter(g);font-family:var(--serif);font-weight:900;
+  font-size:13px;background:var(--coral);color:var(--ink);border:2px solid var(--ink);
+  width:30px;height:30px;border-radius:var(--rp);display:grid;place-items:center}
+.gap h4{font-size:16.5px;font-weight:900;margin-bottom:6px}
+.gap p{font-size:14.5px;color:var(--ink-2);max-width:70ch}
+@media(max-width:560px){.gap{grid-template-columns:1fr}}
 .pgfoot{border-top:2px solid var(--ink);padding-block:var(--s6);font-size:13.5px;color:var(--ink-2)}
 .pgfoot__in{display:flex;justify-content:space-between;gap:var(--s4);flex-wrap:wrap}
 
@@ -944,6 +956,53 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
       <div class="vrow"><span class="was2">Streak-at-risk alert</span><span class="arrow">→</span><span class="now">panic me if my streak's dying</span></div>
       <div class="vrow"><span class="was2">Weekly progress recap</span><span class="arrow">→</span><span class="now">sunday guilt trip</span></div>
       <div class="vrow"><span class="was2">Invite a friend</span><span class="arrow">→</span><span class="now">drag someone in</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="band__h">
+      <h2>What I'm not happy with yet</h2>
+      <p>This was built in a few days, so there are things I'd redo with more time and a round of real feedback. Here's what I'd pick up first.</p>
+    </div>
+    <div class="gaps">
+      <div class="gap">
+        <div>
+          <h4>The copy isn't there yet</h4>
+          <p>Some lines land, some are trying too hard. "finish it, coward" works. A few others are jokes I wrote for myself, not for the user. I'd cut the weakest third, and I'd want a rule for how the tone softens when someone is genuinely struggling — right now it taunts the same way whether you're on day 12 or day 1.</p>
+        </div>
+      </div>
+      <div class="gap">
+        <div>
+          <h4>"Still going" is the weakest section</h4>
+          <p>The class tiles are the one part I'd rebuild. Right now they're just coloured boxes with a name on them — they don't tell you where you left off, how long is left, or why you should go back to that class instead of a different one. It's the section I spent the least time on and it shows.</p>
+        </div>
+      </div>
+      <div class="gap">
+        <div>
+          <h4>The icons could be sharper</h4>
+          <p>I drew them all by hand in SVG to keep them consistent, but a few of the metaphors are a stretch — the knot for crochet and the pot for claymation take a second to read. They're consistent, which is the important part, but consistent isn't the same as obvious. Those need another pass.</p>
+        </div>
+      </div>
+      <div class="gap">
+        <div>
+          <h4>I've only designed the good day</h4>
+          <p>Everything here assumes you have a streak and a lesson in progress. I haven't designed day one, the empty state, or the screen you see after you've been away for a month — and that last one is probably the most important screen in the whole app, because it's where people decide whether to come back.</p>
+        </div>
+      </div>
+      <div class="gap">
+        <div>
+          <h4>The taunting needs a limit</h4>
+          <p>It's funny the first week. I don't know if it's still funny in week six, and I don't have data to say either way. I'd want the tone to earn its way up — start gentle, get cheekier as the streak grows — and I'd want an easy way to turn it off without turning off notifications entirely.</p>
+        </div>
+      </div>
+      <div class="gap">
+        <div>
+          <h4>None of this has been tested on anyone</h4>
+          <p>Every decision here is reasoned, but reasoning isn't validation. The flex card in particular is a guess — I think people would share it, but I'd want to actually watch five people hit that screen before I believed it.</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
