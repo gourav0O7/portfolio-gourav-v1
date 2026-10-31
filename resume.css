@@ -20,7 +20,7 @@
 .rsm__gate-note { margin-top: 28px; justify-self: start; padding: 14px 16px; border-radius: var(--r-sm); background: var(--accent-wash); font-size: 14px; color: var(--ink-2); }
 .rsm__gate-note b { color: var(--ink); font-family: var(--mono); font-weight: 500; }
 
-.rsm__sheet { background: var(--card); border: 1px solid var(--rule); border-radius: var(--r-lg); padding: clamp(28px, 4.5vw, 64px); box-shadow: 0 40px 80px -60px rgba(20,20,20,0.3); }
+.rsm__sheet { background: var(--card); border: 1px solid var(--rule); border-radius: var(--r-lg); padding: clamp(28px, 4.5vw, 64px); box-shadow: 0 40px 80px -60px rgba(0,0,0,0.8); }
 .rsm__sec { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 24px; padding: 30px 0; border-top: 1px solid var(--rule); }
 .rsm__sec:first-child { border-top: 0; padding-top: 0; }
 .rsm__sec:last-child { padding-bottom: 0; }
@@ -60,6 +60,7 @@
 
 @media print {
   .nav, .foot, .rsm__actions, .rsm__gate-note { display: none !important; }
+  :root { --paper: #fff; --card: #fff; --ink: #141414; --ink-2: #333; --muted: #555; --faint: #777; --rule: rgba(0,0,0,0.12); --rule-2: rgba(0,0,0,0.2); --accent-ink: #b83c16; }
   body { background: #fff; }
   .rsm { display: block; padding: 0; max-width: none; }
   .rsm__head { display: block; margin-bottom: 16px; }

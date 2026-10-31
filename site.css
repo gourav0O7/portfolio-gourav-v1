@@ -1,8 +1,9 @@
 /* ============================================================
    GOURAV SHARMA — site design system (v2, 2026)
    ------------------------------------------------------------
-   A light, editorial system: warm paper, ink type, one accent.
-   Instrument Serif for display, Inter for everything else.
+   A dark, immersive system: near-black stage, warm off-white type,
+   one ember accent. Instrument Serif for display, Inter for the rest.
+   The homepage adds a live WebGL face mesh (face-mesh.js) behind it.
 
    Shared by every rebuilt page (home, about, case studies,
    résumé, NIFT, glossary, 404). Legacy token names at the end
@@ -11,19 +12,20 @@
    ============================================================ */
 
 :root {
+  color-scheme: dark;
   /* colour */
-  --paper:      #f6f5f1;
-  --paper-2:    #efede7;
-  --card:       #ffffff;
-  --ink:        #141414;
-  --ink-2:      #3d3d3a;
-  --muted:      #6b6a65;
-  --faint:      #8d8b84;
-  --rule:       rgba(20, 20, 20, 0.09);
-  --rule-2:     rgba(20, 20, 20, 0.16);
-  --accent:     #e8542a;
-  --accent-ink: #b83c16;          /* AA on paper, for small accent text */
-  --accent-wash:#fbe7df;
+  --paper:      #08090c;
+  --paper-2:    #13151a;
+  --card:       #0e1014;
+  --ink:        #f2f0ea;
+  --ink-2:      #c8c6bf;
+  --muted:      #908e87;
+  --faint:      #6c6b67;
+  --rule:       rgba(255, 255, 255, 0.08);
+  --rule-2:     rgba(255, 255, 255, 0.16);
+  --accent:     #ff5b2e;
+  --accent-ink: #ff7d55;          /* lighter accent for small text on dark */
+  --accent-wash:rgba(255, 91, 46, 0.12);
   --ok:         #2f8a5b;
 
   /* type */
@@ -42,15 +44,15 @@
   --nav-h: 68px;
 
   /* legacy aliases (mockup + gate components read these) */
-  --bg: var(--paper); --bg-1: var(--card); --bg-2: var(--paper-2); --bg-3: #e6e4dd;
+  --bg: var(--paper); --bg-1: var(--card); --bg-2: var(--paper-2); --bg-3: #1b1d23;
   --text: var(--ink); --text-dim: var(--muted); --text-faint: var(--faint); --white: var(--ink);
-  --line: var(--rule); --line-2: var(--rule-2); --line-accent: rgba(232, 84, 42, 0.4);
-  --accent-2: #f06a43; --accent-soft: rgba(232, 84, 42, 0.1); --accent-glow: transparent;
+  --line: var(--rule); --line-2: var(--rule-2); --line-accent: rgba(255, 91, 46, 0.4);
+  --accent-2: #ff7d55; --accent-soft: rgba(255, 91, 46, 0.12); --accent-glow: rgba(255, 91, 46, 0.5);
   --font-display: var(--sans); --font-mono: var(--mono);
   --gutter: var(--pad); --maxw: var(--max);
   --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 24px; --sp-6: 32px; --sp-7: 48px; --sp-8: 64px;
   --sp-section: var(--sec);
-  --shadow-rgb: 20, 20, 20;
+  --shadow-rgb: 0, 0, 0;
   --cover-dark: #121212;
 }
 
@@ -112,7 +114,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 }
 .btn:hover { border-color: var(--ink); }
 .btn--ink { background: var(--ink); border-color: var(--ink); color: var(--paper); }
-.btn--ink:hover { background: #000; }
+.btn--ink:hover { background: #fff; border-color: #fff; }
 .btn--sm { height: 38px; padding: 0 16px; font-size: 14px; }
 .btn svg { width: 14px; height: 14px; transition: transform 0.2s var(--ease); }
 .btn:hover svg { transform: translate(2px, -2px); }
@@ -154,7 +156,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .nav__links a:hover { background: var(--paper-2); color: var(--ink); }
 .nav__links a[aria-current="page"] { color: var(--ink); background: var(--paper-2); }
 .nav__links .btn { margin-left: 8px; height: 40px; padding: 0 18px; color: var(--paper); }
-.nav__links .btn:hover { background: #000; color: var(--paper); }
+.nav__links .btn:hover { background: #fff; color: var(--paper); }
 .nav__toggle { display: none; width: 44px; height: 44px; border-radius: 50%; align-items: center; justify-content: center; }
 .nav__toggle span, .nav__toggle span::before {
   display: block; width: 18px; height: 1.5px; background: var(--ink); position: relative; transition: transform 0.25s var(--ease);
@@ -178,7 +180,7 @@ body.menu-open .nav__toggle span::before { transform: translateY(-6px) rotate(-9
 }
 
 /* ---------- footer ---------- */
-.foot { background: var(--ink); color: #ecebe6; margin-top: var(--sec); }
+.foot { position: relative; background: #040507; border-top: 1px solid var(--rule); color: #ecebe6; margin-top: var(--sec); }
 .foot a:hover { color: #fff; }
 .foot__statement { padding-block: clamp(80px, 11vw, 140px) clamp(48px, 6vw, 72px); border-bottom: 1px solid rgba(255,255,255,0.1); }
 .foot__statement .display { color: #fff; }
@@ -210,7 +212,7 @@ body.menu-open .nav__toggle span::before { transform: translateY(-6px) rotate(-9
 /* ---------- phone gate modal ---------- */
 .phonegate { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px; }
 .phonegate[hidden] { display: none; }
-.phonegate__scrim { position: absolute; inset: 0; background: rgba(20,20,20,0.4); backdrop-filter: blur(6px); }
+.phonegate__scrim { position: absolute; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); }
 .phonegate__panel { position: relative; width: min(420px, 100%); background: var(--card); border-radius: var(--r-lg); padding: 32px; box-shadow: 0 40px 80px -30px rgba(0,0,0,0.35); }
 .phonegate__x { position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; border-radius: 50%; font-size: 22px; color: var(--muted); }
 .phonegate__x:hover { background: var(--paper-2); color: var(--ink); }
@@ -235,3 +237,35 @@ body.menu-open .nav__toggle span::before { transform: translateY(-6px) rotate(-9
 
 /* ---------- image-slot (case pages) ---------- */
 image-slot { --is-bg: var(--paper-2); background: var(--paper-2); border-radius: var(--r); overflow: hidden; display: block; }
+
+/* ============================================================
+   IMMERSIVE LAYER — grain, cursor, tilt, glow
+   ============================================================ */
+body::before {
+  content: ""; position: fixed; inset: -50%; z-index: 0; pointer-events: none; opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 1.2s steps(6) infinite;
+}
+@keyframes grain { 0% { transform: translate(0,0); } 20% { transform: translate(-3%,2%); } 40% { transform: translate(2%,-3%); } 60% { transform: translate(-2%,-1%); } 80% { transform: translate(3%,3%); } 100% { transform: translate(0,0); } }
+main, .foot { position: relative; z-index: 1; }
+.nav { z-index: 60; }
+
+/* cursor (pointer: fine only — site.js adds .has-cursor) */
+.cursor { position: fixed; left: 0; top: 0; z-index: 300; pointer-events: none; mix-blend-mode: difference; }
+.cursor__dot { position: absolute; width: 8px; height: 8px; margin: -4px 0 0 -4px; border-radius: 50%; background: #fff; }
+.cursor__ring { position: absolute; width: 40px; height: 40px; margin: -20px 0 0 -20px; border-radius: 50%; border: 1px solid #fff; transition: width .3s var(--ease), height .3s var(--ease), margin .3s var(--ease), background .3s var(--ease), opacity .3s; opacity: .6; }
+.cursor.is-hover .cursor__ring { width: 76px; height: 76px; margin: -38px 0 0 -38px; background: #fff; opacity: 1; }
+.cursor.is-down .cursor__ring { width: 30px; height: 30px; margin: -15px 0 0 -15px; }
+html.has-cursor, html.has-cursor a, html.has-cursor button { cursor: none; }
+html.has-cursor input, html.has-cursor textarea { cursor: text; }
+
+/* 3D tilt cards */
+[data-tilt] { transform-style: preserve-3d; will-change: transform; transition: transform .6s var(--ease), box-shadow .4s var(--ease), border-color .3s; }
+[data-tilt].is-tilting { transition: transform .12s linear, box-shadow .4s var(--ease), border-color .3s; }
+[data-tilt]::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 3;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,0.08), transparent 45%);
+  opacity: 0; transition: opacity .3s;
+}
+[data-tilt]:hover::after { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { body::before { animation: none; } }

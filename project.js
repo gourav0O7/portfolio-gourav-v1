@@ -230,7 +230,7 @@
 
   /* ---------- NEXT ---------- */
   var nextSec = nextP ?
-    '<section class="cs-next"><div class="wrap"><a class="cs-next__card reveal" href="project-' + P.next + '.html">' +
+    '<section class="cs-next"><div class="wrap"><a class="cs-next__card reveal" data-tilt="3" href="project-' + P.next + '.html">' +
       '<span class="label label--plain">Next case · ' + nextP.index + '</span>' +
       '<span class="cs-next__title">' + nextP.title + '</span>' +
       '<span class="cs-next__meta">' + nextP.client + '<span class="cs-next__go">' + arrowUR + '</span></span>' +
@@ -243,7 +243,7 @@
       var sp = (window.PROJECTS || {})[k];
       if (!sp) return '';
       var spTags = (sp.tags || []).slice(0, 3).map(function (t) { return '<span class="chip">' + t + '</span>'; }).join('');
-      return '<a class="cs-sub reveal" href="project-' + k + '.html">' +
+      return '<a class="cs-sub reveal" data-tilt="5" href="project-' + k + '.html">' +
         '<span class="cs-sub__no">' + sp.index + '</span>' +
         '<h3 class="cs-sub__title">' + sp.title + '</h3>' +
         '<p class="cs-sub__desc">' + sp.one + '</p>' +
@@ -283,7 +283,7 @@
     '</main>' +
     '<div data-site-foot></div>';
 
-  if (window.SITE) { window.SITE.mount(root); window.SITE.initReveal(root); }
+  if (window.SITE) { window.SITE.mount(root); window.SITE.initReveal(root); if (window.SITE.initTilt) window.SITE.initTilt(root); }
 
   // scale any HTML mockups injected into the hero (laptop + frames)
   if (typeof window.initLaptops === 'function') window.initLaptops(root);

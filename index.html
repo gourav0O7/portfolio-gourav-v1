@@ -9,19 +9,23 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" />
-<link rel="stylesheet" href="site.css?v=2" />
-<link rel="stylesheet" href="home.css?v=2" />
+<link rel="stylesheet" href="site.css?v=3" />
+<link rel="stylesheet" href="home.css?v=3" />
+<script type="importmap">
+{ "imports": { "three": "./vendor/three/three.module.js", "three/addons/": "./vendor/three/addons/" } }
+</script>
 </head>
 <body data-page="home">
+<canvas class="facemesh" data-face-mesh aria-hidden="true"></canvas>
 <div data-site-nav></div>
 
 <main>
 
-<!-- ===== Hero ===== -->
-<header class="hero wrap">
-  <div class="hero__text">
+<!-- ===== Hero: live 3D face mesh (face-mesh.js) ===== -->
+<header class="xhero">
+  <div class="wrap xhero__in">
     <p class="label reveal">Product &amp; UI/UX Designer</p>
-    <h1 class="display hero__name reveal">Gourav<br /><em>Sharma</em></h1>
+    <h1 class="xhero__name reveal"><span>Gourav</span><span><em>Sharma</em></span></h1>
     <p class="lede reveal">
       Product designer with <b>3.5+ years</b> designing SaaS platforms, mobile apps
       and the web — from <b>user research</b> to <b>design systems</b>. Most of it in
@@ -32,10 +36,11 @@
       <a class="btn" href="resume.html">Résumé</a>
     </div>
   </div>
-  <figure class="hero__photo reveal">
-    <img src="assets/portrait.webp" alt="Gourav Sharma" width="1112" height="1388" />
-    <figcaption><span class="hero__dot"></span>Currently designing at Omniful</figcaption>
-  </figure>
+  <img class="xhero__fallback" src="assets/face/color.webp" alt="" aria-hidden="true" />
+  <div class="wrap xhero__foot">
+    <span class="xhero__status"><span class="hero__dot"></span>Currently designing at Omniful</span>
+    <span class="xhero__hint">Move your cursor across the face · Scroll to dissolve</span>
+  </div>
 </header>
 
 <!-- ===== Stats ===== -->
@@ -57,7 +62,7 @@
     </div>
 
     <div class="work">
-      <a class="wcard wcard--wide reveal" href="project-demand-forecasting.html">
+      <a class="wcard wcard--wide reveal" data-tilt="3" href="project-demand-forecasting.html">
         <div class="wcard__media wcard__media--browser">
           <div class="browser"><div class="browser__bar"><i></i><i></i><i></i></div><img src="assets/proto-demand.png" alt="Demand forecasting dashboard" loading="lazy" /></div>
         </div>
@@ -69,7 +74,7 @@
         </div>
       </a>
 
-      <a class="wcard reveal" href="project-dual-payment.html">
+      <a class="wcard reveal" data-tilt="6" href="project-dual-payment.html">
         <div class="wcard__media"><div class="phone"><img src="assets/proto-payment.png" alt="Collect payment screen" loading="lazy" /></div></div>
         <div class="wcard__body">
           <div class="wcard__meta"><span>002</span><span>Omniful · Delivery Partner App</span></div>
@@ -79,7 +84,7 @@
         </div>
       </a>
 
-      <a class="wcard reveal" href="project-bulk-otp.html">
+      <a class="wcard reveal" data-tilt="6" href="project-bulk-otp.html">
         <div class="wcard__media"><div class="phone"><img src="assets/proto-otp.png" alt="Bulk OTP verification screen" loading="lazy" /></div></div>
         <div class="wcard__body">
           <div class="wcard__meta"><span>003</span><span>Omniful · Delivery Partner App</span></div>
@@ -89,7 +94,7 @@
         </div>
       </a>
 
-      <a class="wcard reveal" href="project-route-optimization-bisleri.html">
+      <a class="wcard reveal" data-tilt="6" href="project-route-optimization-bisleri.html">
         <div class="wcard__media"><div class="phone"><img src="assets/proto-bisleri.png" alt="Bisleri driver app screen" loading="lazy" /></div></div>
         <div class="wcard__body">
           <div class="wcard__meta"><span>004</span><span>Edgistify × Bisleri · Web + Mobile</span></div>
@@ -99,7 +104,7 @@
         </div>
       </a>
 
-      <a class="wcard reveal" href="project-design-system-omniful.html">
+      <a class="wcard reveal" data-tilt="6" href="project-design-system-omniful.html">
         <div class="wcard__media wcard__media--browser">
           <div class="browser"><div class="browser__bar"><i></i><i></i><i></i></div><img src="assets/covers/omniful-ds.jpg" alt="Omniful design system library" loading="lazy" /></div>
         </div>
@@ -161,19 +166,19 @@
       <p class="sec-head__aside">4 recommendations · 2024</p>
     </div>
     <div class="quotes">
-      <figure class="quote reveal">
+      <figure class="quote reveal" data-tilt="4">
         <blockquote>“Gourav's impact has been <b>profound</b> — a dynamic blend of talent across product design, UI/UX innovation and product management. He consistently surpasses expectations, crafting intuitive interfaces that <b>deeply resonate with our users</b>.”</blockquote>
         <figcaption><span class="quote__av">KK</span><span><b>Kamal Kishore Kumawat</b>Co-Founder, Edgistify · EE @ IIT Bombay</span><span class="quote__rel">Managed directly</span></figcaption>
       </figure>
-      <figure class="quote reveal">
+      <figure class="quote reveal" data-tilt="4">
         <blockquote>“Gourav was my main point of contact in design and tech. He has an exceptional ability to <b>grasp intricate concepts and translate them into visually compelling materials</b> — his pitch decks conveyed our message with meticulous attention to detail.”</blockquote>
         <figcaption><span class="quote__av">NS</span><span><b>Nikhil Shrikhande</b>Head — Brand Partnerships · Mancunianz</span><span class="quote__rel">Cross-team</span></figcaption>
       </figure>
-      <figure class="quote reveal">
+      <figure class="quote reveal" data-tilt="4">
         <blockquote>“I've worked with Gourav for <b>over 2 years</b>. His holistic approach and sense of design is noteworthy. A good team player — always open to suggestions and <b>ready to help</b>.”</blockquote>
         <figcaption><span class="quote__av">RP</span><span><b>Rohit Patil</b>Supply Chain Entrepreneur · 12y D2C Fulfillment</span><span class="quote__rel">Senior</span></figcaption>
       </figure>
-      <figure class="quote reveal">
+      <figure class="quote reveal" data-tilt="4">
         <blockquote>“An <b>exceptional UI/UX designer</b> whose creativity elevated our projects. Gourav combines aesthetic appeal with seamless user experience — designs that are visually pleasing and genuinely <b>enhance usability</b>.”</blockquote>
         <figcaption><span class="quote__av">PM</span><span><b>Pankaj Malviya</b>Edgistify · Ex-TCS · NIT Rourkela</span><span class="quote__rel">Same team</span></figcaption>
       </figure>
@@ -233,6 +238,7 @@
 </main>
 
 <div data-site-foot></div>
-<script src="site.js?v=2"></script>
+<script src="site.js?v=3"></script>
+<script type="module" src="face-mesh.js?v=1"></script>
 </body>
 </html>

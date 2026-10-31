@@ -117,6 +117,49 @@
   }
   initReveal();
 
+  /* ---------- immersive: cursor + 3D tilt (fine pointers only) ---------- */
+  var fine = window.matchMedia && matchMedia('(pointer: fine)').matches;
+  var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (fine && !calm) {
+    var cur = document.createElement('div');
+    cur.className = 'cursor';
+    cur.innerHTML = '<div class="cursor__ring"></div><div class="cursor__dot"></div>';
+    document.body.appendChild(cur);
+    document.documentElement.classList.add('has-cursor');
+    var ring = cur.firstChild, dot = cur.lastChild;
+    var mx = -100, my = -100, rx = -100, ry = -100;
+    addEventListener('pointermove', function (e) { mx = e.clientX; my = e.clientY; }, { passive: true });
+    addEventListener('pointerdown', function () { cur.classList.add('is-down'); });
+    addEventListener('pointerup', function () { cur.classList.remove('is-down'); });
+    document.addEventListener('pointerover', function (e) {
+      var t = e.target.closest && e.target.closest('a, button, [data-tilt], label, input');
+      cur.classList.toggle('is-hover', !!t && !(t.matches && t.matches('[data-tilt]')) );
+    });
+    (function loop() {
+      rx += (mx - rx) * 0.18; ry += (my - ry) * 0.18;
+      dot.style.transform = 'translate(' + mx + 'px,' + my + 'px)';
+      ring.style.transform = 'translate(' + rx + 'px,' + ry + 'px)';
+      requestAnimationFrame(loop);
+    })();
+  }
+  function initTilt(scope) {
+    if (!fine || calm) return;
+    (scope || document).querySelectorAll('[data-tilt]').forEach(function (el) {
+      if (el._tilt) return; el._tilt = 1;
+      var max = parseFloat(el.getAttribute('data-tilt')) || 6;
+      el.addEventListener('pointermove', function (e) {
+        var r = el.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        el.classList.add('is-tilting');
+        el.style.transform = 'perspective(1100px) rotateX(' + ((0.5 - y) * max) + 'deg) rotateY(' + ((x - 0.5) * max) + 'deg) translateZ(0)';
+        el.style.setProperty('--mx', (x * 100) + '%'); el.style.setProperty('--my', (y * 100) + '%');
+      });
+      el.addEventListener('pointerleave', function () { el.classList.remove('is-tilting'); el.style.transform = ''; });
+    });
+  }
+  initTilt();
+  window.SITE.initTilt = initTilt;
+
   /* ---------- phone gate ---------- */
   var PHONE = '+91 62002 04324';
   var PHONE_HREF = 'tel:+916200204324';
