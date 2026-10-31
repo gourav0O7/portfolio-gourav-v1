@@ -1,0 +1,76 @@
+/* ============================================================
+   resume.css — Résumé page (v2). Requires site.css.
+   ============================================================ */
+.rsm { padding-top: clamp(48px, 7vw, 96px); max-width: 1040px; }
+.rsm__head { display: grid; grid-template-columns: minmax(0, 1fr) 320px; column-gap: clamp(32px, 6vw, 80px); align-items: end; margin-bottom: clamp(36px, 5vw, 56px); }
+.rsm__head > .label, .rsm__name, .rsm__title, .rsm__actions { grid-column: 1; }
+.rsm__contact { grid-column: 2; grid-row: 1 / span 4; align-self: end; }
+.rsm__gate-note { grid-column: 1 / -1; }
+.rsm__head .label { margin-bottom: 22px; }
+.rsm__name { font-family: var(--serif); font-weight: 400; font-size: clamp(56px, 6.4vw, 92px); line-height: 0.92; letter-spacing: -0.02em; }
+.rsm__name em { color: var(--accent); }
+.rsm__title { margin-top: 14px; font-size: 18px; color: var(--ink-2); }
+.rsm__actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+.rsm__actions .btn { height: 44px; padding: 0 18px; font-size: 14.5px; }
+.rsm__actions svg { width: 16px; height: 16px; }
+.rsm__contact { list-style: none; border-top: 1px solid var(--rule-2); }
+.rsm__contact li { border-bottom: 1px solid var(--rule); }
+.rsm__contact a { display: block; padding: 12px 0; font-size: 15px; }
+.rsm__contact a:hover { color: var(--accent-ink); }
+.rsm__gate-note { margin-top: 28px; justify-self: start; padding: 14px 16px; border-radius: var(--r-sm); background: var(--accent-wash); font-size: 14px; color: var(--ink-2); }
+.rsm__gate-note b { color: var(--ink); font-family: var(--mono); font-weight: 500; }
+
+.rsm__sheet { background: var(--card); border: 1px solid var(--rule); border-radius: var(--r-lg); padding: clamp(28px, 4.5vw, 64px); box-shadow: 0 40px 80px -60px rgba(0,0,0,0.8); }
+.rsm__sec { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 24px; padding: 30px 0; border-top: 1px solid var(--rule); }
+.rsm__sec:first-child { border-top: 0; padding-top: 0; }
+.rsm__sec:last-child { padding-bottom: 0; }
+.rsm__h { font-size: 14px; font-weight: 600; color: var(--accent-ink); padding-top: 2px; }
+.rsm__summary { font-family: var(--serif); font-size: 23px; line-height: 1.32; }
+.rsm__entry + .rsm__entry { margin-top: 30px; }
+.rsm__row { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; flex-wrap: wrap; }
+.rsm__row + .rsm__row { margin-top: 2px; }
+.rsm__row--sub { margin-top: 20px !important; }
+.rsm__org { font-size: 18px; font-weight: 600; letter-spacing: -0.015em; }
+.rsm__org a:hover { color: var(--accent-ink); }
+.rsm__loc, .rsm__dates { font-size: 14px; color: var(--muted); }
+.rsm__role { font-weight: 500; color: var(--ink-2); }
+.rsm__list { margin-top: 12px; padding-left: 18px; color: var(--ink-2); font-size: 15.5px; line-height: 1.65; }
+.rsm__list li + li { margin-top: 6px; }
+.rsm__list li::marker { color: var(--faint); }
+.rsm__early { margin-top: 0; }
+.rsm__early b { color: var(--ink); font-weight: 600; }
+.rsm__skills { color: var(--ink-2); line-height: 1.65; font-size: 15.5px; }
+.rsm__skills b { display: block; color: var(--ink); font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+.rsm__skills b + * , .rsm__skills b:not(:first-child) { margin-top: 14px; }
+.rsm__certs { display: flex; flex-direction: column; }
+.rsm__cert { padding: 9px 0; border-bottom: 1px solid var(--rule); font-size: 15.5px; }
+.rsm__cert:first-child { padding-top: 0; }
+.rsm__cert:last-child { border-bottom: 0; }
+.rsm__cert a { font-weight: 500; text-decoration: underline; text-decoration-color: var(--rule-2); text-underline-offset: 3px; }
+.rsm__cert a:hover { color: var(--accent-ink); }
+.rsm__cert > span { color: var(--muted); }
+
+@media (max-width: 760px) {
+  .rsm__head { grid-template-columns: 1fr; }
+  .rsm__contact { grid-column: 1; grid-row: auto; margin-top: 28px; }
+}
+@media (max-width: 600px) {
+  .rsm__sec { grid-template-columns: 1fr; gap: 12px; }
+}
+
+@media print {
+  .nav, .foot, .rsm__actions, .rsm__gate-note { display: none !important; }
+  :root { --paper: #fff; --card: #fff; --ink: #141414; --ink-2: #333; --muted: #555; --faint: #777; --rule: rgba(0,0,0,0.12); --rule-2: rgba(0,0,0,0.2); --accent-ink: #b83c16; }
+  body { background: #fff; }
+  .rsm { display: block; padding: 0; max-width: none; }
+  .rsm__head { display: block; margin-bottom: 16px; }
+  .rsm__name { font-size: 40px; }
+  .rsm__contact { display: flex; flex-wrap: wrap; gap: 4px 16px; border: 0; margin-top: 10px; }
+  .rsm__contact li { border: 0; }
+  .rsm__contact a { padding: 0; font-size: 12px; }
+  .rsm__sheet { border: 0; box-shadow: none; padding: 0; }
+  .rsm__sec { padding: 12px 0; grid-template-columns: 120px 1fr; }
+  .rsm__list, .rsm__skills, .rsm__cert { font-size: 12px; }
+  .rsm__summary { font-size: 16px; }
+  .reveal { opacity: 1 !important; transform: none !important; }
+}

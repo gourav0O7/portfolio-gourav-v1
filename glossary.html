@@ -8,138 +8,91 @@
 <meta name="description" content="A working glossary of design, UI/UX, product design and arts terms — definitions Gourav Sharma actually uses on the job." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<script src="net-quality.js?v=2"></script>
-<script src="sound-manager.js?v=2"></script>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@300;400;500;600&display=swap" />
-<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" />
+<link rel="stylesheet" href="site.css?v=4" />
 <style>
-/* ---------- Glossary hero ---------- */
-.gloss-hero { padding-top: calc(var(--nav-h) + clamp(40px, 5.5vw, 80px)); padding-bottom: var(--sp-6); }
-.gloss-hero__name { font-size: clamp(40px, 8vw, 104px); font-weight: 500; letter-spacing: -0.03em; line-height: 0.94; margin: var(--sp-5) 0 var(--sp-5); }
-.gloss-hero__name em { font-style: normal; color: var(--accent); }
-.gloss-hero__lede { font-size: clamp(17px, 1.7vw, 21px); line-height: 1.6; color: var(--text-dim); max-width: 60ch; }
-.gloss-hero__lede b { color: var(--text); font-weight: 500; }
+/* ---------- Glossary (v2) ---------- */
+.gloss-hero { padding-top: clamp(56px, 9vw, 120px); padding-bottom: clamp(32px, 4vw, 48px); }
+.gloss-hero .label { margin-bottom: 26px; }
+.gloss-hero__name { font-family: var(--serif); font-weight: 400; font-size: clamp(60px, 10vw, 144px); line-height: 0.9; letter-spacing: -0.025em; }
+.gloss-hero__name em { color: var(--accent); }
+.gloss-hero__lede { margin-top: 30px; font-size: clamp(18px, 1.7vw, 21px); color: var(--ink-2); max-width: 60ch; }
+.gloss-hero__lede b { color: var(--ink); font-weight: 600; }
 
-/* ---------- Sticky tool bar (search + filters + A–Z) ---------- */
-.gloss-bar { position: sticky; top: var(--nav-h); z-index: 60; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-.gloss-bar__inner { max-width: var(--maxw); margin: 0 auto; padding: 14px var(--gutter); display: flex; flex-direction: column; gap: 12px; }
-.gloss-bar__row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.gloss-bar { position: sticky; top: var(--nav-h); z-index: 40; background: rgba(8,9,12,0.85); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-block: 1px solid var(--rule); }
+.gloss-bar__inner { max-width: var(--max); margin: 0 auto; padding: 14px var(--pad); }
+.gloss-bar__row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
+.gloss-search { flex: 1 1 260px; display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 8px 0 18px; border-radius: 999px; background: var(--card); border: 1px solid var(--rule-2); }
+.gloss-search:focus-within { border-color: var(--ink); }
+.gloss-search__prompt { color: var(--accent); font-size: 12px; }
+.gloss-search input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; font: inherit; color: var(--ink); }
+.gloss-search input::-webkit-search-cancel-button { display: none; }
+.gloss-search__clear { display: none; font-size: 12px; color: var(--muted); padding: 6px 12px; border-radius: 999px; }
+.gloss-search__clear.show { display: inline-block; }
+.gloss-search__clear:hover { background: var(--paper-2); color: var(--ink); }
+.gloss-filters { display: flex; flex-wrap: wrap; gap: 6px; }
+.gfilter { height: 38px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--rule-2); font-size: 14px; display: inline-flex; align-items: center; gap: 8px; }
+.gfilter .c { font-family: var(--mono); font-size: 11.5px; color: var(--faint); }
+.gfilter:hover { border-color: var(--ink); }
+.gfilter.is-active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.gfilter.is-active .c { color: #b9b7b0; }
+.gloss-count { margin-left: auto; font-size: 14px; color: var(--muted); }
+.gloss-count b { color: var(--ink); font-weight: 600; }
+.gloss-az { display: flex; flex-wrap: wrap; gap: 2px; margin-top: 10px; }
+.gloss-az button { width: 30px; height: 30px; border-radius: 8px; font-family: var(--mono); font-size: 12.5px; color: var(--ink-2); }
+.gloss-az button:hover { background: var(--paper-2); color: var(--accent-ink); }
+.gloss-az button.is-disabled { color: var(--rule-2); pointer-events: none; }
 
-/* search */
-.gloss-search { flex: 1 1 280px; min-width: 220px; display: flex; align-items: center; gap: 10px; border: 1px solid var(--line-2); background: var(--bg); padding: 0 14px; height: 46px; transition: border-color 0.2s var(--ease); }
-.gloss-search:focus-within { border-color: var(--accent); }
-.gloss-search__prompt { font-family: var(--font-mono); font-size: 13px; color: var(--accent); }
-.gloss-search input { flex: 1; min-width: 0; background: transparent; border: none; outline: none; color: var(--text); font-family: var(--font-mono); font-size: 14px; letter-spacing: 0.03em; }
-.gloss-search input::placeholder { color: var(--text-faint); }
-.gloss-search__clear { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; color: var(--text-faint); border: 1px solid var(--line); padding: 5px 9px; opacity: 0; pointer-events: none; transition: 0.2s var(--ease); white-space: nowrap; }
-.gloss-search__clear.show { opacity: 1; pointer-events: auto; }
-.gloss-search__clear:hover { color: var(--accent); border-color: var(--line-accent); }
-
-/* result count */
-.gloss-count { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.1em; color: var(--text-faint); white-space: nowrap; }
-.gloss-count b { color: var(--accent); font-weight: 500; }
-
-/* category filters */
-.gloss-filters { display: flex; flex-wrap: wrap; gap: 8px; }
-.gfilter { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); border: 1px solid var(--line-2); padding: 9px 14px; transition: 0.22s var(--ease); white-space: nowrap; }
-.gfilter:hover { border-color: var(--accent); color: var(--accent); }
-.gfilter.is-active { background: var(--accent); border-color: var(--accent); color: #0a0c11; }
-html.gold .gfilter.is-active { color: var(--bg); }
-.gfilter .c { color: var(--text-faint); margin-left: 6px; }
-.gfilter.is-active .c { color: inherit; opacity: 0.72; }
-
-/* A–Z jump rail */
-.gloss-az { display: flex; flex-wrap: wrap; gap: 2px; border-top: 1px solid var(--line); padding-top: 12px; }
-.gloss-az button { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.04em; color: var(--text-dim); width: 26px; height: 26px; display: grid; place-items: center; transition: 0.18s var(--ease); }
-.gloss-az button:hover { color: var(--accent); }
-.gloss-az button.is-disabled { color: var(--text-faint); opacity: 0.28; pointer-events: none; }
-
-/* ---------- Lexicon body ---------- */
-.lexicon { padding-top: clamp(36px, 4vw, 56px); }
-.lex-group { display: grid; grid-template-columns: clamp(64px, 9vw, 132px) 1fr; gap: clamp(18px, 3vw, 48px); border-top: 1px solid var(--line); padding-top: clamp(20px, 2.6vw, 34px); margin-top: clamp(20px, 2.6vw, 34px); }
-.lex-group:first-of-type { border-top: 0; margin-top: 0; padding-top: 0; }
+.lexicon { padding-block: clamp(32px, 4vw, 56px) 0; }
+.lex-group { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: clamp(16px, 4vw, 56px); padding: 28px 0; border-top: 1px solid var(--rule-2); }
 .lex-group.is-empty { display: none; }
-.lex-group__letter { font-family: var(--font-display); font-weight: 600; font-size: clamp(46px, 7vw, 100px); line-height: 0.82; letter-spacing: -0.04em; }
-.lex-group__terms { display: flex; flex-direction: column; min-width: 0; }
-
-.term { padding: clamp(18px, 2vw, 26px) 8px; border-bottom: 1px solid var(--line); position: relative; transition: background 0.35s var(--ease), padding 0.35s var(--ease); }
-.lex-group__terms .term:last-child { border-bottom: 0; }
-.term::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--accent); transform: scaleY(0); transform-origin: top; transition: transform 0.4s var(--ease); }
-.term:hover { background: linear-gradient(90deg, var(--accent-soft), transparent 62%); padding-left: 20px; }
-.term:hover::before { transform: scaleY(1); }
+.lex-group__letter { font-family: var(--serif); font-size: clamp(56px, 6vw, 88px); line-height: 0.85; color: var(--accent); position: sticky; top: calc(var(--nav-h) + 150px); align-self: start; }
+.lex-group__terms { display: grid; gap: 12px; }
+.term { background: var(--card); border: 1px solid var(--rule); border-radius: var(--r); padding: clamp(20px, 2.4vw, 28px); scroll-margin-top: calc(var(--nav-h) + 160px); }
 .term.is-hidden { display: none; }
-.term__head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
-.term__name { font-size: clamp(20px, 2.3vw, 27px); font-weight: 500; letter-spacing: -0.015em; line-height: 1.1; }
-.term:hover .term__name { color: var(--accent); }
-.term__name .term__no { font-family: var(--font-mono); font-size: 12px; font-weight: 400; color: var(--text-faint); letter-spacing: 0.05em; margin-right: 12px; vertical-align: 2px; }
-.term:hover .term__name .term__no { color: var(--accent); }
-.term__name .term__abbr { font-family: var(--font-mono); font-size: 0.5em; color: var(--text-faint); letter-spacing: 0.04em; margin-left: 8px; vertical-align: 3px; }
-.term__cat { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); border: 1px solid var(--line-2); padding: 6px 10px; white-space: nowrap; flex-shrink: 0; }
-.term__def { color: var(--text-dim); font-size: 15.5px; line-height: 1.62; margin-top: 12px; max-width: 70ch; }
-.term__def b { color: var(--text); font-weight: 500; }
-.term__see { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 16px; }
-.term__see-lbl { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-faint); }
-.seelink { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em; color: var(--text-dim); border: 1px solid var(--line); padding: 6px 11px; transition: 0.2s var(--ease); display: inline-flex; align-items: center; gap: 6px; }
-.seelink::before { content: "→"; color: var(--text-faint); font-size: 10px; transition: color 0.2s var(--ease); }
-.seelink:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
-.seelink:hover::before { color: var(--accent); }
-
-/* jump highlight flash */
-@keyframes termflash { 0% { background: var(--accent-soft); } 100% { background: transparent; } }
 .term.is-flash { animation: termflash 1.6s var(--ease); }
-.term.is-flash::before { transform: scaleY(1); }
+@keyframes termflash { 0%, 30% { box-shadow: 0 0 0 3px var(--accent); } 100% { box-shadow: 0 0 0 0 transparent; } }
+.term__head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+.term__name { font-family: var(--serif); font-weight: 400; font-size: clamp(26px, 2.6vw, 32px); line-height: 1.1; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 12px; }
+.term__no { font-family: var(--mono); font-size: 12px; color: var(--faint); }
+.term__abbr { font-family: var(--mono); font-size: 13px; color: var(--muted); padding: 2px 8px; border-radius: 6px; background: var(--paper-2); }
+.term__cat { flex: none; font-size: 12.5px; padding: 4px 10px; border-radius: 999px; background: var(--paper-2); color: var(--muted); }
+.term[data-cat="uiux"] .term__cat { background: var(--accent-wash); color: var(--accent-ink); }
+.term__def { margin-top: 10px; color: var(--ink-2); line-height: 1.7; max-width: 70ch; }
+.term__def b { color: var(--ink); font-weight: 600; }
+.term__see { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 14px; }
+.term__see-lbl { font-size: 13px; color: var(--muted); margin-right: 4px; }
+.seelink { font-size: 13.5px; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--rule-2); }
+.seelink:hover { border-color: var(--ink); color: var(--accent-ink); }
 
-/* empty / no-results */
-.gloss-empty { display: none; border: 1px solid var(--line-2); padding: clamp(40px, 6vw, 72px) var(--gutter); text-align: center; }
+.gloss-empty { display: none; border: 1px dashed var(--rule-2); border-radius: var(--r-lg); padding: clamp(40px, 6vw, 72px) var(--pad); text-align: center; margin-top: 24px; }
 .gloss-empty.show { display: block; }
-.gloss-empty__code { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); }
-.gloss-empty__msg { font-size: clamp(20px, 3vw, 30px); font-weight: 500; letter-spacing: -0.02em; margin-top: 16px; }
-.gloss-empty__msg b { color: var(--accent); font-weight: 500; }
-.gloss-empty__reset { margin-top: 22px; }
+.gloss-empty__code { font-family: var(--mono); font-size: 12px; color: var(--accent-ink); }
+.gloss-empty__msg { font-family: var(--serif); font-size: clamp(26px, 3vw, 36px); margin-top: 14px; }
+.gloss-empty__msg b { color: var(--accent-ink); font-weight: 400; }
+.gloss-empty__reset { margin-top: 24px; }
 
-@media (max-width: 720px) {
-  .lex-group { grid-template-columns: 1fr; gap: 4px; }
-  .lex-group__letter { font-size: clamp(40px, 12vw, 60px); }
-  .gloss-bar__row { gap: 10px; }
-  .gloss-count { order: 3; width: 100%; }
+@media (max-width: 760px) {
+  .lex-group { grid-template-columns: 1fr; gap: 8px; }
+  .lex-group__letter { position: static; }
+  .gloss-count { margin-left: 0; }
+  .gloss-az { display: none; }
+  .term__head { flex-direction: column; gap: 8px; }
+  .term { scroll-margin-top: calc(var(--nav-h) + 200px); }
 }
 </style>
-<script src="theme-toggle.js"></script>
-<script src="page-transition.js"></script>
-<script src="gold-cursor.js"></script>
 </head>
-<body>
-<script src="loader.js?v=3"></script>
+<body data-page="glossary">
 
-<!-- ===== Nav ===== -->
-<nav class="nav">
-  <div class="nav__inner">
-    <a class="brand" href="index.html"><span class="brand__mark" aria-hidden="true"><svg class="brand__logo" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect x="0.5" y="0.5" width="31" height="31" rx="6" fill="#0a0c11" stroke="#ff5b2e" stroke-width="1"/><line x1="7" y1="25" x2="25" y2="7" stroke="#ff5b2e" stroke-width="1" stroke-opacity="0.55"/><text x="6" y="13" font-family="Space Grotesk, system-ui, sans-serif" font-size="10" font-weight="600" fill="#ffffff">G</text><text x="20" y="27" font-family="Space Grotesk, system-ui, sans-serif" font-size="10" font-weight="600" fill="#ffffff">S</text></svg><img class="brand__face" src="assets/portrait.png" alt="" /></span><b>GOURAV</b><span>/SHARMA</span></a>
-    <div class="nav__links">
-      <a href="index.html"><span class="idx">01</span>Index</a>
-      <a href="index.html#work"><span class="idx">02</span>Work</a>
-      <a href="about.html"><span class="idx">03</span>About</a>
-      <a href="blog.html"><span class="idx">04</span>Blogs</a>
-    </div>
-    <a class="btn btn--ghost nav__cta" href="resume.html">Resume ↓</a>
-    <button class="nav__burger" aria-label="Menu"><span></span></button>
-  </div>
-</nav>
-<div class="drawer">
-  <a href="index.html"><span class="idx">01</span>Index</a>
-  <a href="index.html#work"><span class="idx">02</span>Work</a>
-  <a href="about.html"><span class="idx">03</span>About</a>
-  <a href="blog.html"><span class="idx">04</span>Blogs</a>
-  <a href="resume.html"><span class="idx">→</span>Download Resume</a>
-</div>
+<div data-site-nav></div>
 
 <main>
 <!-- ===== Hero ===== -->
 <header class="gloss-hero" data-screen-label="Glossary / Intro">
   <div class="wrap">
-    <div class="eyebrow reveal in">Reference // Lexicon</div>
-    <h1 class="gloss-hero__name reveal in" data-rise>The design<br /><em>glossary.</em></h1>
-    <p class="gloss-hero__lede reveal in">A working dictionary of the words behind the work &mdash; <b>design, UI/UX, product</b> and <b>arts</b>. No textbook recitals; just the terms I actually reach for, defined the way I&rsquo;d explain them across a desk. Search it, filter it, follow the threads.</p>
+    <p class="label">Reference · Lexicon</p>
+    <h1 class="gloss-hero__name">The design<br /><em>glossary.</em></h1>
+    <p class="gloss-hero__lede">A working dictionary of the words behind the work &mdash; <b>design, UI/UX, product</b> and <b>arts</b>. No textbook recitals; just the terms I actually reach for, defined the way I&rsquo;d explain them across a desk. Search it, filter it, follow the threads.</p>
   </div>
 </header>
 
@@ -150,7 +103,7 @@ html.gold .gfilter.is-active { color: var(--bg); }
       <label class="gloss-search">
         <span class="gloss-search__prompt" aria-hidden="true">▸</span>
         <input type="search" id="gSearch" placeholder="Search the lexicon…" autocomplete="off" spellcheck="false" aria-label="Search glossary terms" />
-        <button type="button" class="gloss-search__clear" id="gClear">CLEAR ✕</button>
+        <button type="button" class="gloss-search__clear" id="gClear">Clear ✕</button>
       </label>
       <div class="gloss-filters" data-gfilters>
         <button class="gfilter is-active" type="button" data-filter="all">All <span class="c" data-c="all">00</span></button>
@@ -172,7 +125,7 @@ html.gold .gfilter.is-active { color: var(--bg); }
 
       <!-- A -->
       <div class="lex-group" data-letter="A">
-        <div class="lex-group__letter chrome-text" aria-hidden="true">A</div>
+        <div class="lex-group__letter" aria-hidden="true">A</div>
         <div class="lex-group__terms">
           <article class="term" id="accessibility" data-cat="uiux">
             <div class="term__head"><h3 class="term__name"><span class="term__no">001</span>Accessibility<span class="term__abbr">a11y</span></h3><span class="term__cat">UI/UX</span></div>
@@ -194,7 +147,7 @@ html.gold .gfilter.is-active { color: var(--bg); }
 
       <!-- B -->
       <div class="lex-group" data-letter="B">
-        <div class="lex-group__letter chrome-text" aria-hidden="true">B</div>
+        <div class="lex-group__letter" aria-hidden="true">B</div>
         <div class="lex-group__terms">
           <article class="term" id="baseline-grid" data-cat="design">
             <div class="term__head"><h3 class="term__name"><span class="term__no">004</span>Baseline Grid</h3><span class="term__cat">Design</span></div>
@@ -211,7 +164,7 @@ html.gold .gfilter.is-active { color: var(--bg); }
 
       <!-- C -->
       <div class="lex-group" data-letter="C">
-        <div class="lex-group__letter chrome-text" aria-hidden="true">C</div>
+        <div class="lex-group__letter" aria-hidden="true">C</div>
         <div class="lex-group__terms">
           <article class="term" id="card-sorting" data-cat="product">
             <div class="term__head"><h3 class="term__name"><span class="term__no">006</span>Card Sorting</h3><span class="term__cat">Product</span></div>
@@ -233,7 +186,7 @@ html.gold .gfilter.is-active { color: var(--bg); }
 
       <!-- D -->
       <div class="lex-group" data-letter="D">
-        <div class="lex-group__letter chrome-text" aria-hidden="true">D</div>
+        <div class="lex-group__letter" aria-hidden="true">D</div>
         <div class="lex-group__terms">
           <article class="term" id="design-system" data-cat="design">
             <div class="term__head"><h3 class="term__name"><span class="term__no">009</span>Design System</h3><span class="term__cat">Design</span></div>
@@ -260,7 +213,7 @@ html.gold .gfilter.is-active { color: var(--bg); }
 
       <!-- E -->
       <div class="lex-group" data-letter="E">
-        <div class="lex-group__letter chrome-text" aria-hidden="true">E</div>
+        <div class="lex-group__letter" aria-hidden="true">E</div>
         <div class="lex-group__terms">
           <article class="term" id="empty-state" data-cat="uiux">
             <div class="term__head"><h3 class="term__name"><span class="term__no">013</span>Empty State</h3><span class="term__cat">UI/UX</span></div>
@@ -272,7 +225,7 @@ html.gold .gfilter.is-active { color: var(--bg); }
 
       <!-- F -->
       <div class="lex-group" data-letter="F">
-        <div class="lex-group__letter chrome-text" aria-hidden="true">F</div>
+        <div class="lex-group__letter" aria-hidden="true">F</div>
         <div class="lex-group__terms">
           <article class="term" id="figure-ground" data-cat="arts">
             <div class="term__head"><h3 class="term__name"><span class="term__no">014</span>Figure–Ground</h3><span class="term__cat">Arts</span></div>
@@ -294,7 +247,7 @@ html.gold .gfilter.is-active { color: var(--bg); }
 
       <!-- G -->
       <div class="lex-group" data-letter="G">
-        <div class="lex-group__letter chrome-text" aria-hidden="true">G</div>
+        <div class="lex-group__letter" aria-hidden="true">G</div>
         <div class="lex-group__terms">
           <article class="term" id="gestalt" data-cat="design">
             <div class="term__head"><h3 class="term__name"><span class="term__no">017</span>Gestalt Principles</h3><span class="term__cat">Design</span></div>
@@ -316,7 +269,7 @@ html.gold .gfilter.is-active { color: var(--bg); }
 
       <!-- H -->
       <div class="lex-group" data-letter="H">
-        <div class="lex-group__letter chrome-text" aria-hidden="true">H</div>
+        <div class="lex-group__letter" aria-hidden="true">H</div>
         <div class="lex-group__terms">
           <article class="term" id="heuristic-evaluation" data-cat="uiux">
             <div class="term__head"><h3 class="term__name"><span class="term__no">020</span>Heuristic Evaluation</h3><span class="term__cat">UI/UX</span></div>
@@ -338,7 +291,7 @@ html.gold .gfilter.is-active { color: var(--bg); }
 
       <!-- I -->
       <div class="lex-group" data-letter="I">
-        <div class="lex-group__letter chrome-text" aria-hidden="true">I</div>
+        <div class="lex-group__letter" aria-hidden="true">I</div>
         <div class="lex-group__terms">
           <article class="term" id="information-architecture" data-cat="product">
             <div class="term__head"><h3 class="term__name"><span class="term__no">023</span>Information Architecture<span class="term__abbr">IA</span></h3><span class="term__cat">Product</span></div>
@@ -355,7 +308,7 @@ html.gold .gfilter.is-active { color: var(--bg); }
 
       <!-- J -->
       <div class="lex-group" data-letter="J">
-        <div class="lex-group__letter chrome-text" aria-hidden="true">J</div>
+        <div class="lex-group__letter" aria-hidden="true">J</div>
         <div class="lex-group__terms">
           <article class="term" id="jobs-to-be-done" data-cat="product">
             <div class="term__head"><h3 class="term__name"><span class="term__no">025</span>Jobs to Be Done<span class="term__abbr">JTBD</span></h3><span class="term__cat">Product</span></div>
@@ -367,7 +320,7 @@ html.gold .gfilter.is-active { color: var(--bg); }
 
       <!-- K -->
       <div class="lex-group" data-letter="K">
-        <div class="lex-group__letter chrome-text" aria-hidden="true">K</div>
+        <div class="lex-group__letter" aria-hidden="true">K</div>
         <div class="lex-group__terms">
           <article class="term" id="kanban" data-cat="product">
             <div class="term__head"><h3 class="term__name"><span class="term__no">026</span>Kanban</h3><span class="term__cat">Product</span></div>
@@ -384,7 +337,7 @@ html.gold .gfilter.is-active { color: var(--bg); }
 
       <!-- L -->
       <div class="lex-group" data-letter="L">
-        <div class="lex-group__letter chrome-text" aria-hidden="true">L</div>
+        <div class="lex-group__letter" aria-hidden="true">L</div>
         <div class="lex-group__terms">
           <article class="term" id="leading" data-cat="design">
             <div class="term__head"><h3 class="term__name"><span class="term__no">028</span>Leading</h3><span class="term__cat">Design</span></div>
@@ -396,7 +349,7 @@ html.gold .gfilter.is-active { color: var(--bg); }
 
       <!-- M -->
       <div class="lex-group" data-letter="M">
-        <div class="lex-group__letter chrome-text" aria-hidden="true">M</div>
+        <div class="lex-group__letter" aria-hidden="true">M</div>
         <div class="lex-group__terms">
           <article class="term" id="mental-model" data-cat="uiux">
             <div class="term__head"><h3 class="term__name"><span class="term__no">029</span>Mental Model</h3><span class="term__cat">UI/UX</span></div>
@@ -423,7 +376,7 @@ html.gold .gfilter.is-active { color: var(--bg); }
 
       <!-- N -->
       <div class="lex-group" data-letter="N">
-        <div class="lex-group__letter chrome-text" aria-hidden="true">N</div>
+        <div class="lex-group__letter" aria-hidden="true">N</div>
         <div class="lex-group__terms">
           <article class="term" id="negative-space" data-cat="arts">
             <div class="term__head"><h3 class="term__name"><span class="term__no">033</span>Negative Space</h3><span class="term__cat">Arts</span></div>
@@ -435,7 +388,7 @@ html.gold .gfilter.is-active { color: var(--bg); }
 
       <!-- O -->
       <div class="lex-group" data-letter="O">
-        <div class="lex-group__letter chrome-text" aria-hidden="true">O</div>
+        <div class="lex-group__letter" aria-hidden="true">O</div>
         <div class="lex-group__terms">
           <article class="term" id="onboarding" data-cat="product">
             <div class="term__head"><h3 class="term__name"><span class="term__no">034</span>Onboarding</h3><span class="term__cat">Product</span></div>
@@ -447,7 +400,7 @@ html.gold .gfilter.is-active { color: var(--bg); }
 
       <!-- P -->
       <div class="lex-group" data-letter="P">
-        <div class="lex-group__letter chrome-text" aria-hidden="true">P</div>
+        <div class="lex-group__letter" aria-hidden="true">P</div>
         <div class="lex-group__terms">
           <article class="term" id="persona" data-cat="product">
             <div class="term__head"><h3 class="term__name"><span class="term__no">035</span>Persona</h3><span class="term__cat">Product</span></div>
@@ -474,7 +427,7 @@ html.gold .gfilter.is-active { color: var(--bg); }
 
       <!-- R -->
       <div class="lex-group" data-letter="R">
-        <div class="lex-group__letter chrome-text" aria-hidden="true">R</div>
+        <div class="lex-group__letter" aria-hidden="true">R</div>
         <div class="lex-group__terms">
           <article class="term" id="responsive-design" data-cat="uiux">
             <div class="term__head"><h3 class="term__name"><span class="term__no">039</span>Responsive Design</h3><span class="term__cat">UI/UX</span></div>
@@ -491,7 +444,7 @@ html.gold .gfilter.is-active { color: var(--bg); }
 
       <!-- S -->
       <div class="lex-group" data-letter="S">
-        <div class="lex-group__letter chrome-text" aria-hidden="true">S</div>
+        <div class="lex-group__letter" aria-hidden="true">S</div>
         <div class="lex-group__terms">
           <article class="term" id="signifier" data-cat="uiux">
             <div class="term__head"><h3 class="term__name"><span class="term__no">041</span>Signifier</h3><span class="term__cat">UI/UX</span></div>
@@ -508,7 +461,7 @@ html.gold .gfilter.is-active { color: var(--bg); }
 
       <!-- T -->
       <div class="lex-group" data-letter="T">
-        <div class="lex-group__letter chrome-text" aria-hidden="true">T</div>
+        <div class="lex-group__letter" aria-hidden="true">T</div>
         <div class="lex-group__terms">
           <article class="term" id="tone-of-voice" data-cat="product">
             <div class="term__head"><h3 class="term__name"><span class="term__no">043</span>Tone of Voice</h3><span class="term__cat">Product</span></div>
@@ -525,7 +478,7 @@ html.gold .gfilter.is-active { color: var(--bg); }
 
       <!-- U -->
       <div class="lex-group" data-letter="U">
-        <div class="lex-group__letter chrome-text" aria-hidden="true">U</div>
+        <div class="lex-group__letter" aria-hidden="true">U</div>
         <div class="lex-group__terms">
           <article class="term" id="usability-testing" data-cat="uiux">
             <div class="term__head"><h3 class="term__name"><span class="term__no">045</span>Usability Testing</h3><span class="term__cat">UI/UX</span></div>
@@ -542,7 +495,7 @@ html.gold .gfilter.is-active { color: var(--bg); }
 
       <!-- V -->
       <div class="lex-group" data-letter="V">
-        <div class="lex-group__letter chrome-text" aria-hidden="true">V</div>
+        <div class="lex-group__letter" aria-hidden="true">V</div>
         <div class="lex-group__terms">
           <article class="term" id="vertical-rhythm" data-cat="design">
             <div class="term__head"><h3 class="term__name"><span class="term__no">047</span>Vertical Rhythm</h3><span class="term__cat">Design</span></div>
@@ -554,7 +507,7 @@ html.gold .gfilter.is-active { color: var(--bg); }
 
       <!-- W -->
       <div class="lex-group" data-letter="W">
-        <div class="lex-group__letter chrome-text" aria-hidden="true">W</div>
+        <div class="lex-group__letter" aria-hidden="true">W</div>
         <div class="lex-group__terms">
           <article class="term" id="wcag" data-cat="uiux">
             <div class="term__head"><h3 class="term__name"><span class="term__no">048</span>WCAG</h3><span class="term__cat">UI/UX</span></div>
@@ -578,47 +531,16 @@ html.gold .gfilter.is-active { color: var(--bg); }
 
     <!-- No results -->
     <div class="gloss-empty" data-empty>
-      <div class="gloss-empty__code">// 404 · NO MATCH IN INDEX</div>
+      <div class="gloss-empty__code">No match in the index</div>
       <div class="gloss-empty__msg">Nothing for &ldquo;<b data-empty-q>—</b>&rdquo; in the lexicon.</div>
-      <button class="btn btn--primary gloss-empty__reset" type="button" data-reset>Reset search <span class="arrow">→</span></button>
+      <button class="btn btn--ink gloss-empty__reset" type="button" data-reset>Reset search <span class="arrow">→</span></button>
     </div>
   </div>
 </section>
 </main>
 
-<!-- ===== Footer ===== -->
-<footer class="footer">
-  <div class="wrap">
-    <div class="footer__grid">
-      <div>
-        <div class="footer__big">Gourav Sharma<span class="accent">.</span></div>
-        <p class="dim footer__lede">Product &amp; UI/UX Designer. Designing scalable systems for logistics, SaaS &amp; mobile.</p>
-      </div>
-      <div class="footer__col">
-        <h4>Navigate</h4>
-        <a href="index.html">Index</a>
-        <a href="index.html#work">Work</a>
-        <a href="about.html">About</a>
-        <a href="blog.html">Blogs</a>
-        <a href="glossary.html">Glossary</a>
-        <a href="resume.html">Resume ↓</a>
-      </div>
-      <div class="footer__col">
-        <h4>Connect</h4>
-        <a href="mailto:gouravsharma.ux@gmail.com">Email</a>
-        <a href="https://www.linkedin.com/in/gourav-sharmaux/" target="_blank" rel="noopener">LinkedIn</a>
-      </div>
-    </div>
-    <div class="footer__bar">
-      <span>© 2026 GOURAV SHARMA</span>
-      <span>DESIGNED &amp; BUILT · v1.0 · <span data-clock>--:--:-- UTC</span></span>
-    </div>
-  </div>
-</footer>
-
-<script src="bigfoot.js?v=3"></script>
-<script src="easter-egg.js"></script>
-<script src="click-sfx.js"></script>
+<div data-site-foot></div>
+<script src="site.js?v=3"></script>
 <script>
 /* ============================================================
    Glossary — search, category filter, A–Z jump, see-also links
@@ -766,9 +688,6 @@ html.gold .gfilter.is-active { color: var(--bg); }
   apply();
 })();
 </script>
-<script src="nav-scramble.js"></script>
-<script src="main.js"></script>
-<script src="rise.js"></script>
 </body>
 </html>
 
