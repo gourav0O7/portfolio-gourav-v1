@@ -1,12 +1,10 @@
 
 /* ============================================================
-   PROJECT page renderer — reads window.PROJECT_KEY + window.PROJECTS
-   Builds the case study, nav, footer; wires shared main.js after.
-   Sections render in case-study order:
-     hero · problem · goals · research · overview · insights
-     · principles · ideation · solution · designSystem
-     · gallery · validation · outcomes · interviewer · next
-   Each new section is conditional on data presence.
+   PROJECT page renderer (v2) — reads window.PROJECT_KEY + window.PROJECTS
+   Builds the case study into #app; nav + footer come from site.js.
+   Sections: hero · (sub-projects) · overview · challenge · approach
+             · screens · impact · reflection · next
+   Each section is conditional on data presence.
    ============================================================ */
 (function () {
   'use strict';
@@ -94,76 +92,20 @@
     heroArt ? '<div class="iso-wrap">' + heroArt + '</div>' :
     slot('proj-hero');
 
-  var arrowUR = '<svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H5M12 4V11" stroke="currentColor" stroke-width="1.4"/></svg>';
+  var arrowUR = '<svg width="18" height="18" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 12L12 4M12 4H5M12 4V11" stroke="currentColor" stroke-width="1.5"/></svg>';
 
-  var navHTML =
-    '<nav class="nav"><div class="nav__inner">' +
-      '<a class="brand" href="index.html"><span class="brand__mark" aria-hidden="true"><svg class="brand__logo" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><rect x="0.5" y="0.5" width="31" height="31" rx="6" fill="#0a0c11" stroke="#ff5b2e" stroke-width="1"/><line x1="7" y1="25" x2="25" y2="7" stroke="#ff5b2e" stroke-width="1" stroke-opacity="0.55"/><text x="6" y="13" font-family="Space Grotesk, system-ui, sans-serif" font-size="10" font-weight="600" fill="#ffffff">G</text><text x="20" y="27" font-family="Space Grotesk, system-ui, sans-serif" font-size="10" font-weight="600" fill="#ffffff">S</text></svg><img class="brand__face" src="assets/portrait.png" alt="" /></span><b>GOURAV</b><span>/SHARMA</span></a>' +
-      '<div class="nav__links">' +
-        '<a href="index.html"><span class="idx">01</span>Index</a>' +
-        '<a href="index.html#work" class="active"><span class="idx">02</span>Work</a>' +
-        '<a href="about.html"><span class="idx">03</span>About</a>' +
-        '<a href="index.html#contact"><span class="idx">04</span>Contact</a>' +
-      '</div>' +
-      '<a class="btn btn--ghost nav__cta" href="resume.html">Resume ↓</a>' +
-      '<button class="nav__burger" aria-label="Menu"><span></span></button>' +
-    '</div></nav>' +
-    '<div class="drawer">' +
-      '<a href="index.html"><span class="idx">01</span>Index</a>' +
-      '<a href="index.html#work" class="active"><span class="idx">02</span>Work</a>' +
-      '<a href="about.html"><span class="idx">03</span>About</a>' +
-      '<a href="index.html#contact"><span class="idx">04</span>Contact</a>' +
-      '<a href="resume.html"><span class="idx">→</span>Download Resume</a>' +
-    '</div>';
-
-  var metaTop =
-    '<div class="p-meta-top">' +
-      '<span><span class="i">CASE //</span> ' + P.index + '</span>' +
-      '<span><span class="i">CLIENT //</span> ' + P.client + '</span>' +
-      '<span><span class="i">YEAR //</span> ' + P.year + '</span>' +
-    '</div>';
-
-  var strip =
-    '<dl class="p-strip reveal">' +
-      '<div><dt>Role</dt><dd>' + P.meta.role + '</dd></div>' +
-      '<div><dt>Timeline</dt><dd>' + P.meta.timeline + '</dd></div>' +
-      '<div><dt>Platform</dt><dd>' + P.meta.platform + '</dd></div>' +
-      '<div><dt>Team</dt><dd>' + P.meta.team + '</dd></div>' +
-    '</dl>';
-
-  var overviewParas = P.overview.map(function (p) { return '<p>' + p + '</p>'; }).join('');
-
-  var steps = P.sections.map(function (s) {
-    return '<div class="p-step reveal"><div class="p-step__k">' + s.k + ' /</div>' +
-      '<div><div class="p-step__h">' + s.h + '</div><div class="p-step__b">' + s.b + '</div></div></div>';
-  }).join('');
-
-  var outcomes = (P.outcomes || []).map(function (o) {
-    return '<div class="p-outcome reveal"><div class="n">' + o.n + '</div><div class="l">' + o.l + '</div></div>';
-  }).join('');
-
-  /* ---------- HERO ---------- */
-  var hero =
-    '<header class="p-hero" data-screen-label="Project / ' + P.title + '"><div class="wrap">' +
-      '<a class="p-back" href="index.html#work"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.4"/></svg> All Work</a>' +
-      metaTop +
-      '<h1 class="p-title">' + P.title + '</h1>' +
-      '<p class="p-one">' + P.one + '</p>' +
-      '<div class="p-visual reveal">' + heroVisual +
-        '<div class="p-visual__cap"><span>' + P.client + ' · ' + P.meta.platform + '</span><span>' + P.year + '</span></div>' +
-      '</div>' +
-      strip +
-    '</div></header>';
-
-  /* ============================================================
-     SENIOR NARRATIVE STRUCTURE
-     Overview · The Challenge · Approach · The Product · Reflection
-     A tight story, not a checklist of UX deliverables. The richer
-     data (goals / research / principles / ideation alts / design
-     system / validation) is folded into these few sections.
-     ============================================================ */
-
-  // pull a specific point out of the interviewer takeaways
+  // section shell: sticky side label + content column
+  function sec(name, inner, cls) {
+    return '<section class="cs-sec' + (cls ? ' ' + cls : '') + '"><div class="wrap cs-split">' +
+      '<div class="cs-side reveal"><span class="cs-side__n">' + nx() + '</span>' + name + '</div>' +
+      '<div class="cs-main">' + inner + '</div>' +
+    '</div></section>';
+  }
+  function wideHead(name, title, aside) {
+    return '<div class="sec-head reveal"><div><p class="label"><span class="cs-side__n">' + nx() + '</span>' + name + '</p>' +
+      '<h2 class="h2">' + title + '</h2></div>' +
+      (aside ? '<p class="sec-head__aside">' + aside + '</p>' : '') + '</div>';
+  }
   function findInterviewerPoint(re){
     if (!P.interviewer || !P.interviewer.points) return null;
     for (var i = 0; i < P.interviewer.points.length; i++) {
@@ -172,44 +114,48 @@
     return null;
   }
 
-  /* ---------- 01 · OVERVIEW (context + my role, set the scene) ---------- */
-  var overviewSec =
-    '<section class="p-section"><div class="wrap"><div class="p-split">' +
-      splitHead('Overview') +
-      '<div class="p-prose reveal">' + overviewParas + '</div>' +
-    '</div></div></section>';
+  /* ---------- HERO ---------- */
+  var hero =
+    '<header class="cs-hero"><div class="wrap">' +
+      '<a class="cs-back" href="index.html#work"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.6"/></svg>All work</a>' +
+      '<div class="cs-hero__meta reveal"><span class="cs-hero__idx">Case ' + P.index + '</span><span>' + P.client + '</span><span>' + P.year + '</span></div>' +
+      '<h1 class="cs-hero__title reveal">' + P.title + '</h1>' +
+      '<p class="cs-hero__one lede reveal">' + P.one + '</p>' +
+      '<dl class="cs-facts reveal">' +
+        '<div><dt>Role</dt><dd>' + P.meta.role + '</dd></div>' +
+        '<div><dt>Timeline</dt><dd>' + P.meta.timeline + '</dd></div>' +
+        '<div><dt>Platform</dt><dd>' + P.meta.platform + '</dd></div>' +
+        '<div><dt>Team</dt><dd>' + P.meta.team + '</dd></div>' +
+      '</dl>' +
+    '</div>' +
+    '<div class="wrap wrap--wide"><div class="cs-stage reveal">' + heroVisual + '</div></div>' +
+    '</header>';
 
-  /* ---------- 02 · THE CHALLENGE (the problem, the reframe, what was really going on) ---------- */
-  var reframe = (P.insights && P.insights.lead) ?
-    '<p class="p-prose reveal" style="margin-top:26px">' + P.insights.lead + '</p>' : '';
-  var painsRows = '';
+  /* ---------- OVERVIEW ---------- */
+  var overviewSec = sec('Overview',
+    '<div class="cs-prose reveal">' + P.overview.map(function (p) { return '<p>' + p + '</p>'; }).join('') + '</div>');
+
+  /* ---------- THE CHALLENGE ---------- */
+  var reframe = (P.insights && P.insights.lead) ? '<p class="cs-prose reveal">' + P.insights.lead + '</p>' : '';
+  var pains = '';
   if (P.insights && P.insights.pains && P.insights.pains.length) {
-    painsRows = '<div class="p-pains reveal" style="margin-top:48px">' + P.insights.pains.map(function (p, i) {
-      return '<div class="p-pain"><div class="p-pain__n">' + ('0' + (i + 1)).slice(-2) + '</div>' +
-        '<div><h4>' + p.h + '</h4><p>' + p.b + '</p></div></div>';
+    pains = '<div class="cs-pains">' + P.insights.pains.map(function (p, i) {
+      return '<div class="cs-pain reveal"><span class="cs-pain__n">' + ('0' + (i + 1)).slice(-2) + '</span>' +
+        '<h4>' + p.h + '</h4><p>' + p.b + '</p></div>';
     }).join('') + '</div>';
   }
-  // research evidence: sample size + a real user quote (renders only when present)
-  var evidenceBlock = '';
+  var evidence = '';
   if (P.evidence && (P.evidence.quote || P.evidence.sample)) {
     var eq = P.evidence.quote;
-    evidenceBlock = '<div class="p-evidence reveal" style="margin-top:44px">' +
-      (P.evidence.sample ? '<div class="p-evidence__sample"><span class="i">Research //</span> ' + P.evidence.sample + '</div>' : '') +
-      (eq ? '<blockquote class="p-quote">\u201C' + eq.text + '\u201D<cite>' + eq.who + '</cite></blockquote>' : '') +
-    '</div>';
+    evidence = '<figure class="cs-quote reveal">' +
+      (eq ? '<blockquote>“' + eq.text + '”</blockquote><figcaption>' + eq.who + '</figcaption>' : '') +
+      (P.evidence.sample ? '<p class="cs-quote__sample"><b>Research</b> ' + P.evidence.sample + '</p>' : '') +
+    '</figure>';
   }
-  var challengeSec =
-    '<section class="p-section"><div class="wrap"><div class="p-split">' +
-      splitHead('The Challenge') +
-      '<div>' +
-        '<div class="p-prose big reveal">' + P.challenge + '</div>' +
-        reframe +
-        painsRows +
-        evidenceBlock +
-      '</div>' +
-    '</div></div></section>';
+  var challengeSec = sec('The challenge',
+    '<div class="cs-lead reveal">' + P.challenge + '</div>' + reframe + pains + evidence);
 
-  /* ---------- 03 · APPROACH (the moves, then the one hard decision) ---------- */
+  /* ---------- APPROACH ---------- */
   var hardest = findInterviewerPoint(/hardest|decision|the call/i);
   var decisionText = '', decisionLabel = 'The hardest call';
   if (hardest) {
@@ -218,103 +164,77 @@
     decisionText = P.ideation.tradeoff; decisionLabel = 'The tradeoff';
   } else if (P.validation && P.validation.changes && P.validation.changes.length) {
     var c0 = P.validation.changes[0];
-    decisionText = '<b style="color:var(--text);font-weight:500">' + c0.h + '.</b> ' + c0.b; decisionLabel = 'A decision that mattered';
+    decisionText = '<b>' + c0.h + '.</b> ' + c0.b; decisionLabel = 'A decision that mattered';
   }
-  var decisionCallout = decisionText ?
-    '<div class="p-tradeoff reveal" style="margin-top:16px"><span class="p-tradeoff__lbl">' + decisionLabel + '</span>' + decisionText + '</div>' : '';
-  var approachSec =
-    '<section class="p-section"><div class="wrap">' +
-      '<div class="head-row reveal"><div><div class="eyebrow">// ' + nx() + ' · Approach</div>' +
-      '<h2 class="section-title" style="margin-top:18px;">Designing the solution.</h2></div>' +
-      '<div class="head-row__count">[ ' + P.sections.length + ' STAGES ]</div></div>' +
-      '<div class="p-approach">' + steps + '</div>' +
-      decisionCallout +
-    '</div></section>';
+  var steps = '<ol class="cs-steps">' + P.sections.map(function (s) {
+    return '<li class="cs-step reveal"><span class="cs-step__k">' + s.k + '</span>' +
+      '<div><h3 class="cs-step__h">' + s.h + '</h3><div class="cs-step__b">' + s.b + '</div></div></li>';
+  }).join('') + '</ol>';
+  var approachSec = sec('Approach',
+    '<h2 class="h2 cs-h reveal">Designing the <em>solution.</em></h2>' + steps +
+    (decisionText ? '<aside class="cs-call reveal"><span class="cs-call__lbl">' + decisionLabel + '</span><div>' + decisionText + '</div></aside>' : ''));
 
-  /* ---------- gallery (visual breather) ---------- */
+  /* ---------- SCREENS ---------- */
   var gallery;
   if (window.PROJECT_SCREENS) {
-    // project-specific: replace the placeholder gallery with replica screens
+    var PS = window.PROJECT_SCREENS;
     gallery =
-      '<section class="p-section p-screens-sec"><div class="wrap">' +
-        '<div class="head-row reveal"><div><div class="eyebrow">// ' + nx() + ' · Screens</div>' +
-        '<h2 class="section-title" style="margin-top:18px;">The product.</h2></div>' +
-        '<div class="head-row__count">[ ' + (window.PROJECT_SCREENS.tag || 'DRIVER · ADMIN') + ' ]</div></div>' +
+      '<section class="cs-sec cs-screens"><div class="wrap">' +
+        wideHead('Screens', 'The <em>product.</em>', PS.tag || 'Driver · Admin') +
         '<div class="p-screens">' +
-          '<div class="p-screens__group reveal">' + window.PROJECT_SCREENS.driver + '</div>' +
-          (window.PROJECT_SCREENS.admin ? '<div class="p-screens__group reveal">' + window.PROJECT_SCREENS.admin + '</div>' : '') +
+          '<div class="p-screens__group reveal">' + PS.driver + '</div>' +
+          (PS.admin ? '<div class="p-screens__group reveal">' + PS.admin + '</div>' : '') +
         '</div>' +
-        (window.PROJECT_SCREENS.live ? window.PROJECT_SCREENS.live : '') +
+        (PS.live ? PS.live : '') +
       '</div></section>';
   } else {
     gallery =
-      '<section class="p-section--tight"><div class="wrap"><div class="p-gallery reveal">' +
+      '<section class="cs-sec cs-screens"><div class="wrap"><div class="cs-gallery reveal">' +
         slot('proj-g1') + slot('proj-g2') +
-        '<div class="wide" style="grid-column:1/-1">' + slot('proj-g3', 'style="aspect-ratio:21/9"') + '</div>' +
+        '<div style="grid-column:1/-1">' + slot('proj-g3', 'style="aspect-ratio:21/9"') + '</div>' +
       '</div></div></section>';
   }
 
-  /* ---------- IMPACT (real before\u2192after metrics, renders only when present) ---------- */
+  /* ---------- IMPACT ---------- */
   var impactSec = '';
   if (P.impact && P.impact.metrics && P.impact.metrics.length) {
-    var impactCards = P.impact.metrics.map(function (m) {
+    var cards = P.impact.metrics.map(function (m) {
       var nums = (m.before && m.after)
-        ? '<div class="p-impact__nums"><span class="before">' + m.before + '</span><span class="arrow">\u2192</span><span class="after">' + m.after + '</span></div>'
-        : '<div class="p-impact__nums"><span class="after">' + (m.after || m.value || '') + '</span></div>';
-      return '<div class="p-impact__card reveal">' + nums +
-        '<div class="p-impact__label">' + m.label + '</div>' +
-        (m.source ? '<div class="p-impact__src">' + m.source + '</div>' : '') +
+        ? '<div class="cs-metric__nums"><span class="cs-metric__before">' + m.before + '</span><span class="cs-metric__arrow">→</span><span>' + m.after + '</span></div>'
+        : '<div class="cs-metric__nums"><span>' + (m.after || m.value || '') + '</span></div>';
+      return '<div class="cs-metric reveal">' + nums +
+        '<div class="cs-metric__label">' + m.label + '</div>' +
+        (m.source ? '<div class="cs-metric__src">' + m.source + '</div>' : '') +
       '</div>';
     }).join('');
     impactSec =
-      '<section class="p-section"><div class="wrap">' +
-        '<div class="head-row reveal"><div><div class="eyebrow">// ' + nx() + ' \u00B7 Impact</div>' +
-        '<h2 class="section-title" style="margin-top:18px;">What changed.</h2></div>' +
-        '<div class="head-row__count">[ MEASURED ]</div></div>' +
-        '<div class="p-impact">' + impactCards + '</div>' +
-        (P.impact.note ? '<p class="p-impact__note reveal">' + P.impact.note + '</p>' : '') +
+      '<section class="cs-sec cs-impact"><div class="wrap">' +
+        wideHead('Impact', 'What <em>changed.</em>', 'Measured') +
+        '<div class="cs-metrics">' + cards + '</div>' +
+        (P.impact.note ? '<p class="cs-impact__note reveal">' + P.impact.note + '</p>' : '') +
       '</div></section>';
   }
 
-  /* ---------- 05 · REFLECTION (the takeaway + what I'd revisit) ---------- */
+  /* ---------- REFLECTION ---------- */
   var reflectionSec = '';
   if (P.interviewer) {
     var takeaway = P.interviewer.lead ? P.interviewer.lead.replace(/^What I want you to remember:\s*/i, '') : '';
     var moreP = findInterviewerPoint(/more time|revisit/i);
-    var learnP = (P.learning && P.learning.b) ? '<p class="p-prose reveal" style="margin-top:26px"><b style="color:var(--text);font-weight:500">' + (P.learning.h || 'What surprised me') + ': </b>' + P.learning.b + '</p>' : '';
-    reflectionSec =
-      '<section class="p-section"><div class="wrap"><div class="p-split">' +
-        splitHead('Reflection') +
-        '<div>' +
-          (takeaway ? '<div class="p-prose big reveal">' + takeaway + '</div>' : '') +
-          learnP +
-          (moreP ? '<p class="p-prose reveal" style="margin-top:26px"><b style="color:var(--text);font-weight:500">What I\u2019d revisit: </b>' + moreP.b + '</p>' : '') +
-        '</div>' +
-      '</div></div></section>';
+    reflectionSec = sec('Reflection',
+      (takeaway ? '<div class="cs-lead reveal">' + takeaway + '</div>' : '') +
+      '<div class="cs-notes">' +
+        ((P.learning && P.learning.b) ? '<div class="cs-note reveal"><h4>' + (P.learning.h || 'What surprised me') + '</h4><p>' + P.learning.b + '</p></div>' : '') +
+        (moreP ? '<div class="cs-note reveal"><h4>What I’d revisit</h4><p>' + moreP.b + '</p></div>' : '') +
+      '</div>');
   }
 
-  /* ---------- Next ---------- */
-  var nextSec =
-    '<section class="p-section p-next-sec"><div class="wrap"><div class="p-next"><a href="project-' + P.next + '.html">' +
-      '<div class="p-next__lbl">Next<br />Case</div>' +
-      '<div><div class="p-next__lbl" style="margin-bottom:10px">' + nextP.index + ' // ' + nextP.client + '</div>' +
-      '<div class="p-next__title">' + nextP.title + '</div></div>' +
-      '<div class="p-next__arrow">' + arrowUR + '</div>' +
-    '</a></div></div></section>';
-
-  var footer =
-    '<footer class="footer"><div class="wrap"><div class="footer__grid">' +
-      '<div><div class="footer__big">Gourav Sharma<span class="accent">.</span></div>' +
-      '<p class="dim" style="margin-top:14px;max-width:36ch;">Product &amp; UI/UX Designer. Designing scalable systems for logistics, SaaS &amp; mobile.</p></div>' +
-      '<div class="footer__col"><h4>Navigate</h4>' +
-        '<a href="index.html">Index</a><a href="index.html#work">Work</a><a href="about.html">About</a><a href="blog.html">Blogs</a><a href="glossary.html">Glossary</a><a href="resume.html">Resume ↓</a></div>' +
-      '<div class="footer__col"><h4>Connect</h4>' +
-        '<a href="mailto:gouravsharma.ux@gmail.com">Email</a>' +
-        '<a href="https://www.linkedin.com/in/gourav-sharmaux/" target="_blank" rel="noopener">LinkedIn</a>' +
-        '<a href="https://www.behance.net/" target="_blank" rel="noopener">Behance</a>' +
-        '<a href="#" data-phone-gate>Phone</a></div>' +
-    '</div><div class="footer__bar"><span>© 2026 GOURAV SHARMA</span>' +
-    '<span>CASE ' + P.index + ' · <span data-clock>--:--:-- UTC</span></span></div></div></footer>';
+  /* ---------- NEXT ---------- */
+  var nextSec = nextP ?
+    '<section class="cs-next"><div class="wrap"><a class="cs-next__card reveal" href="project-' + P.next + '.html">' +
+      '<span class="label label--plain">Next case · ' + nextP.index + '</span>' +
+      '<span class="cs-next__title">' + nextP.title + '</span>' +
+      '<span class="cs-next__meta">' + nextP.client + '<span class="cs-next__go">' + arrowUR + '</span></span>' +
+    '</a></div></section>' : '';
 
   /* ---------- Sub-projects: "Inside this app" (umbrella case only) ---------- */
   var subSec = '';
@@ -322,37 +242,32 @@
     var subCards = P.subProjects.map(function (k) {
       var sp = (window.PROJECTS || {})[k];
       if (!sp) return '';
-      var spTags = (sp.tags || []).slice(0, 3).map(function (t) { return '<span>' + t + '</span>'; }).join('');
-      return '<a class="p-subcard reveal" href="project-' + k + '.html">' +
-        '<div class="p-subcard__no">' + sp.index + '</div>' +
-        '<div class="p-subcard__body">' +
-          '<h3 class="p-subcard__title">' + sp.title + '</h3>' +
-          '<p class="p-subcard__desc">' + sp.one + '</p>' +
-          (spTags ? '<div class="p-subcard__tags">' + spTags + '</div>' : '') +
-        '</div>' +
-        '<div class="p-subcard__go">' + arrowUR + '</div>' +
+      var spTags = (sp.tags || []).slice(0, 3).map(function (t) { return '<span class="chip">' + t + '</span>'; }).join('');
+      return '<a class="cs-sub reveal" href="project-' + k + '.html">' +
+        '<span class="cs-sub__no">' + sp.index + '</span>' +
+        '<h3 class="cs-sub__title">' + sp.title + '</h3>' +
+        '<p class="cs-sub__desc">' + sp.one + '</p>' +
+        (spTags ? '<div class="cs-sub__tags">' + spTags + '</div>' : '') +
+        '<span class="cs-sub__go">' + arrowUR + '</span>' +
       '</a>';
     }).join('');
     subSec =
-      '<section class="p-section p-subprojects"><div class="wrap">' +
-        '<div class="head-row reveal"><div><div class="eyebrow">// Inside this app</div>' +
-        '<h2 class="section-title" style="margin-top:18px;">Featured work.</h2></div>' +
-        '<div class="head-row__count">[ ' + ('0' + P.subProjects.length).slice(-2) + ' FEATURES ]</div></div>' +
-        '<div class="p-subgrid">' + subCards + '</div>' +
+      '<section class="cs-sec"><div class="wrap">' +
+        '<div class="sec-head reveal"><div><p class="label">Inside this app</p><h2 class="h2">Featured <em>work.</em></h2></div>' +
+        '<p class="sec-head__aside">' + P.subProjects.length + ' features</p></div>' +
+        '<div class="cs-subgrid">' + subCards + '</div>' +
       '</div></section>';
   }
 
-  // A case can declare itself public (P.open) — self-initiated work with no
-  // client confidentiality. Public cases still get the white-sheet wrapper
-  // (.case-gatewrap carries the light token scope the whole narrative reads
-  // from) but NOT the #caseGate id, so case-gate.js finds no gate and returns
-  // without encrypting anything. Everything else stays NDA-locked by default.
+  // A case can declare itself public (P.open). Public cases get the wrapper
+  // but NOT the #caseGate id, so case-gate.js finds no gate and returns.
   var isOpen = P.open === true;
   var gateOpen = isOpen
-    ? '<div class="case-gatewrap" data-screen-label="Project / Case">'
-    : '<div class="case-gatewrap is-arming" id="caseGate" data-screen-label="Project / Protected">';
+    ? '<div class="case-gatewrap">'
+    : '<div class="case-gatewrap is-arming" id="caseGate">';
 
-  root.innerHTML = navHTML +
+  root.innerHTML =
+    '<div data-site-nav></div>' +
     '<main>' +
       hero +
       subSec +
@@ -366,20 +281,13 @@
       '</div>' +
       nextSec +
     '</main>' +
-    footer;
+    '<div data-site-foot></div>';
 
-  // scale any HTML mockups injected into the hero (laptop photo + frames)
+  if (window.SITE) { window.SITE.mount(root); window.SITE.initReveal(root); }
+
+  // scale any HTML mockups injected into the hero (laptop + frames)
   if (typeof window.initLaptops === 'function') window.initLaptops(root);
   if (typeof window.initMockupScale === 'function') window.initMockupScale(root);
-
-  // upgrade the simple footer into the shared marquee + bigfoot immediately,
-  // so when main.js boots the marquees exist and can be animated.
-  if (typeof window.__mountBigfoot === 'function') window.__mountBigfoot();
-
-  // load shared behaviour AFTER markup exists
-  var s = document.createElement('script');
-  s.src = 'main.js';
-  document.body.appendChild(s);
 
   // NDA gate: scrambles everything below the hero until the passphrase is entered
   var g = document.createElement('script');
