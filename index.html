@@ -8,115 +8,115 @@
 <meta name="description" content="Gourav Sharma — Product &amp; UI/UX Designer with 3.5+ years designing SaaS, mobile and web products." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" />
-<link rel="stylesheet" href="site.css?v=3" />
-<link rel="stylesheet" href="home.css?v=3" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" />
+<link rel="stylesheet" href="site.css?v=4" />
+<link rel="stylesheet" href="home.css?v=4" />
+<link rel="stylesheet" href="cinema.css?v=1" />
 <script type="importmap">
 { "imports": { "three": "./vendor/three/three.module.js", "three/addons/": "./vendor/three/addons/" } }
 </script>
 </head>
 <body data-page="home">
-<canvas class="facemesh" data-face-mesh aria-hidden="true"></canvas>
+<canvas class="cine" data-cinema aria-hidden="true"></canvas>
+<div class="cine-vignette" aria-hidden="true"></div>
 <div data-site-nav></div>
 
 <main>
 
-<!-- ===== Hero: live 3D face mesh (face-mesh.js) ===== -->
-<header class="xhero">
-  <div class="wrap xhero__in">
-    <p class="label reveal">Product &amp; UI/UX Designer</p>
-    <h1 class="xhero__name reveal"><span>Gourav</span><span><em>Sharma</em></span></h1>
-    <p class="lede reveal">
-      Product designer with <b>3.5+ years</b> designing SaaS platforms, mobile apps
-      and the web — from <b>user research</b> to <b>design systems</b>. Most of it in
-      logistics, where the users are drivers, pickers and ops teams.
-    </p>
-    <div class="hero__cta reveal">
-      <a class="btn btn--ink" href="#work">Selected work</a>
-      <a class="btn" href="resume.html">Résumé</a>
-    </div>
-  </div>
-  <img class="xhero__fallback" src="assets/face/color.webp" alt="" aria-hidden="true" />
-  <div class="wrap xhero__foot">
-    <span class="xhero__status"><span class="hero__dot"></span>Currently designing at Omniful</span>
-    <span class="xhero__hint">Move your cursor across the face · Scroll to dissolve</span>
-  </div>
-</header>
+<!-- ===== The journey: one WebGL scene, driven by scroll (cinema.js) =====
+     The tall .journey gives the scroll distance; .stage is sticky and holds
+     the text panels cinema.js fades in and out as the camera moves. -->
+<section class="journey" id="top" aria-label="Introduction and selected work">
+  <div class="stage">
 
-<!-- ===== Stats ===== -->
-<section class="wrap" aria-label="At a glance">
-  <dl class="stats reveal">
-    <div><dt>Years designing</dt><dd class="num">3.5<span>+</span></dd></div>
-    <div><dt>Featured cases</dt><dd class="num">8</dd></div>
-    <div><dt>Design systems built</dt><dd class="num">2</dd></div>
-    <a href="nift.html"><dt>B.Des · Kolkata ↗</dt><dd>NIFT<span>·</span>22</dd></a>
-  </dl>
+    <header class="shot shot--hero" data-panel="hero">
+      <h1 class="hero-name"><span class="hero-name__a">Gourav</span><span class="hero-name__b">Sharma</span></h1>
+      <div class="hero-sub">
+        <p class="hero-role">Product &amp; UI/UX Designer</p>
+        <p class="hero-lede">Product designer with <b>3.5+ years</b> designing SaaS platforms, mobile apps and the web — from <b>user research</b> to <b>design systems</b>. Most of it in logistics, where the users are drivers, pickers and ops teams.</p>
+      </div>
+      <div class="hero-foot">
+        <span><i class="live"></i>Currently designing at Omniful</span>
+        <span class="hero-cue">Scroll to enter <i></i></span>
+      </div>
+    </header>
+
+    <div class="shot shot--dive" data-panel="dive" id="work">
+      <p class="label">Selected work</p>
+      <h2 class="dive-t">Work that<br />shipped.</h2>
+      <dl class="dive-stats">
+        <div><dt>Years designing</dt><dd>3.5+</dd></div>
+        <div><dt>Featured cases</dt><dd>8</dd></div>
+        <div><dt>Design systems built</dt><dd>2</dd></div>
+        <div><dt><a href="nift.html">B.Des · Kolkata ↗</a></dt><dd>NIFT·22</dd></div>
+      </dl>
+      <p class="dive-n">13 projects · 2022 — 2026</p>
+    </div>
+
+      <article class="shot shot--r" data-panel="p0">
+        <div class="shot__meta"><span class="shot__n">001</span><span>Omniful · WMS / OMS</span></div>
+        <h2 class="shot__t">Demand forecasting</h2>
+        <p class="shot__d">From a demand chart the planner can trust to a purchase order, in one confident step.</p>
+        <div class="shot__foot">
+          <span class="shot__tags">Data · Web</span>
+          <a class="shot__go" href="project-demand-forecasting.html">Open case study <span>→</span></a>
+        </div>
+      </article>
+      <article class="shot shot--l" data-panel="p1">
+        <div class="shot__meta"><span class="shot__n">002</span><span>Omniful · Delivery Partner App</span></div>
+        <h2 class="shot__t">Dual payment collection</h2>
+        <p class="shot__d">Settle one order across two methods, with the balance auto-calculated as the partner types.</p>
+        <div class="shot__foot">
+          <span class="shot__tags">Mobile · Payments</span>
+          <a class="shot__go" href="project-dual-payment.html">Open case study <span>→</span></a>
+        </div>
+      </article>
+      <article class="shot shot--r" data-panel="p2">
+        <div class="shot__meta"><span class="shot__n">003</span><span>Omniful · Delivery Partner App</span></div>
+        <h2 class="shot__t">Bulk OTP verification</h2>
+        <p class="shot__d">One code verifies a customer's whole set of packages, the partner still choosing what is handed over.</p>
+        <div class="shot__foot">
+          <span class="shot__tags">Mobile · Verification</span>
+          <a class="shot__go" href="project-bulk-otp.html">Open case study <span>→</span></a>
+        </div>
+      </article>
+      <article class="shot shot--l" data-panel="p3">
+        <div class="shot__meta"><span class="shot__n">004</span><span>Edgistify × Bisleri · Web + Mobile</span></div>
+        <h2 class="shot__t">Route optimization</h2>
+        <p class="shot__d">Validate the daily sheet on upload, then plan a vehicle-aware route past Maps’ ten-stop ceiling.</p>
+        <div class="shot__foot">
+          <span class="shot__tags">Web · Mobile</span>
+          <a class="shot__go" href="project-route-optimization-bisleri.html">Open case study <span>→</span></a>
+        </div>
+      </article>
+      <article class="shot shot--r" data-panel="p4">
+        <div class="shot__meta"><span class="shot__n">005</span><span>Omniful · WMS / OMS / TMS</span></div>
+        <h2 class="shot__t">Omniful design system</h2>
+        <p class="shot__d">55 tokens, 230 domain icons and 25+ components — one language for three products.</p>
+        <div class="shot__foot">
+          <span class="shot__tags">Design System · Web</span>
+          <a class="shot__go" href="project-design-system-omniful.html">Open case study <span>→</span></a>
+        </div>
+      </article>
+
+    <div class="shot shot--end" data-panel="end">
+      <p class="label">And there's more</p>
+      <h2 class="dive-t">The full<br />index.</h2>
+    </div>
+
+    <div class="cine-progress" aria-hidden="true"><i></i></div>
+    <ol class="cine-chapters" aria-hidden="true">
+      <li>Intro</li><li>001</li><li>002</li><li>003</li><li>004</li><li>005</li><li>Index</li>
+    </ol>
+  </div>
 </section>
 
-<!-- ===== Work ===== -->
-<section class="sec" id="work">
+<!-- ===== Static fallback (no WebGL / reduced motion) ===== -->
+<noscript><style>.journey{height:auto}.stage{position:static;height:auto}.shot{position:static;opacity:1;transform:none}</style></noscript>
+
+<!-- ===== After the journey: regular content over the dimmed scene ===== -->
+<section class="sec after" id="all-work">
   <div class="wrap">
-    <div class="sec-head reveal">
-      <div><p class="label">Selected work</p><h2 class="h2">Work that <em>shipped.</em></h2></div>
-      <p class="sec-head__aside">13 projects · 2022 — 2026</p>
-    </div>
-
-    <div class="work">
-      <a class="wcard wcard--wide reveal" data-tilt="3" href="project-demand-forecasting.html">
-        <div class="wcard__media wcard__media--browser">
-          <div class="browser"><div class="browser__bar"><i></i><i></i><i></i></div><img src="assets/proto-demand.png" alt="Demand forecasting dashboard" loading="lazy" /></div>
-        </div>
-        <div class="wcard__body">
-          <div class="wcard__meta"><span>001</span><span>Omniful · WMS / OMS</span></div>
-          <h3 class="wcard__title">Demand forecasting</h3>
-          <p class="wcard__desc">From a demand chart the planner can trust to a purchase order, in one confident step.</p>
-          <div class="wcard__tags"><span class="chip">Data</span><span class="chip">Web</span></div>
-        </div>
-      </a>
-
-      <a class="wcard reveal" data-tilt="6" href="project-dual-payment.html">
-        <div class="wcard__media"><div class="phone"><img src="assets/proto-payment.png" alt="Collect payment screen" loading="lazy" /></div></div>
-        <div class="wcard__body">
-          <div class="wcard__meta"><span>002</span><span>Omniful · Delivery Partner App</span></div>
-          <h3 class="wcard__title">Dual payment collection</h3>
-          <p class="wcard__desc">Settle one order across two methods, with the balance auto-calculated as the partner types.</p>
-          <div class="wcard__tags"><span class="chip">Mobile</span><span class="chip">Payments</span></div>
-        </div>
-      </a>
-
-      <a class="wcard reveal" data-tilt="6" href="project-bulk-otp.html">
-        <div class="wcard__media"><div class="phone"><img src="assets/proto-otp.png" alt="Bulk OTP verification screen" loading="lazy" /></div></div>
-        <div class="wcard__body">
-          <div class="wcard__meta"><span>003</span><span>Omniful · Delivery Partner App</span></div>
-          <h3 class="wcard__title">Bulk OTP verification</h3>
-          <p class="wcard__desc">One code verifies a customer's whole set of packages, the partner still choosing what is handed over.</p>
-          <div class="wcard__tags"><span class="chip">Mobile</span><span class="chip">Verification</span></div>
-        </div>
-      </a>
-
-      <a class="wcard reveal" data-tilt="6" href="project-route-optimization-bisleri.html">
-        <div class="wcard__media"><div class="phone"><img src="assets/proto-bisleri.png" alt="Bisleri driver app screen" loading="lazy" /></div></div>
-        <div class="wcard__body">
-          <div class="wcard__meta"><span>004</span><span>Edgistify × Bisleri · Web + Mobile</span></div>
-          <h3 class="wcard__title">Route optimization</h3>
-          <p class="wcard__desc">Validate the daily sheet on upload, then plan a vehicle-aware route past Maps’ ten-stop ceiling.</p>
-          <div class="wcard__tags"><span class="chip">Web</span><span class="chip">Mobile</span></div>
-        </div>
-      </a>
-
-      <a class="wcard reveal" data-tilt="6" href="project-design-system-omniful.html">
-        <div class="wcard__media wcard__media--browser">
-          <div class="browser"><div class="browser__bar"><i></i><i></i><i></i></div><img src="assets/covers/omniful-ds.jpg" alt="Omniful design system library" loading="lazy" /></div>
-        </div>
-        <div class="wcard__body">
-          <div class="wcard__meta"><span>005</span><span>Omniful · WMS / OMS / TMS</span></div>
-          <h3 class="wcard__title">Omniful design system</h3>
-          <p class="wcard__desc">55 tokens, 230 domain icons and 25+ components — one language for three products.</p>
-          <div class="wcard__tags"><span class="chip">Design System</span><span class="chip">Web</span></div>
-        </div>
-      </a>
-    </div>
-
     <div class="soon reveal">
       <div class="soon__card">
         <div class="wcard__meta"><span>006</span><span>Omniful · Admin + Driver</span></div>
@@ -138,7 +138,6 @@
       </div>
     </div>
 
-    <!-- full index -->
     <div class="index reveal" id="all">
       <div class="index__head"><h3 class="h3">All projects</h3><span class="muted small">Full index · 14</span></div>
       <a class="index__row" href="project-bulk-otp.html"><span class="index__no">01</span><span class="index__t">Bulk OTP verification</span><span class="index__c">Omniful · Delivery Partner App</span><span class="index__k">Mobile</span><span class="index__go">↗</span></a>
@@ -155,7 +154,7 @@
       <a class="index__row" href="project-edgistify-website.html"><span class="index__no">13</span><span class="index__t">Edgistify website redesign</span><span class="index__c">Edgistify · Marketing Site</span><span class="index__k">Web</span><span class="index__go">↗</span></a>
       <div class="index__row is-soon"><span class="index__no">14</span><span class="index__t">Confirm delivery address</span><span class="index__c">Omniful · TMS</span><span class="index__k">Mobile</span><span class="index__go">Soon</span></div>
     </div>
-  </div>
+    </div>
 </section>
 
 <!-- ===== Testimonials ===== -->
@@ -220,17 +219,15 @@
   </div>
 </section>
 
-<!-- ===== Contact ===== -->
-<section class="sec" id="contact">
+<!-- ===== Contact: the face re-forms behind this ===== -->
+<section class="sec outro" id="contact">
   <div class="wrap">
-    <div class="cta reveal">
-      <p class="label">Contact</p>
-      <h2 class="h1">Let's work on <em>what's next.</em></h2>
-      <p class="lede">Currently designing at Omniful, and open to interesting product problems. I usually reply within a day.</p>
-      <div class="hero__cta">
-        <a class="btn btn--ink" href="mailto:gouravsharma.ux@gmail.com">gouravsharma.ux@gmail.com</a>
-        <a class="btn" href="https://www.linkedin.com/in/gourav-sharmaux/" target="_blank" rel="noopener">LinkedIn →</a>
-      </div>
+    <p class="label">Contact</p>
+    <h2 class="outro-t">Let's work on<br /><em>what's next.</em></h2>
+    <p class="lede">Currently designing at Omniful, and open to interesting product problems. I usually reply within a day.</p>
+    <div class="hero__cta">
+      <a class="btn btn--ink" href="mailto:gouravsharma.ux@gmail.com">gouravsharma.ux@gmail.com</a>
+      <a class="btn" href="https://www.linkedin.com/in/gourav-sharmaux/" target="_blank" rel="noopener">LinkedIn →</a>
     </div>
   </div>
 </section>
@@ -238,7 +235,7 @@
 </main>
 
 <div data-site-foot></div>
-<script src="site.js?v=3"></script>
-<script type="module" src="face-mesh.js?v=1"></script>
+<script src="site.js?v=4"></script>
+<script type="module" src="cinema.js?v=1"></script>
 </body>
 </html>

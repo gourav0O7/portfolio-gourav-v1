@@ -1,9 +1,10 @@
 /* ============================================================
    GOURAV SHARMA — site design system (v2, 2026)
    ------------------------------------------------------------
-   A dark, immersive system: near-black stage, warm off-white type,
-   one ember accent. Instrument Serif for display, Inter for the rest.
-   The homepage adds a live WebGL face mesh (face-mesh.js) behind it.
+   A dark, cinematic, monochrome system: black stage, silver-white type,
+   no brand hue (colour comes only from the product screens). Archivo,
+   condensed and heavy, for display; Inter for reading.
+   The homepage is one scroll-driven WebGL scene (cinema.js).
 
    Shared by every rebuilt page (home, about, case studies,
    résumé, NIFT, glossary, 404). Legacy token names at the end
@@ -23,13 +24,14 @@
   --faint:      #6c6b67;
   --rule:       rgba(255, 255, 255, 0.08);
   --rule-2:     rgba(255, 255, 255, 0.16);
-  --accent:     #ff5b2e;
-  --accent-ink: #ff7d55;          /* lighter accent for small text on dark */
-  --accent-wash:rgba(255, 91, 46, 0.12);
+  --accent:     #f2f0ea;          /* monochrome: the "accent" is full white */
+  --accent-ink: #f2f0ea;
+  --accent-wash:rgba(255, 255, 255, 0.06);
   --ok:         #2f8a5b;
 
   /* type */
-  --serif: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
+  --serif: 'Archivo', 'Inter', system-ui, sans-serif;
+  --disp:  'Archivo', 'Inter', system-ui, sans-serif;
   --sans:  'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --mono:  'JetBrains Mono', ui-monospace, Menlo, monospace;
 
@@ -37,17 +39,17 @@
   --max: 1200px;
   --pad: clamp(20px, 4.5vw, 56px);
   --sec: clamp(80px, 11vw, 150px);
-  --r-sm: 10px;
-  --r:    16px;
-  --r-lg: 24px;
+  --r-sm: 2px;
+  --r:    3px;
+  --r-lg: 4px;
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   --nav-h: 68px;
 
   /* legacy aliases (mockup + gate components read these) */
   --bg: var(--paper); --bg-1: var(--card); --bg-2: var(--paper-2); --bg-3: #1b1d23;
   --text: var(--ink); --text-dim: var(--muted); --text-faint: var(--faint); --white: var(--ink);
-  --line: var(--rule); --line-2: var(--rule-2); --line-accent: rgba(255, 91, 46, 0.4);
-  --accent-2: #ff7d55; --accent-soft: rgba(255, 91, 46, 0.12); --accent-glow: rgba(255, 91, 46, 0.5);
+  --line: var(--rule); --line-2: var(--rule-2); --line-accent: rgba(255, 255, 255, 0.3);
+  --accent-2: #ffffff; --accent-soft: rgba(255, 255, 255, 0.08); --accent-glow: rgba(255, 255, 255, 0.3);
   --font-display: var(--sans); --font-mono: var(--mono);
   --gutter: var(--pad); --maxw: var(--max);
   --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 24px; --sp-6: 32px; --sp-7: 48px; --sp-8: 64px;
@@ -83,9 +85,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 /* ---------- type ---------- */
 .label {
   display: inline-flex; align-items: center; gap: 10px;
-  font-size: 13px; font-weight: 500; letter-spacing: 0.01em; color: var(--muted);
+  font-size: 11.5px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);
 }
-.label::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+.label::before { content: ""; width: 18px; height: 1px; background: currentColor; }
 .label--plain::before { display: none; }
 .display {
   font-family: var(--serif); font-weight: 400;
@@ -107,7 +109,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 /* ---------- buttons ---------- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-  height: 48px; padding: 0 22px; border-radius: 999px;
+  height: 48px; padding: 0 22px; border-radius: 2px;
   font-size: 15px; font-weight: 500; letter-spacing: -0.005em; white-space: nowrap;
   border: 1px solid var(--rule-2); background: transparent; color: var(--ink);
   transition: background 0.2s var(--ease), color 0.2s var(--ease), border-color 0.2s var(--ease), transform 0.2s var(--ease);
@@ -269,3 +271,22 @@ html.has-cursor input, html.has-cursor textarea { cursor: text; }
 }
 [data-tilt]:hover::after { opacity: 1; }
 @media (prefers-reduced-motion: reduce) { body::before { animation: none; } }
+
+/* ============================================================
+   CINEMATIC TYPE — heavy condensed Archivo, outline instead of
+   italic-colour emphasis. Overrides every serif heading above.
+   ============================================================ */
+html .display, html .h1, html .h2 {
+  font-family: var(--disp); font-weight: 800; font-stretch: 68%; font-style: normal;
+  text-transform: uppercase; letter-spacing: -0.005em; line-height: 0.88;
+}
+html .display em, html .h1 em, html .h2 em {
+  font-style: normal; color: transparent; -webkit-text-stroke: 1.2px var(--ink);
+}
+.chip { border-radius: 2px; }
+
+/* serif → condensed display (cinematic pass) */
+html .wcard__title, html .soon__title, html .tl__role, html .edu__deg, html .off__h, html .cs-hero__title, html .cs-sub__title, html .cs-next__title, html .rsm__name, html .term__name, html .gloss-hero__name, html .nf__code, html .nf h1, html .nf-banner__h, html .reel, html .tally b, html .stats dd, html .cs-metric__nums, html .phonegate__title, html .xhero__name, html .lex-group__letter, html .ab-hero__h { font-family: var(--disp); font-weight: 800; font-stretch: 68%; font-style: normal; text-transform: uppercase; letter-spacing: 0; }
+html .quote blockquote, html .cs-lead, html .rsm__summary, html .cs-quote blockquote, html .kit__list li, html .bring li, html .gloss-empty__msg, html .hero__lede { font-family: var(--sans); font-weight: 300; letter-spacing: -0.015em; }
+html .quote blockquote b, html .cs-lead b, html .cs-lead strong { color: var(--ink); font-weight: 500; }
+html .xhero__name em, html .cs-hero__title em, html .rsm__name em, html .gloss-hero__name em { color: transparent; -webkit-text-stroke: 1.2px var(--ink); }

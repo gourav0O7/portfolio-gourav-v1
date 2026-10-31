@@ -40,11 +40,11 @@ html.no-webgl .xhero__fallback { display: block; position: absolute; right: var(
 /* ---------- work grid ---------- */
 .work { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(16px, 2vw, 24px); }
 .wcard { position: relative; display: flex; flex-direction: column; background: rgba(14,16,20,0.78); backdrop-filter: blur(6px); border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--rule); transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease); }
-.wcard:hover { border-color: var(--rule-2); box-shadow: 0 40px 80px -40px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,91,46,0.12); }
+.wcard:hover { border-color: var(--rule-2); box-shadow: 0 40px 80px -40px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.12); }
 .wcard--wide { grid-column: 1 / -1; flex-direction: row; }
 .wcard__media {
   position: relative; display: flex; align-items: flex-end; justify-content: center; overflow: hidden;
-  background: radial-gradient(100% 90% at 50% 100%, rgba(255,91,46,0.14), transparent 60%), var(--paper-2); aspect-ratio: 4 / 3; padding: 36px 36px 0;
+  background: radial-gradient(100% 90% at 50% 100%, rgba(255,255,255,0.14), transparent 60%), var(--paper-2); aspect-ratio: 4 / 3; padding: 36px 36px 0;
 }
 .wcard--wide .wcard__media { flex: 1.6; aspect-ratio: auto; min-height: 460px; padding: 48px 0 0 48px; justify-content: flex-start; }
 .wcard__body { padding: 28px 28px 30px; display: flex; flex-direction: column; gap: 10px; }

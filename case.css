@@ -49,7 +49,7 @@ body[data-project] .case-gatewrap {
   --bg: var(--paper); --bg-1: var(--card); --bg-2: var(--paper-2); --bg-3: #1b1d23;
   --line: var(--rule); --line-2: var(--rule-2); --line-accent: rgba(232, 84, 42, 0.4);
   --text: var(--ink); --text-dim: var(--muted); --text-faint: var(--faint); --white: var(--ink);
-  --accent: #ff5b2e; --accent-2: #ff7d55; --accent-soft: rgba(255, 91, 46, 0.12);
+  --accent: #ffffff; --accent-2: #ffffff; --accent-soft: rgba(255, 255, 255, 0.12);
   color: var(--ink);
 }
 .cs-sec { padding-top: clamp(80px, 10vw, 140px); }
@@ -74,7 +74,7 @@ body[data-project] .case-gatewrap {
 .cs-pain p { font-size: 15px; color: var(--muted); line-height: 1.6; }
 
 /* quote */
-.cs-quote { margin-top: 44px; padding: clamp(28px, 4vw, 44px); border-radius: var(--r-lg); background: linear-gradient(135deg, rgba(255,91,46,0.16), rgba(255,91,46,0.03)); border: 1px solid rgba(255,91,46,0.25); color: var(--ink); }
+.cs-quote { margin-top: 44px; padding: clamp(28px, 4vw, 44px); border-radius: var(--r-lg); background: linear-gradient(135deg, rgba(255,255,255,0.16), rgba(255,255,255,0.03)); border: 1px solid rgba(255,255,255,0.25); color: var(--ink); }
 .cs-quote blockquote { font-family: var(--serif); font-size: clamp(24px, 2.6vw, 32px); line-height: 1.22; }
 .cs-quote figcaption { margin-top: 18px; color: var(--muted); font-size: 14px; }
 .cs-quote__sample { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--rule); font-size: 14px; color: var(--muted); }
